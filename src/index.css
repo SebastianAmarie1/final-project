@@ -1,0 +1,355 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    padding: 0px;
+    margin: 0px;
+}
+
+/*   Variables   */
+:root {
+    --ff-primary : 'Bahnschrift';
+  
+    --fw-reg: 300;
+    --fw-bold: 900;
+  
+    --clr-primary: #1a0c30;
+    --clr-secondary: #444054;
+    --clr-contrast: #ebe6f5;
+    --clr-highlighted:#DB8A74;
+    --clr-secondaryHighlighted: #FAC9B8;
+    --clr-ownMessage: lightblue;
+    --clr-white: white;
+    --clr-black: black;
+  
+    --bs-titles: rgba(0, 0, 0, 0.45) 0px 5px 20px;
+  
+    --fs-h1: 2rem;
+    --fs-h2: 1.5rem;
+    --fs-h3: 1.25rem;
+    --fs-h4: 1rem;
+    --fs-a: 1.25rem;
+    --fs-p: 1rem;
+    --fs-body: 1rem;
+  }
+
+/*   General Styles   */
+html {
+    scroll-behavior:smooth;
+}
+
+body {
+    margin: 0;
+    line-height: 1.2;
+    box-sizing: border-box;
+    
+    font-family: var(--ff-primary);
+    color: var(--white);
+  }
+
+h1{font-size: var(--fs-h1)}
+h2{font-size: var(--fs-h2)}
+h3{font-size: var(--fs-h3)}
+h4{font-size: var(--fs-h4)}
+
+a{font-size: var(--fs-a); text-decoration: none;}
+
+img {width: 100%;}
+
+strong {font-weight: var(--fw-bold)}
+
+.fcc{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/*   Navigation   */
+.navigation-container{
+    position: fixed;
+    display: flex;
+    align-items: center;
+    width:100%;
+    z-index: 100;
+
+    padding: 1em;
+    background-color: #ffffff55;
+    box-shadow: var(--bs-titles);
+}
+
+.navigation-logo{
+    width: 125px;
+    margin-right: auto;
+    color: var(--clr-white);
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+.navigation-right-container{
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+}
+
+.navigation-btn{
+    color: var(--clr-white);
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    margin-right: 1em;
+}
+
+.navigation-burger{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    height:30px;
+    width: 30px;
+    cursor: pointer;
+}
+
+.navigation-btn:hover,
+.navigation-btn:active{
+    color: var(--clr-lightBlue);
+    border-bottom: 5px solid var(--clr-lightBlue);
+}
+
+.navigation-burger-ind{
+    width: 100%;
+    height: 15%;
+    border-radius: 8px;
+    background-color: white;
+}
+
+.navigation-bottom-active{
+    position: absolute;
+    z-index: -1;
+    top:0;
+    left:0;
+    width: 100%;
+    padding: 2em;
+    border-radius: 5px;
+    background-color: var(--clr-primary);
+    animation: drop-down 0.75s ease-in;
+}
+.navigation-friends-icon{
+    width: 30px;
+    height: 30px;
+    margin-right: 1em;
+}
+
+@keyframes drop-down {
+    0%{
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
+}
+.navigation-bottom-active-spacer{
+    height: 80px;
+}
+.navigation-bottom-active-container{
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.navigation-bottom-active-option{
+    color: var(--clr-white);
+}
+
+
+/*   Friends   */
+
+.freinds-main-box{
+    height: calc(100vh);
+    width: 100%;
+    display:flex;
+    flex-direction: column;
+    background-color: var(--clr-primary);
+}
+
+.friends-individual-arrow{
+    margin-left: auto;
+}
+.friends-individual-user-box{
+    display: flex;
+    margin-bottom: 0.2em;
+    padding: 0.5em;
+    cursor: pointer;
+    color:white;
+}
+.following-individual-pp{
+    width: 45px;
+    height: 45px;
+    margin-right: 1em;
+    border-radius: 50%;
+}
+.friends-individual-name{
+    
+}
+
+.friends-individual-user-button{
+    margin-left: auto;
+}
+.friends-main-message{
+    color:white;
+    text-align: center;
+}
+
+/*    Chat Page   */
+/*    NAV   */
+.cnav-container{
+    position: relative;
+    width: 100%;
+    height: 60px;
+    display: flex;
+    color: white;
+    background-color: var(--clr-primary);
+}
+.cnav-container-left{
+    display: flex;
+    align-items: center;
+    margin-left: 0.75em;
+}
+.cnav-container-username{
+    margin-left: 4.5em;
+}
+
+.cnav-container-pp{
+    width:35px;
+    border-radius: 50%;
+    margin-left: 1em;
+}
+.cnav-container-arrow{
+    cursor: pointer;
+}
+
+/*   MAIN   */
+.chat-container-messages{
+    position:relative;
+    height:calc(100vh - 130px);
+    width:100%;
+    overflow-y: scroll;
+    display:flex;
+    flex-direction: column;
+    padding: 1em;
+    background-color: var(--clr-contrast);
+}
+
+/* OWN */
+.chat-message-box-own{
+    position: relative;
+    max-width: 65%;
+    margin-bottom:0.25em;
+    margin-left: auto;
+    line-height: 1;
+
+    padding: 0.5em;
+    border-radius: 10px;
+    display: inline-block;
+    background-color: var(--clr-ownMessage);
+}
+
+/*  partner  */
+
+.chat-container-reciever{
+    display: flex;
+    align-items: center;
+}
+
+.chat-message-image-reciever{
+    width: 30px;
+    height:30px;
+    border-radius: 50%;
+    margin-right: 0.35em;
+}
+.chat-message-box-reciever{
+    position: relative;
+    max-width: 65%;
+    margin-bottom:0.25em;
+    line-height: 1;
+
+    padding: 0.5em;
+    border-radius: 10px;
+    display: inline-block;
+    background-color: darkgray;
+}
+
+/*   Chat Footer   */
+.chat-footer{
+    position: relative;
+    width: 100%;
+    height:70px;;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 1em;
+    background-color: var(--clr-primary);
+}
+.chat-footer-textarea{
+    width:90%;
+    height: 45px;
+
+    border-radius: 10px;
+    border-width: 2px;
+    font-size:1.25em;
+    padding: 0.5em;
+    padding-top: 0.6em;
+    color: var(--clr-white);
+    border-color: var(--clr-white);
+    background-color: var(--clr-primary);
+}
+.chat-footer-button{
+    height: 35px;
+    width:35px;
+    margin-left: 0.5em;
+
+    cursor: pointer;
+    border-radius: 50%;
+    color: var(--clr-white);
+    border-color: var(--clr-white);
+    background-color: var(--clr-primary);
+}
+
+
+/*   Footer   */
+.footer-container{
+    margin-top: -5px;
+    width: 100%;
+    padding: 1em;
+    color: var(--clr-white);
+    background-color: var(--clr-primary);
+}
+.footer-title{
+    width:100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2em;
+}
+.footer-main{
+    display: flex;
+    justify-content: space-around;
+    margin-top: 1em;
+}
+.footer-bottom{
+    display:flex;
+    justify-content: center;
+    margin-top: 2em;
+}
+
+/*   Other Styles   */
+.hide{display: none}
+.change-active{
+    background-color: var(--clr-lightBlue);
+}
+.navigation-spacer{
+    height:70px;
+    background-color: var(--clr-primary);
+}
+.nav-placeholder {
+    width: 100%;
+    height:63px;
+    background-color: var(--clr-primary);
+}
