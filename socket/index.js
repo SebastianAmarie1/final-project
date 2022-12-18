@@ -9,7 +9,8 @@ const io = require("socket.io")(8900, {
 })
 
 let usersHash = {}
-
+let rooms = []
+let activeRooms = []
 
 //SOCKET
 io.on("connection", (socket) => {
@@ -36,10 +37,7 @@ io.on("connection", (socket) => {
 
 
     socket.on('sendMessage', (data) => {
-        console.log(socket.id, "current")
-        console.log(usersHash[data.senderId].socketId, "in hash")
-        console.log(usersHash, "USERS HASH")
-        console.log(usersHash[data.recieverId].socketId, "SENDING TO")
+
         io.to(usersHash[data.recieverId].socketId).emit("messageRecieved", {
             senderId: data.senderId,
             recieverId: data.recieverId,
