@@ -3,34 +3,39 @@ import { Link } from 'react-router-dom';
 import { useAuth } from "../Contexts/AuthContext"
 import axios from "../Contexts/axiosConfig"
 import { useNavigate } from 'react-router-dom';
-import { io } from "socket.io-client"
 import friendsIcon from "../Assets/friendsIcon.png"
+import { useSocket } from "../Contexts/socketContext"
 
 function Navigation() {
 
-  const { user, setUser, axiosAuth } = useAuth()
+  const { user, setUser, axiosAuth, flag } = useAuth()
+  const { socket } = useSocket()
   const [toggled, setToggled] = useState(false)
   const navigate = useNavigate()
-  const socket = useRef()
+
+  useEffect(()=> {
+    if (user !== "a" && user !== null) {
+        socket.current.on('connect', () => {})
+        socket.current.emit("addUser", {  
+          userId : user.id,
+          name : user.username,
+        })
+    }
+  },[user])
 
   function eventHandler(flag) {
     setToggled((oldValue) => !oldValue)
   }
 
-  useEffect(() => {
-    socket.current = io("ws://localhost:8900")
-  },[])
-
   const handleLogout = async() => { //removes the user from local storage and state
 
-    const res = await axiosAuth.post("/api/logout", {id: user.id}, {
+    await axiosAuth.post("/api/logout", {id: user.id}, {
       headers: { authorization: "Bearer " + user.accessToken}
     })
     localStorage.removeItem('userDetails')
 
     socket.current.emit("rmvUser", {userId : user.id})
    
-
     setUser(null)
     navigate("/signin")
   }

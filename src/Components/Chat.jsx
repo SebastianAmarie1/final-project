@@ -1,24 +1,32 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { useLocation } from 'react-router-dom'
-import { io } from "socket.io-client"
 import { nanoid } from 'nanoid'
 
 import { useAuth } from "../Contexts/AuthContext"
+import { useSocket } from '../Contexts/socketContext'
 import Message from './Message'
 
 function Chat() {
 
     const { state } = useLocation()
     const { conversationId, recieverId } = state // get the conversation and reciever IDs from the previous page
+    const { socket } = useSocket()
     const { user, axiosAuth } = useAuth()
 
     const [inputMessage, setInputMessage] = useState("")
     const [messages, setMessages] = useState()
     const [arrivalMessage, setArrivalMessage] = useState(null)
-    const socket = useRef() // set the socket to get Ids
 
     useEffect(() => { 
-
+        socket.current.on("messageRecieved", (data) => {
+            console.log("message recieved")
+            setArrivalMessage({
+                recieverid: data.recieverId,
+                message: data.message,
+                senderid: data.senderId,
+                message_id: nanoid()
+            })
+        })
     }, [])
 
     useEffect(() => { //adds the arrived message to the messages
@@ -60,13 +68,18 @@ function Chat() {
     
     if ( userActivity ){
         socket.current.emit("sendMessage", { // sends message to the socket
-            userId: user.id,
+            senderId: user.id,
             recieverId: recieverId,
-            text: inputMessage
+            message: inputMessage
         })
     }
 
     setInputMessage("")
+  }
+
+  const practise = () => {
+    socket.current.emit("printUsers", {  
+    })
   }
 
   return (
@@ -81,12 +94,12 @@ function Chat() {
         </div>
         <div className="chat-footer">
             <textarea className="chat-footer-textarea"
-                    type="text"
-                    id="message"
-                    value={inputMessage}
-                    onChange={e => setInputMessage(e.target.value)} 
-                    placeholder="Message... " />
-            <button className="chat-footer-button" onClick={(e) => handleSendMessage(e)}>&gt;</button>
+                type="text"
+                id="message"
+                value={inputMessage}
+                onChange={e => setInputMessage(e.target.value)} 
+                placeholder="Message... " />
+            <button className="chat-footer-button" onClick={(e) => handleSendMessage(e)}>&gt;</button><button onClick={practise}>SeeUserHash</button>
         </div>
     </div>
   )

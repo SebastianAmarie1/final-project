@@ -1,4 +1,6 @@
 
+const express = require('express');
+const app = express();
 const io = require("socket.io")(8900, {
     cors:{
         origin:["http://localhost:3000","http://localhost:3001", "http://localhost:3002"],
@@ -11,29 +13,37 @@ let usersHash = {}
 
 //SOCKET
 io.on("connection", (socket) => {
-    console.log(socket.id, "MYSOCKET")
-    console.log(usersHash)
- 
-///////////////////////// Messaging System ///////////////////
-            //adding a user to the usersArray//
 
-    
-    socket.on("addUser", (data) => {
-        console.log(socket.id, "RAN ADD USER")
+    console.log(socket.id, "S")
+
+    socket.on('printUsers', () => {
+        console.log(socket.id)
+        console.log(usersHash)
+    })
+ 
+///////////////////////// Adding Users //////////////////////////
+
+    socket.on('addUser', (data) => {
         if(data.userId == undefined || data.name == undefined){
             console.log("No User Data Sent To Socket")
         } else {
-            usersHash[data.userId] = [socket.id, data.name]
+            usersHash[data.userId] = {socketId: socket.id, username:data.name}
+            console.log(usersHash, "USER HASH UPDATED")
         }
     })
 
-    socket.on("sendMessage", ({ userId, recieverId, text }) => {
-        console.log(usersHash[recieverId][0], usersHash[recieverId][1])
-        console.log(usersHash[userId][0], "|" , socket.id)
-        io.to(usersHash[recieverId][0]).emit("getMessage", {
-            senderId: userId,
-            recieverId: recieverId, 
-            text
+///////////////////////// Messaging System ///////////////////////
+
+
+    socket.on('sendMessage', (data) => {
+        console.log(socket.id, "current")
+        console.log(usersHash[data.senderId].socketId, "in hash")
+        console.log(usersHash, "USERS HASH")
+        console.log(usersHash[data.recieverId].socketId, "SENDING TO")
+        io.to(usersHash[data.recieverId].socketId).emit("messageRecieved", {
+            senderId: data.senderId,
+            recieverId: data.recieverId,
+            message: data.message,
         })
     })
 
@@ -45,6 +55,6 @@ io.on("connection", (socket) => {
 ///////////////// DISCONNECTIONS ////////////////////////////////
 
     socket.on("rmvUser", (data) => {delete usersHash[data.userId]})
-    socket.on("disconnect", (data) => {console.log("a user has disconnected")})
+    socket.on("disconnect", () => {console.log("a user has disconnected")})
 })
 

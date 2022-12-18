@@ -32,7 +32,6 @@ function Follow() {
       { headers: 
         { authorization: "Bearer " + user.accessToken}
       })
-      console.log(res.data.conversation_id)
       navigate(`/homepage/follow/chat/${res.data.conversation_id}`, { state: {conversationId: res.data.conversation_id, recieverId: secondaryUser} })
     } catch (error) {
       console.log(error)

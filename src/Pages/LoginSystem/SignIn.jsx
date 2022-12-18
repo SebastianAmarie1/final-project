@@ -5,7 +5,6 @@ import "./signin.css"
 
 import { useAuth } from "../../Contexts/AuthContext"
 import { useNavigate } from "react-router-dom"
-import { io } from "socket.io-client"
 
 
 function SignIn() {
@@ -15,11 +14,8 @@ function SignIn() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const navigate = useNavigate()
-  const socket = useRef()
 
-  useEffect(() => {
-    socket.current = io("ws://localhost:8900")
-  },[])
+ 
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -40,12 +36,6 @@ function SignIn() {
           region: res.data.region,
           active: true,
         })
-
-        socket.current.emit("addUser", {  
-          userId : res.data.users_id,
-          name : res.data.username,
-        })
-
         navigate("/homepage")
     } catch (err) {
         setError("Password or Email Incorrect")

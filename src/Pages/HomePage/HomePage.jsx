@@ -1,24 +1,23 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { useAuth } from "../../Contexts/AuthContext"
-import { io } from "socket.io-client"
+import { useSocket } from "../../Contexts/socketContext"
 import Peer from "simple-peer"
 import "./homepage.css"
-import { useInsertionEffect } from 'react'
 
 function HomePage() {
 
   const { user } = useAuth()
-  const socket = useRef()
+  const { socket } = useSocket()
 
-  const [stream, setStream] = useState() ///
-  const [recievingCall, setReceivingCall] = useState(false) ///////
+  const [stream, setStream] = useState() 
+  const [recievingCall, setReceivingCall] = useState(false) 
   const [searching, setSearching] = useState(false)
   const [caller, setCaller] = useState()
   const [name, setName] = useState("")
   const [callerSignal, setCallerSignal] = useState()
   const [callAccepted, setCallAccepted] = useState(false)
 
-  const myVideo = useRef()///
+  const myVideo = useRef()
   const [myVideoToggled, setMyVideoToggled] = useState(false)
   const partnerVideo = useRef()
   const [partnerVideoToggled, setPartnerVideoToggled] = useState(false)
@@ -120,6 +119,11 @@ function HomePage() {
     socket.current.emit("endCall", {to: caller, gender: user.gender})
   }
 
+  const practise = () => {
+    socket.current.emit("printUsers", {  
+    })
+  }
+
 
   let MyVideo = stream && <video className="home-video-me" ref={myVideo} autoPlay playsInline muted />
   let PartnersVideo = callAccepted && <video className="home-video-partner-video" ref={partnerVideo} autoPlay playsInline muted />
@@ -127,7 +131,7 @@ function HomePage() {
   return (
     <div className="home-main"> {/*Container for the whole page*/}
       <div className="home-container-headbar"> {/*Container for the title for the webpage */}
-        <h2>Caller Name</h2>
+        <h2>Caller Name</h2><button onClick={practise}>See UsersHash</button>
         <div className="home-container-timer"> {/*Timer container */}
           <h3>1:00</h3>
         </div>

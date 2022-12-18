@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react"
 import jwt_decode from "jwt-decode"
 import axios from "./axiosConfig.jsx"
+import useSocket from "./socketContext"
 
 const AuthContext = React.createContext()
 
@@ -23,6 +24,10 @@ export function AuthProvider({ children }) {
         const saved = localStorage.getItem("userDetails");
         setUser(JSON.parse(saved))
     }, [])
+
+    useEffect(() => {
+        
+    }, [flag])
 
     const refreshToken = async() => { //method to refresh the tokens
         try {
@@ -59,7 +64,8 @@ export function AuthProvider({ children }) {
         user,
         axiosAuth,
         setUser,
-        setFlag
+        flag,
+        setFlag,
     }
 
     return (

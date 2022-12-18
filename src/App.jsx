@@ -27,11 +27,10 @@ function App() {
           <Route exact path="/homepage" element={<><Navigation /><HomePage /></>} />
           <Route exact path="/homepage/profile" element={<><Navigation /><Profile /></>} />
           <Route exact path="/homepage/follow" element={<><Navigation /><Follow /></>} />
-          <Route exact path="/homepage/follow/chat/:id" element={<><ChatNavigation /><Chat /></>} />
+          <Route exact path="/homepage/follow/chat/:id" element={<><Navigation /><Chat /></>} />
         </Route>
       </Routes>
     </Router>
-    
   )
 }
 
