@@ -10,12 +10,9 @@ function HomePage() {
   const { socket } = useSocket()
 
   const [stream, setStream] = useState() 
-  const [recievingCall, setReceivingCall] = useState(false) 
   const [searching, setSearching] = useState(false)
-  const [caller, setCaller] = useState()
-  const [name, setName] = useState("")
-  const [callerSignal, setCallerSignal] = useState()
   const [callAccepted, setCallAccepted] = useState(false)
+  const [roomId, setRoomId] = useState(null)
 
   const myVideo = useRef()
   const [myVideoToggled, setMyVideoToggled] = useState(false)
@@ -25,7 +22,7 @@ function HomePage() {
 
   useEffect(() => {
 
-    const settingMyStream = async() => {
+    const settingMyStream = async() => { //sets up my stream.
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true })
         setStream(stream)
@@ -38,85 +35,37 @@ function HomePage() {
     }
     settingMyStream()
 
+    socket.current.on("setRoomId", (data) => {
+      setRoomId(data.roomId)
+    })
+
   }, [])
 
-  useEffect(() => {
-    if (recievingCall) {
-      acceptCall()
-    }
-  }, [recievingCall])
-
-
-  const addToSearch = () => {
+  console.log(roomId)
+  const searchForCall = () => {
+    
     setSearching(true)
 
-    if (user.gender === "Male") {
-      console.log("Ran meth")
-      callUser()
-    }
-  }
 
-  const callUser = () => {
-    const peer = new Peer({
-			initiator: true,
-			trickle: false,
-			stream: stream
-		})
-
-    peer.on("signal", (data) => {
-			socket.current.emit("callUser", {
-				signal: data,
-				id: user.id,
-        name: user.username
-			})
-		})
-
-    peer.on("stream", (stream) => {
-			if (partnerVideo.current) {
-        partnerVideo.current.srcObject = stream
-      }
+    socket.current.emit("search", {  
+      id: user.id,
+      gender: user.gender,
     })
 
-    socket.current.on("callAccepted", (signal) => {
-      console.log("CALL ACCEPTED")
-			setCallAccepted(true)
-			peer.signal(signal)
-		})
-
-    connectionRef.current = peer
   }
-//////////////////////////
-  const acceptCall = () => {
-    console.log("ran")
-    setCallAccepted(true)
-		const peer = new Peer({
-			initiator: false,
-			trickle: false,
-			stream: stream
-		})
-		peer.on("signal", (data) => {
-			socket.current.emit("answerCall", { signal: data, to: caller })
-		})
-		peer.on("stream", (stream) => {
-      if (partnerVideo.current) {
-        partnerVideo.current.srcObject = stream
-      }		
-    })
 
-		peer.signal(callerSignal)
-		connectionRef.current = peer
-  }
+const stopSearch = () => {
+  setSearching(false)
+  setRoomId(null)
+  socket.current.emit("leaveRoom", {  
+    roomId: roomId,
+  })
+}
+
+ 
 /////////////////////////////
   const endCall = () => {
-    setReceivingCall(false)
-    setCaller()
-    setName("")
-    setSearching(false)
-    setCallerSignal()
-    setCallAccepted(false)
-    partnerVideo.current.srcObject = null
     
-    socket.current.emit("endCall", {to: caller, gender: user.gender})
   }
 
   const practise = () => {
@@ -139,22 +88,22 @@ function HomePage() {
       <div className="home-video">{/* Container for all the video components*/}
         <div className="home-video-questions">
           {!callAccepted ?
-                          searching ?
-                            <div className="home-video-search">
-                              <h3 className="home-video-search-text">Searching ...</h3>
-                            </div>
-                            :
-                            <div className="home-video-search"  onClick={addToSearch}>
-                              <h3 className="home-video-search-text">Click To Find Partner</h3>
-                            </div>
-                          :
-                          <div className="home-video-partner" onClick={() => {setPartnerVideoToggled((oldValue) => !oldValue)}}>
-                            {partnerVideoToggled && <div className="home-partner-toggled fcc"> 
-                                                       <button className="home-partner-endbutton" onClick={() => endCall()}>End Call</button>
-                                                    </div>
-                            }
-                            {PartnersVideo}
-                          </div> 
+              searching ?
+                  <div className="home-video-search" onClick={stopSearch}>
+                    <h3 className="home-video-search-text">Searching ...</h3>
+                  </div>
+                  :
+                  <div className="home-video-search" onClick={searchForCall}>
+                    <h3 className="home-video-search-text">Click To Find Partner</h3>
+                  </div>
+                :
+                <div className="home-video-partner" onClick={() => {setPartnerVideoToggled((oldValue) => !oldValue)}}>
+                  {partnerVideoToggled && <div className="home-partner-toggled fcc"> 
+                                              <button className="home-partner-endbutton" onClick={() => endCall()}>End Call</button>
+                                          </div>
+                  }
+                  {PartnersVideo}
+                </div> 
           }
           <div className="home-video-hints" >
             
