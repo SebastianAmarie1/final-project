@@ -32,8 +32,9 @@ const checkRooms = (roomId) => {
     return inArray
 }
 
-const checkAvailableRoom = (id, gender, socket, signal) =>{
+const checkAvailableRoom = (id, gender, socket) =>{
     let available = false
+    console.log("RAN")
 
     for (let i =0 ; i < rooms.length; i++){
         if(rooms[i].gender !== gender) {
@@ -41,6 +42,7 @@ const checkAvailableRoom = (id, gender, socket, signal) =>{
             socket.join(rooms[i].roomId)
             io.to(socket.id).emit("setRoomId", {
                 roomId: rooms[i].roomId,
+                initiator: true,
             })
         
             activeRooms[rooms[i].roomId] = {first: rooms[i].first, second: id}
@@ -53,8 +55,6 @@ const checkAvailableRoom = (id, gender, socket, signal) =>{
 }
 
 io.on("connection", (socket) => {
-
-    console.log(rooms, "R")
 
     socket.on('printUsers', () => {
         console.log(rooms)
@@ -85,7 +85,7 @@ io.on("connection", (socket) => {
 
 socket.on('search', ({id, gender, signal}) => { // user_id, gender
     deleteRoomsById(id)
-    if (rooms.length <= 0 | !checkAvailableRoom(id, gender, socket, signal)) {// create a unique room.
+    if (rooms.length <= 0 | !checkAvailableRoom(id, gender, socket)) {// create a unique room.
         const roomName =`room${roomId}`
         roomId = roomId + 1
         rooms.push({roomId: roomName, first: id, gender: gender})
@@ -93,10 +93,18 @@ socket.on('search', ({id, gender, signal}) => { // user_id, gender
 
         io.to(socket.id).emit("setRoomId", {
             roomId: roomName,
+            initiator: false,
         })
-
-        console.log(rooms, "Rooms")
     }
+})
+
+socket.on("callUser", (data) => {
+    socket.broadcast.to(data.roomId).emit("answerUser", { signal: data.signal, roomId: data.roomId})
+})
+
+socket.on("answerCall", (data) => {
+    console.log("RAN ANSWER CALL")
+    socket.broadcast.to(data.roomId).emit("callAccepted", { signal: data.signal })
 })
 
 ///////////////// DISCONNECTIONS /////////////////////////////////

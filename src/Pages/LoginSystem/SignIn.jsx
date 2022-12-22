@@ -1,10 +1,12 @@
-import React, { useState, useEffect, useRef} from 'react'
+import React, { useState} from 'react'
 import axios from "../../Contexts/axiosConfig"
 import { CurrentTime } from '../../Components/CurrentTime'
-import "./signin.css"
+import "./credentials.css"
+import heart from "../../Assets/credentials/credentials-heart.png"
+
 
 import { useAuth } from "../../Contexts/AuthContext"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, Link } from "react-router-dom"
 
 
 function SignIn() {
@@ -43,42 +45,61 @@ function SignIn() {
   }
 
   return (
-    <div className="signin-main">
-      <div className="signin-img-container" />
-      <div className="signin-form-container">
-        <form  onSubmit={handleSubmit} className="signin-form">
-          <h2 className="signin-form-title">Sign Into Your Account</h2>
-          {error && <div className="signup-error-container signin-error">{error}</div>}
-          <input
-            className="signin-form-input"
-            id="Username" 
-            type="text"
-            name="username" 
-            placeholder="Username"
-            value={username}
-            onChange ={(e) => setUsername(e.target.value)} 
-            required>
-          </input>
+    <>
+    <div className="navbar-spacer"></div>
+    <div className="credentials-main fcc">
+      <div className="credentials-heart-container">
+        <img className="credentials-heart" src={heart} />
 
-          <input 
-            className="signin-form-input"
-            id="Password"
-            name="password"
-            type="password" 
-            placeholder="Password"
-            value={password}
-            onChange ={(e) => setPassword(e.target.value)} 
-            required>
-          </input>
-          <button className="signin-form-btn">Sign In</button>
-        </form>
-        <div className="signin-signup-container">
-          <h1 className="signin-signup-title">No Account? </h1>
-          <h2 className="signin-signup-text">Sign up now and join in on the fun for free. Click the button.</h2>
-          <button onClick={() => {navigate("/signup")}} className="signin-form-btn signin-signup-btn">Sign Up</button>
-        </div>
       </div>
+        <div className="credentials-strip" />
+        <div className="credentials-content-container">
+          <div className = "credentials-image-container">
+            <div className="credentials-indv-img a-grid"></div>
+            <div className="credentials-indv-img c-grid"></div>
+            <div className="credentials-indv-img b-grid"></div>
+            <div className="credentials-indv-img d-grid"></div>
+            <div className="credentials-indv-img e-grid"></div>
+            <div className="credentials-indv-img f-grid"></div>
+            <div className="credentials-indv-img g-grid"></div>
+          </div>
+          <div className = "credentials-form-container">
+            <form  onSubmit={handleSubmit} className="credentials-form">
+              <h2 className="credentials-title">Sign Into Your Account</h2>
+              {error && <div className="credentials-error-container credentials-error">{error}</div>}
+              <div className="signin-form">
+                <input
+                  className="credentials-form-input signin-input"
+                  id="Username" 
+                  type="text"
+                  name="username" 
+                  placeholder="Username"
+                  value={username}
+                  onChange ={(e) => setUsername(e.target.value)} 
+                  required>
+                </input>
+
+                <input 
+                  className="credentials-form-input signin-input"
+                  id="Password"
+                  name="password"
+                  type="password" 
+                  placeholder="Password"
+                  value={password}
+                  onChange ={(e) => setPassword(e.target.value)} 
+                  required>
+                </input>
+              
+                <button className="credentials-form-btn signin-button">Sign In</button>
+                <h2 className="grid-k signup-signin-link"> No Account? <Link to="/signup">Click Here</Link></h2>
+              </div>
+            </form>
+          </div>
+        </div>
+        
+        
     </div>
+    </>
   )
 }
 

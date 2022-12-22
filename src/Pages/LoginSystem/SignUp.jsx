@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 import axios from "../../Contexts/axiosConfig"
 import { CurrentTime } from '../../Components/CurrentTime'
-import { useNavigate } from "react-router-dom"
-import "./signup.css"
-import SignUpImage from "../../Assets/signup-placeholder.jpg"
+import { useNavigate, Link } from "react-router-dom"
+import heart from "../../Assets/credentials/credentials-heart.png"
+
+import "./credentials.css"
 
 function SignUp() {
 
@@ -62,99 +63,111 @@ function SignUp() {
 
   return (
     <>
-    <div className="signup-main">
-      <div className="signup-img-container" />
-      <div className="signup-form-container">
-        <form className="signup-form" onSubmit={onSubmitForm}>
-          <h2 className="signup-title">Sign Up</h2>
-          {error && <div className="signup-error-container">{error}</div>}
-          <div className="sign-up-form-container">
-            <input
-              className = "grid-a signup-form-input" 
-              type="text"
-              id="username" 
-              value={username}
-              onChange={e => setUsername(e.target.value)} 
-              placeholder="Username" 
-              required/>
+    <div className="navbar-spacer"></div>
+    <div className="credentials-main fcc">
+      <div className="credentials-heart-container">
+        <img className="credentials-heart" src={heart} />
 
-            <input
-              className = "grid-b signup-form-input"  
-              type="text"
-              id="fName" 
-              value={fName}
-              onChange={e => setFName(e.target.value)} 
-              placeholder="First Name" 
-              required/>
-
-            <input
-              className = "grid-c signup-form-input"  
-              type="text"
-              id="lName" 
-              value={lName}
-              onChange={e => setLName(e.target.value)} 
-              placeholder="Last Name" 
-              required/>
-
-            <input
-              className = "grid-d signup-form-input"  
-              type="text"
-              id="email" 
-              value={email}
-              onChange={e => setEmail(e.target.value)} 
-              placeholder="Email" 
-              required/>
-            
-            <input
-              className = "grid-e signup-form-input"  
-              type="text"
-              id="password" 
-              value={pwd}
-              onChange={e => setPassword(e.target.value)} 
-              placeholder="Password"
-              required/>
-
-            <input
-              className = "grid-f signup-form-input"  
-              type="text"
-              id="cPassword" 
-              value={cPassword}
-              onChange={e => setCPassword(e.target.value)} 
-              placeholder="Confirm Password" 
-              required/>
-            
-            <input
-              className = "grid-g signup-form-input"  
-              type="text"
-              id="region" 
-              value={region}
-              onChange={e => setRegion(e.target.value)} 
-              placeholder="Region" 
-              required/>
-
-            <input
-              className = "grid-h signup-form-input"  
-              type="text"
-              id="phonenumber" 
-              value={phonenumber}
-              onChange={e => setPhonenumber(e.target.value)} 
-              placeholder="Phone Number" 
-              required/>
-
-            <select onChange={(e) => {setGender(e.target.value)}} className="grid-i signup-form-input" id="gender">
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-            </select>
-
-            <button className="grid-j signup-form-btn" type="submit">Sign Up</button>
-          </div>
-        </form>
-        <div className="signup-signin-container">
-          <h2 className="signup-signin-title">Already got an account?</h2>
-          <h5 className="signup-signin-text">Log in now and hop into a video call.</h5>
-          <button className="signup-form-btn signup-signin-btn" onClick={() => {navigate("/signin")}}>Sign In</button>
-        </div>
       </div>
+        <div className="credentials-strip" />
+        <div className="credentials-content-container">
+          <div className = "credentials-image-container">
+            <div className="credentials-indv-img a-grid"></div>
+            <div className="credentials-indv-img c-grid"></div>
+            <div className="credentials-indv-img b-grid"></div>
+            <div className="credentials-indv-img d-grid"></div>
+            <div className="credentials-indv-img e-grid"></div>
+            <div className="credentials-indv-img f-grid"></div>
+            <div className="credentials-indv-img g-grid"></div>
+          </div>
+          <div className = "credentials-form-container">
+            <form className="credentials-form" onSubmit={onSubmitForm}>
+              <h2 className="credentials-title">Sign Up</h2>
+              {error && <div className="signup-error-container">{error}</div>}
+              <div className="sign-up-form-container">
+                <input
+                  className = "grid-a credentials-form-input" 
+                  type="text"
+                  id="username" 
+                  value={username}
+                  onChange={e => setUsername(e.target.value)} 
+                  placeholder="Username" 
+                  required/>
+
+                <input
+                  className = "grid-b credentials-form-input"  
+                  type="text"
+                  id="fName" 
+                  value={fName}
+                  onChange={e => setFName(e.target.value)} 
+                  placeholder="First Name" 
+                  required/>
+
+                <input
+                  className = "grid-c credentials-form-input"  
+                  type="text"
+                  id="lName" 
+                  value={lName}
+                  onChange={e => setLName(e.target.value)} 
+                  placeholder="Last Name" 
+                  required/>
+
+                <input
+                  className = "grid-d credentials-form-input"  
+                  type="text"
+                  id="email" 
+                  value={email}
+                  onChange={e => setEmail(e.target.value)} 
+                  placeholder="Email" 
+                  required/>
+                
+                <input
+                  className = "grid-e credentials-form-input"  
+                  type="text"
+                  id="password" 
+                  value={pwd}
+                  onChange={e => setPassword(e.target.value)} 
+                  placeholder="Password"
+                  required/>
+
+                <input
+                  className = "grid-f credentials-form-input"  
+                  type="text"
+                  id="cPassword" 
+                  value={cPassword}
+                  onChange={e => setCPassword(e.target.value)} 
+                  placeholder="Confirm Password" 
+                  required/>
+                
+                <input
+                  className = "grid-g credentials-form-input"  
+                  type="text"
+                  id="region" 
+                  value={region}
+                  onChange={e => setRegion(e.target.value)} 
+                  placeholder="Region" 
+                  required/>
+
+                <input
+                  className = "grid-h credentials-form-input"  
+                  type="text"
+                  id="phonenumber" 
+                  value={phonenumber}
+                  onChange={e => setPhonenumber(e.target.value)} 
+                  placeholder="Phone Number" 
+                  required/>
+
+                <select onChange={(e) => {setGender(e.target.value)}} className="grid-i credentials-form-input" id="gender">
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                </select>
+
+                <button className="grid-j credentials-form-btn" type="submit">Sign Up</button>
+                <h2 className="grid-k signup-signin-link"> No Account? <Link to="/signin">Click Here</Link></h2>
+              </div>
+            </form>
+          </div>
+        </div>
     </div>
     </>
   )

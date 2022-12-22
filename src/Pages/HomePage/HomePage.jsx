@@ -13,6 +13,8 @@ function HomePage() {
   const [searching, setSearching] = useState(false)
   const [callAccepted, setCallAccepted] = useState(false)
   const [roomId, setRoomId] = useState(null)
+  const [initiator, setInitiator] = useState(null)
+  const [callerSignal, setCallerSignal] = useState(null)
 
   const myVideo = useRef()
   const [myVideoToggled, setMyVideoToggled] = useState(false)
@@ -37,21 +39,89 @@ function HomePage() {
 
     socket.current.on("setRoomId", (data) => {
       setRoomId(data.roomId)
+      setInitiator(data.initiator)
     })
 
-  }, [])
+    socket.current.on("answerUser", (data) => {
+      setCallerSignal(data.signal)
+    })
 
-  console.log(roomId)
+    
+
+  }, [])
+  
+  useEffect(() => { // initiating the call
+      if(initiator) {
+        const peer = new Peer({ // create peer
+          initiator: true,
+          trickle: false,
+          stream: stream
+        })
+
+        
+        peer.on("signal", (data) => {//sending signal to reciever
+          socket.current.emit("callUser", {
+            signal: data,
+            roomId: roomId,
+          })
+        })
+        
+        peer.on("stream", (stream) => {//setting stream of partner
+          if (partnerVideo.current) {
+            partnerVideo.current.srcObject = stream
+          }
+        })
+        
+        socket.current.on("callAccepted", (data) => { //for recieving answer
+          setCallerSignal(data.signal)
+          setCallAccepted(true)
+          peer.signal(data.signal)
+        })
+        
+        connectionRef.current = peer
+      }
+      
+  }, [initiator])
+
+  useEffect(() => { // recieving the call
+    if(callerSignal != null & initiator === false) {
+      setCallAccepted(true)
+
+      const peer = new Peer({ //create peer
+        initiator: false,
+        trickle: false,
+        stream: stream
+      })
+
+      
+      peer.on("signal", (data) => {
+        socket.current.emit("answerCall", {
+          signal: data,
+          roomId: roomId,
+        })
+      })
+      
+      peer.on("stream", (stream) => {
+        if (partnerVideo.current) {
+          partnerVideo.current.srcObject = stream
+        }
+      })
+
+      peer.signal(callerSignal)
+      connectionRef.current = peer
+    }
+
+  }, [callerSignal])
+
+
   const searchForCall = () => {
     
     setSearching(true)
-
 
     socket.current.emit("search", {  
       id: user.id,
       gender: user.gender,
     })
-
   }
 
 const stopSearch = () => {
@@ -69,6 +139,8 @@ const stopSearch = () => {
   }
 
   const practise = () => {
+    console.log(callerSignal)
+    console.log(initiator, "ini")
     socket.current.emit("printUsers", {  
     })
   }
@@ -98,9 +170,10 @@ const stopSearch = () => {
                   </div>
                 :
                 <div className="home-video-partner" onClick={() => {setPartnerVideoToggled((oldValue) => !oldValue)}}>
-                  {partnerVideoToggled && <div className="home-partner-toggled fcc"> 
-                                              <button className="home-partner-endbutton" onClick={() => endCall()}>End Call</button>
-                                          </div>
+                  {partnerVideoToggled && 
+                      <div className="home-partner-toggled fcc"> 
+                          <button className="home-partner-endbutton" onClick={() => endCall()}>End Call</button>
+                      </div>
                   }
                   {PartnersVideo}
                 </div> 
