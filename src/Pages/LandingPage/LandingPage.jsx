@@ -95,7 +95,7 @@ function LandingPage() {
   useEffect(() => {
     setTimeout(() => {
       setDiv(true)
-    }, 8000)
+    }, 4000)
 
 
     window.addEventListener('resize', updateSize);

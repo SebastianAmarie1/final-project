@@ -1,5 +1,5 @@
 .landing-loading-animation{
-    animation: animateIn 8s ;
+    animation: animateIn 4s ;
 }
 @keyframes animateIn {
     0%{
@@ -13,7 +13,7 @@
     }
 }
 .landing-loading-title-animation {
-    animation: animateTitle 8s;
+    animation: animateTitle 4s;
 }
 @keyframes animateTitle {
     0%{
@@ -30,7 +30,7 @@
     }
 }
 .landing-loading-desc-animation{
-    animation: animateDesc 8s;
+    animation: animateDesc 4s;
 }
 
 @keyframes animateDesc {
@@ -48,7 +48,7 @@
     }
 }
 .landing-loading-btn-animation{
-    animation: animationBtn 8s
+    animation: animationBtn 4s
 }
 @keyframes animationBtn {
     0%{

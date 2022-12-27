@@ -107,6 +107,16 @@ socket.on("answerCall", (data) => {
     socket.broadcast.to(data.roomId).emit("callAccepted", { signal: data.signal })
 })
 
+socket.on("endCall", (data) => {
+    delete activeRooms[data.roomId]
+    socket.broadcast.to(data.roomId).emit("callEnded")
+})
+
+socket.on("editVideo", (data) => {
+    socket.broadcast.to(data.roomId).emit("changeVideo", { active: data.active })
+})
+
+
 ///////////////// DISCONNECTIONS /////////////////////////////////
 
     socket.on('leaveRoom', ({roomId}) => { // user_id, gender

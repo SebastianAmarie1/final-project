@@ -15,7 +15,7 @@
   
     --clr-primary: #1a0c30;
     --clr-secondary: #444054;
-    --clr-contrast: #161518;
+    --clr-contrast: lightgray;
     --clr-highlighted:#DB8A74;
     --clr-secondaryHighlighted: #FAC9B8;
     --clr-ownMessage: rgb(173, 216, 230);
@@ -64,98 +64,6 @@ strong {font-weight: var(--fw-bold)}
     justify-content: center;
 }
 
-/*   Navigation   */
-.navigation-container{
-    position: fixed;
-    display: flex;
-    align-items: center;
-    width:100%;
-    z-index: 100;
-
-    padding: 1em;
-    background-color: #ffffff55;
-    box-shadow: var(--bs-titles);
-}
-
-.navigation-logo{
-    width: 125px;
-    margin-right: auto;
-    color: var(--clr-white);
-    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-}
-
-.navigation-right-container{
-    display: flex;
-    align-items: center;
-    margin-left: auto;
-}
-
-.navigation-btn{
-    color: var(--clr-white);
-    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-    margin-right: 1em;
-}
-
-.navigation-burger{
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    height:30px;
-    width: 30px;
-    cursor: pointer;
-}
-
-.navigation-btn:hover,
-.navigation-btn:active{
-    color: var(--clr-lightBlue);
-    border-bottom: 5px solid var(--clr-lightBlue);
-}
-
-.navigation-burger-ind{
-    width: 100%;
-    height: 15%;
-    border-radius: 8px;
-    background-color: white;
-}
-
-.navigation-bottom-active{
-    position: absolute;
-    z-index: -1;
-    top:0;
-    left:0;
-    width: 100%;
-    padding: 2em;
-    border-radius: 5px;
-    background-color: var(--clr-primary);
-    animation: drop-down 0.75s ease-in;
-}
-.navigation-friends-icon{
-    width: 30px;
-    height: 30px;
-    margin-right: 1em;
-}
-
-@keyframes drop-down {
-    0%{
-        opacity: 0;
-    }
-    100%{
-        opacity: 1;
-    }
-}
-.navigation-bottom-active-spacer{
-    height: 80px;
-}
-.navigation-bottom-active-container{
-    
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-.navigation-bottom-active-option{
-    color: var(--clr-white);
-}
 
 
 /*   Friends   */
@@ -352,4 +260,8 @@ strong {font-weight: var(--fw-bold)}
     width: 100%;
     height:63px;
     background-color: var(--clr-primary);
+}
+
+.home-speaker-on{
+    transform: scale(1.17);
 }

@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 
 import PrivateRoute from "./Contexts/PrivateRoute.jsx";
 
-import Navigation from "./Components/Navigation.jsx";
+import Navigation from "./Components/navbar/Navigation.jsx";
 import Footer from "./Components/Footer.jsx";
 
 import LandingPage from "./Pages/LandingPage/LandingPage.jsx"
@@ -13,7 +13,6 @@ import HomePage from "./Pages/HomePage/HomePage.jsx"
 import Profile from "./Pages/Profile.jsx";
 import Follow from "./Pages/Follow.jsx"
 import Chat from "./Components/Chat.jsx"
-import ChatNavigation from "./Components/ChatNavigation.jsx";
  
 function App() {
   
