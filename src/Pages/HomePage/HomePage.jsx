@@ -30,8 +30,8 @@ function HomePage() {
   const [mute, setMute] = useState(false)
   const [partnerMute, setPartnerMute] = useState(false)
   const [viewCamera, setViewCamera] = useState(false)
-  const [viewPartnerCamera, setPartnerViewCamera] = useState(false)
-  const [partnerCamera, setPartnerCamera] = useState(true)
+  const [viewPartnerCamera, setPartnerViewCamera] = useState(false)//you switch off partners camera
+  const [partnerCamera, setPartnerCamera] = useState(true)//partner switches off their camera
 
   const myVideo = useRef(null)
   const [myVideoToggled, setMyVideoToggled] = useState(false)
@@ -201,6 +201,7 @@ const stopSearch = () => {
   }
   const showPartnerCamera = () => {
     setPartnerViewCamera((prev) => !prev)
+    viewPartnerCamera ? partnerVideo.current.play() : partnerVideo.current.pause()
   }
 
   const practise = () => {
@@ -209,7 +210,8 @@ const stopSearch = () => {
 
   let MyVideo = <video onClick={() => {setMyVideoToggled((oldValue) => !oldValue)}} className="home-video-me" ref={myVideo} autoPlay playsInline/>
   let PartnersVideo = <video onClick={() => {setPartnerVideoToggled((oldValue) => !oldValue)}} className="home-video-partner-video" ref={partnerVideo} autoPlay playsInline muted />
-  
+  console.log(viewPartnerCamera)
+
   return (
     <div className="home-main"> {/*Container for the whole page*/}
       <div className="home-container-headbar"> {/*Container for the title for the webpage */}
@@ -243,11 +245,14 @@ const stopSearch = () => {
                   </div>
                 :
                 <div className="home-video-partner fcc">
-                  <div className={`hideCamera fcc ${partnerCamera && 'hide'}`}>
-                    <h2 className="hideCamera-title">Camera Turned Off</h2>
+                  <div onClick={() => {setPartnerVideoToggled((oldValue) => !oldValue)}} className={`hideCamera fcc ${partnerCamera && 'hide'}`} >
+                    <h2 className="hideCamera-title">Camera Turned Off</h2> 
+                  </div>
+                  <div onClick={() => {setPartnerVideoToggled((oldValue) => !oldValue)}} className={`hideCamera fcc ${!viewPartnerCamera && 'hide'}`}>
+                    <h2 className="hideCamera-title">Hiding Partners Camera</h2> 
                   </div>
                   {partnerVideoToggled 
-                    && 
+                    &&
                       <div className="home-partner-toggled"> 
                         <button className="home-partner-button" >Skip</button>
                         <button className="home-partner-button report-button" >Report</button>
@@ -275,11 +280,11 @@ const stopSearch = () => {
           <div className="home-video-hints" >
           </div>
           <div className="home-video-user">
-            <div className={`hideCamera fcc ${!viewCamera && 'hide'}`}>
+            <div onClick={() => {setMyVideoToggled((oldValue) => !oldValue)}} className={`hideCamera fcc ${!viewCamera && 'hide'}`}>
               <h2 className="hideCamera-title">Camera Turned Off</h2>
             </div>
             {MyVideo}
-            {myVideoToggled 
+            {myVideoToggled   
               && <>
                 <div className="home-partner-toggled-footer fcc">
                   <div className="home-partner-toggled-footer-inner">
