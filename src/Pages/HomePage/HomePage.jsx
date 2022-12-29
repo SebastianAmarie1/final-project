@@ -25,6 +25,7 @@ function HomePage() {
 
   //Connections
   const [stream, setStream] = useState() 
+  const [pStream, setPStream] = useState()
   const [searching, setSearching] = useState(false)
   const [callAccepted, setCallAccepted] = useState(false)
   const [roomId, setRoomId] = useState(null)
@@ -47,10 +48,9 @@ function HomePage() {
 
   //Phases
   const [currentPhase, setCurrentPhase] = useState(1)// out of 3
-  const [phaseTime, setPhaseTime] = useState([0, 0.1, 0.2, 0.2])
+  const [phaseTime, setPhaseTime] = useState([0, 0.05, 0.2, 0.2])
   const [showTimer, setShowTimer] = useState(false)
   const [decisionScreen, setDecisionScreen] = useState(false)
-
 
   useEffect(() => {
     const settingMyStream = async() => { //sets up my stream.
@@ -111,11 +111,10 @@ const searchForCall = () => {
           signal: data,
           roomId: roomId,
         })
-
-        console.log("RAN IN SIGNAL")
       })
       
       peer.on("stream", (stream) => {//setting stream of partner
+        setPStream(stream)
         if (partnerVideo.current) {
           partnerVideo.current.srcObject = stream
           partnerVideo.current.pause()
@@ -132,6 +131,13 @@ const searchForCall = () => {
       connectionRef.current = peer
     }
   }, [initiator])
+
+  useEffect(() => {
+    if(partnerVideo.current){
+      partnerVideo.current.srcObject = pStream
+      partnerVideo.current.play()
+    }
+  },[decisionScreen])
 
 //// recieving the call ////
   useEffect(() => { 
@@ -152,6 +158,7 @@ const searchForCall = () => {
       })
       
       peer.on("stream", (stream) => {
+        setPStream(stream)
         if (partnerVideo.current) {
           partnerVideo.current.srcObject = stream
           partnerVideo.current.pause()
@@ -237,13 +244,14 @@ const nextPhase = () => {
 }
 
   const practise = () => {
-    socket.current.emit("printUsers", {})
+    //socket.current.emit("printUsers", {})
     //partnerVideo.current.play()
-    setShowTimer(!showTimer)
+    console.log(pStream)
+    //setShowTimer(!showTimer)
   }
 
   let MyVideo = <video onClick={() => {setMyVideoToggled((oldValue) => !oldValue)}} className="home-video-me" ref={myVideo} autoPlay playsInline/>
-  let PartnersVideo = <video onClick={() => {setPartnerVideoToggled((oldValue) => !oldValue)}} className="home-video-partner-video" ref={partnerVideo} autoPlay playsInline muted />
+  let PartnersVideo = <video onClick={() => {setPartnerVideoToggled((oldValue) => !oldValue)}} className="home-video-partner-video" ref={partnerVideo} autoPlay playsInline muted/>
 
   return (
     <div className="home-main"> {/*Container for the whole page*/}
