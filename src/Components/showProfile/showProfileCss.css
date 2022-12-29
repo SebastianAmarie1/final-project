@@ -1,0 +1,20 @@
+
+.showp-container{
+    position: relative;
+    max-width: 1850px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    grid-area: v;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-color: gray;
+    border-radius: 5px;
+    padding: 1.5em;
+}
+
+.showp-user-picture{
+    max-width: 250px;
+    max-height: 250px;
+    border-radius: 50%;
+}

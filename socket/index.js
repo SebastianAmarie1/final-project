@@ -116,6 +116,9 @@ socket.on("editVideo", (data) => {
     socket.broadcast.to(data.roomId).emit("changeVideo", { active: data.active })
 })
 
+socket.on("responseNextStage", (data) => {
+    socket.broadcast.to(data.roomId).emit("responseNextStage", { response: data.response })
+})
 
 ///////////////// DISCONNECTIONS /////////////////////////////////
 
