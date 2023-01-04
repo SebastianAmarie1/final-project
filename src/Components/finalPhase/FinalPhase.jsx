@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useAuth } from "../../Contexts/AuthContext"
 import { useSocket } from "../../Contexts/socketContext"
 
-function FinalPhase({ roomId, endCall }) {
+function FinalPhase({ roomId, endCall, partnerId }) {
 
   const { user, setUser, setFlag, axiosAuth } = useAuth()
   const { socket } = useSocket()
@@ -11,12 +11,26 @@ function FinalPhase({ roomId, endCall }) {
   const [answer, setAnswer] = useState(false)
   const [response, setResponse] = useState(false)
   const [partnerDetails, setPartnerDetails] = useState(null)
+  const [following, setFollowing] = useState(false)
 
   useEffect(() => {
     socket.current.on("responseFollow", (data) => {
       setResponse(true)
       setPartnerDetails(data.userDetails)
     })
+
+    const checkFollowing = () => {
+      if (user.friendslist){
+        user.friendslist.forEach((value) => {
+          if (value === partnerId){
+            console.log(value, partnerId)
+            setFollowing(true)
+          }
+        })
+      }
+    }
+    checkFollowing()
+
   },[])
 
   useEffect(() => {
@@ -69,7 +83,8 @@ function FinalPhase({ roomId, endCall }) {
     <div className="showp-container">
       <h2>FINAL PHASE</h2>
       <h3>Would you like to add this user?</h3>
-      <button onClick={handleAdd}>Add User!</button>
+      { following ? <button>You are Already Following This user!</button> : <button onClick={handleAdd}>Add User!</button>}
+        
     </div>
   )
 }

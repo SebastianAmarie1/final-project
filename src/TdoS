@@ -1,4 +1,10 @@
-1) when refreshing in chat the interceptors bug out this is because user is first "a"
-then  it turns to the actuial data.
-2) sending message when other person is not online will cause Socket errors.
-Add a IsOnline varaiable in the db and only use socket if the other user is online.
+Chat)
+1)change background
+2) use a Template
+
+
+
+
+1)finalPhase, update the useContext when adding a user.
+
+

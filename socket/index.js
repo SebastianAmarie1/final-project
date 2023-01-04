@@ -83,7 +83,7 @@ io.on("connection", (socket) => {
 
 ///////////////////////// Video System ////////////////////////////
 
-socket.on('search', ({id, gender, signal}) => { // user_id, gender
+socket.on('search', ({id, gender}) => { // user_id, gender
     deleteRoomsById(id)
     if (rooms.length <= 0 | !checkAvailableRoom(id, gender, socket)) {// create a unique room.
         const roomName =`room${roomId}`
@@ -99,12 +99,12 @@ socket.on('search', ({id, gender, signal}) => { // user_id, gender
 })
 
 socket.on("callUser", (data) => {
-    socket.broadcast.to(data.roomId).emit("answerUser", { signal: data.signal, roomId: data.roomId})
+    socket.broadcast.to(data.roomId).emit("answerUser", { signal: data.signal, roomId: data.roomId, partnerId: data.id })
 })
 
 socket.on("answerCall", (data) => {
     console.log("RAN ANSWER CALL")
-    socket.broadcast.to(data.roomId).emit("callAccepted", { signal: data.signal })
+    socket.broadcast.to(data.roomId).emit("callAccepted", { signal: data.signal, partnerId: data.id })
 })
 
 socket.on("endCall", (data) => {

@@ -192,7 +192,7 @@ app.get("/api/allusers", async(req, res) => { // ", verify, (req,res)"
 app.post("/api/follow", verify, async (req, res) => {
     try {
         const { id, followedUser } = req.body
-        console.log(followedUser)
+        
         const newUser = await pool.query("update users set friendslist = array_append(friendslist, $1) where users_id = $2", [followedUser, id])
         res.json(newUser)
     } catch (error) {

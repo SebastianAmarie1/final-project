@@ -29,6 +29,7 @@ function HomePage() {
   const [searching, setSearching] = useState(false)
   const [callAccepted, setCallAccepted] = useState(false)
   const [roomId, setRoomId] = useState(null)
+  const [partnerId, setPartnerId] = useState(null)
   const [initiator, setInitiator] = useState(null)
   const [callerSignal, setCallerSignal] = useState(null)
 
@@ -75,6 +76,7 @@ function HomePage() {
     socket.current.on("answerUser", (data) => {
       setCallerSignal(data.signal)
       setShowTimer(true)
+      setPartnerId(data.partnerId)
     })
 
     socket.current.on("callEnded", () => {
@@ -87,7 +89,6 @@ function HomePage() {
   }, [])
 
 //// initiating the call ////
-
 const searchForCall = () => {
     
   setSearching(true)
@@ -110,6 +111,7 @@ const searchForCall = () => {
         socket.current.emit("callUser", {
           signal: data,
           roomId: roomId,
+          id: user.id
         })
       })
       
@@ -125,6 +127,7 @@ const searchForCall = () => {
         setCallerSignal(data.signal)
         setCallAccepted(true)
         setShowTimer(true)
+        setPartnerId(data.partnerId)
         peer.signal(data.signal)
       })
       
@@ -154,6 +157,7 @@ const searchForCall = () => {
         socket.current.emit("answerCall", {
           signal: data,
           roomId: roomId,
+          id: user.id
         })
       })
       
@@ -288,7 +292,7 @@ const nextPhase = () => {
                 :
                 (currentPhase === 3 && decisionScreen)
                 ?
-                  <FinalPhase roomId={roomId} endCall={endCall}/>
+                  <FinalPhase roomId={roomId} endCall={endCall} partnerId={partnerId}/>
                 :
                   decisionScreen
                     ?
