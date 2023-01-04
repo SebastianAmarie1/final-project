@@ -1,0 +1,43 @@
+/*   Friends   */
+
+.freinds-main-box{
+    height: calc(100vh - 70px);
+    width: 100%;
+    padding-top: 2em;
+    background-color: var(--clr-secondary);
+}
+.friends-container{
+    background-color: var(--clr-contrast);
+    max-width: 1000px;
+    min-height: 800px;
+    margin: 0 auto;
+    border-radius: 10px;;
+
+}
+.friends-individual-arrow{
+    margin-left: auto;
+}
+.friends-individual-user-box{
+    display: flex;
+    margin-bottom: 0.2em;
+    padding: 0.5em;
+    cursor: pointer;
+    color:white;
+}
+.following-individual-pp{
+    width: 45px;
+    height: 45px;
+    margin-right: 1em;
+    border-radius: 50%;
+}
+.friends-individual-name{
+    
+}
+
+.friends-individual-user-button{
+    margin-left: auto;
+}
+.friends-main-message{
+    color:var(--clr-primary);
+    text-align: center;
+}

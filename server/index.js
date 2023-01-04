@@ -52,9 +52,9 @@ app.post("/api/checkue", async(req, res) => {
 app.post("/api/refresh", async(req, res) => {//used to generate a refresh token
     //take the refresh token and id from the user
     const { id, refreshToken } = req.body
-    
+
     if (!refreshToken) return res.status(401).json("You are not authenticated")
-    
+ 
     const user = await pool.query("SELECT * FROM users WHERE users_id = $1", [id])
 
     if (!user.rows[0]){
@@ -86,8 +86,7 @@ const generateAccessToken = (user) => {
         fName: user.fName,
         lName: user.lName,
         email: user.email,
-        followerlist: user.followerlist,
-        followinglist: user.followinglist,
+        friendslist: user.friendslist,
         phonenumber: user.phonenumber,
         gender: user.gender
     }, 
@@ -101,8 +100,7 @@ const generateRefreshToken = (user) => {
         fName: user.fName,
         lName: user.lName,
         email: user.email,
-        followerlist: user.followerlist,
-        followinglist: user.followinglist,
+        friendslist: user.friendslist,
         phonenumber: user.phonenumber,
         gender: user.gender
     }, 
@@ -122,7 +120,7 @@ app.post("/api/login", async(req, res) => {
         const accessToken = generateAccessToken(user)
         const refreshToken = generateRefreshToken(user)
 
-        const {users_id, username, fName, lName, email, phonenumber, followerlist, followinglist, gender, region} = user.rows[0]
+        const {users_id, username, fName, lName, email, phonenumber, friendslist, gender, region} = user.rows[0]
         try {
             const updateUser = await pool.query("UPDATE users SET refreshtoken = $1, accesstoken = $2, last_login = $3, active = $4 WHERE users_id = $5", [refreshToken, accessToken, last_login, true, users_id])
         } catch (error) {
@@ -138,8 +136,7 @@ app.post("/api/login", async(req, res) => {
             phonenumber,
             accessToken,
             refreshToken,
-            followerlist,
-            followinglist,
+            friendslist,
             gender,
             region,
         })
@@ -195,7 +192,8 @@ app.get("/api/allusers", async(req, res) => { // ", verify, (req,res)"
 app.post("/api/follow", verify, async (req, res) => {
     try {
         const { id, followedUser } = req.body
-        const newUser = await pool.query("update users set followinglist = array_append(followinglist, $1) where users_id = $2", [followedUser, id])
+        console.log(followedUser)
+        const newUser = await pool.query("update users set friendslist = array_append(friendslist, $1) where users_id = $2", [followedUser, id])
         res.json(newUser)
     } catch (error) {
         console.log(error)
@@ -205,7 +203,7 @@ app.post("/api/follow", verify, async (req, res) => {
 app.post("/api/unfollow", verify, async (req, res) => {
     try {
         const { id, newList } = req.body
-        const newUser = await pool.query("update users set followinglist = $1 where users_id = $2", [newList, id])
+        const newUser = await pool.query("update users set friendslist = $1 where users_id = $2", [newList, id])
         res.json(newUser)
     } catch (error) {
         console.log(error)
@@ -239,16 +237,17 @@ app.get("/api/retrieve_conversations", verify, async(req, res) => {
 //make Conversations
 app.post("/api/create_conversation", verify, async(req, res) => { // create a if the conversation already exists, you dont create another instance of conversation
     
-    const { primaryUser, secondaryUser } = req.body
-    const conversations = await pool.query("SELECT * FROM conversations where $1 = ANY(members) AND $2 = ANY(members)", [primaryUser, secondaryUser])
+    const { userDetails, partnerDetails } = req.body
+
+    const conversations = await pool.query("SELECT * FROM conversations where $1 = ANY(members) AND $2 = ANY(members)", [userDetails.id, partnerDetails.id])
     
     if(conversations.rows[0]){
         res.status(400).json("Conversation already started")
-    } else if (primaryUser === secondaryUser){
+    } else if (userDetails.id === partnerDetails.id){
         res.status(400).json("Cannot start conversation with self")
     } else {
         try {
-            const conversation = await pool.query("INSERT INTO conversations (members) VALUES (ARRAY [$1, $2]) RETURNING *", [primaryUser, secondaryUser])
+            const conversation = await pool.query("INSERT INTO conversations (members, time_created, members_names) VALUES (ARRAY [$1, $2], $3, ARRAY [$4, $5]) RETURNING *", [userDetails.id, partnerDetails.id, new Date(), userDetails.username, partnerDetails.username])
             res.json(conversation.rows[0])
         } catch (err) {
             console.error(err.message)
@@ -259,8 +258,24 @@ app.post("/api/create_conversation", verify, async(req, res) => { // create a if
 //get Messages
 app.post("/api/retrieve_messages", verify, async(req, res) => {
     try {
-        const { conversation_id } = req.body
-        const messages = await pool.query("SELECT * FROM messages WHERE conversation_id = $1", [conversation_id])
+        const { conversation_id, userId } = req.body
+        let messages = await pool.query("SELECT * FROM messages WHERE conversation_id = $1", [conversation_id])
+        
+        await Promise.all(
+            messages.rows.map(async (message) => {
+              if (!message.seen) {
+                await pool.query(
+                  "UPDATE messages SET seen = true WHERE message_id = $1 AND senderid != $2",
+                  [message.message_id, userId]
+                );
+              }
+            })
+          );
+        messages = await pool.query(
+        "SELECT * FROM messages WHERE conversation_id = $1",
+        [conversation_id]
+        );
+
         res.json(messages.rows)
     } catch (err) {
         console.error(err.message)
@@ -270,8 +285,9 @@ app.post("/api/retrieve_messages", verify, async(req, res) => {
 //make Message
 app.post("/api/create_message", verify, async(req, res) => { 
     try {
-        const { conversation_id, senderId, recieverId, message } = req.body
-        const messages = await pool.query("INSERT INTO messages (conversation_id, senderId, recieverId, message ) VALUES ($1, $2, $3, $4) RETURNING *", [conversation_id, senderId, recieverId, message])
+        const { conversation_id, senderId, recieverId, message, time_sent } = req.body
+        console.log(time_sent)
+        const messages = await pool.query("INSERT INTO messages (conversation_id, senderId, recieverId, message, time_sent ) VALUES ($1, $2, $3, $4, $5) RETURNING *", [conversation_id, senderId, recieverId, message, time_sent])
         const activity = await pool.query("SELECT active FROM users WHERE users_id = $1", [recieverId])
         res.json(activity.rows[0])
     } catch (err) {

@@ -10,8 +10,8 @@ import LandingPage from "./Pages/LandingPage/LandingPage.jsx"
 import SignUp from "./Pages/LoginSystem/SignUp.jsx"
 import SignIn from "./Pages/LoginSystem/SignIn.jsx"
 import HomePage from "./Pages/HomePage/HomePage.jsx"
-import Profile from "./Pages/Profile.jsx";
-import Follow from "./Pages/Follow.jsx"
+import Profile from "./Pages/Profile/Profile.jsx";
+import Follow from "./Pages/Profile/Follow.jsx"
 import Chat from "./Components/Chat.jsx"
  
 function App() {

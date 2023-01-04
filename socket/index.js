@@ -120,6 +120,10 @@ socket.on("responseNextStage", (data) => {
     socket.broadcast.to(data.roomId).emit("responseNextStage", { response: data.response })
 })
 
+socket.on("Follow", (data) => {
+    socket.broadcast.to(data.roomId).emit("responseFollow", { response: data.response, userDetails: data.userDetails })
+})
+
 ///////////////// DISCONNECTIONS /////////////////////////////////
 
     socket.on('leaveRoom', ({roomId}) => { // user_id, gender

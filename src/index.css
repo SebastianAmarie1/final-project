@@ -66,44 +66,6 @@ strong {font-weight: var(--fw-bold)}
 
 
 
-/*   Friends   */
-
-.freinds-main-box{
-    height: calc(100vh);
-    width: 100%;
-    display:flex;
-    flex-direction: column;
-    background-color: var(--clr-primary);
-}
-
-.friends-individual-arrow{
-    margin-left: auto;
-}
-.friends-individual-user-box{
-    display: flex;
-    margin-bottom: 0.2em;
-    padding: 0.5em;
-    cursor: pointer;
-    color:white;
-}
-.following-individual-pp{
-    width: 45px;
-    height: 45px;
-    margin-right: 1em;
-    border-radius: 50%;
-}
-.friends-individual-name{
-    
-}
-
-.friends-individual-user-button{
-    margin-left: auto;
-}
-.friends-main-message{
-    color:white;
-    text-align: center;
-}
-
 /*    Chat Page   */
 /*    NAV   */
 .cnav-container{

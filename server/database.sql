@@ -12,8 +12,7 @@ CREATE TABLE users(
     phonenumber VARCHAR(255) NOT NULL,
     refreshtoken VARCHAR(1000),
     accesstoken VARCHAR(1000),
-    followerlist VARCHAR [],
-    followinglist VARCHAR [],
+    friendslist VARCHAR [],
     active BOOLEAN NOT NULL DEFAULT false,
     time_created TIMESTAMP NOT NULL,
     last_login TIMESTAMP
@@ -21,7 +20,11 @@ CREATE TABLE users(
 
 CREATE TABLE conversations(
     conversation_id SERIAL PRIMARY KEY,
-    members VARCHAR [] NOT NULL
+    members VARCHAR [] NOT NULL,
+    members_names VARCHAR [] NOT NULL,
+    time_created TIMESTAMP NOT NULL,
+    last_message VARCHAR (255),
+    last_message_date TIMESTAMP
 );
 
 CREATE TABLE messages(
