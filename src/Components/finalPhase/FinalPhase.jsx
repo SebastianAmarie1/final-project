@@ -11,25 +11,15 @@ function FinalPhase({ roomId, endCall, partnerId }) {
   const [answer, setAnswer] = useState(false)
   const [response, setResponse] = useState(false)
   const [partnerDetails, setPartnerDetails] = useState(null)
+  const [initiator, setInitiator] = useState(false)
   const [following, setFollowing] = useState(false)
 
   useEffect(() => {
     socket.current.on("responseFollow", (data) => {
       setResponse(true)
       setPartnerDetails(data.userDetails)
+      setInitiator(true)
     })
-
-    const checkFollowing = () => {
-      if (user.friendslist){
-        user.friendslist.forEach((value) => {
-          if (value === partnerId){
-            console.log(value, partnerId)
-            setFollowing(true)
-          }
-        })
-      }
-    }
-    checkFollowing()
 
   },[])
 
@@ -39,6 +29,17 @@ function FinalPhase({ roomId, endCall, partnerId }) {
     }
     
   },[answer, response])
+
+
+  useEffect(() => {
+    const checkFollowing = () => {
+      if (user.friendslist){
+        console.log(user.friendslist, "friendsList")
+      }
+    }
+    checkFollowing()
+  },[user])
+
 
   const handleAdd = () => {
     setAnswer(true)
@@ -56,28 +57,27 @@ function FinalPhase({ roomId, endCall, partnerId }) {
       { headers: 
         { authorization: "Bearer " + user.accessToken}
       })
+
+      console.log(res.data.flag)
       
-      setFlag(true)
-      if (user.friendslist === null){
-        setUser({...user, friendslist: JSON.stringify(partnerDetails.id)})
-      } else{
-        setUser({...user, friendslist: [...user.friendslist, JSON.stringify(partnerDetails.id)]})
+      if (res.data.flag) {
+        setFlag(true)
+        setUser(res.data.user)
+        
+        if(initiator){
+          const response = await axiosAuth.post("/api/create_conversation", {userDetails: user, partnerDetails: partnerDetails}, 
+          { headers: 
+            { authorization: "Bearer " + user.accessToken}
+          })
+        }
       }
+
     } catch (error) {
       console.log(error)
     }
 
-    try {
-      const response = await axiosAuth.post("/api/create_conversation", {userDetails: user, partnerDetails: partnerDetails}, 
-      { headers: 
-        { authorization: "Bearer " + user.accessToken}
-      })
-    } catch (error) {
-      console.log(error)
-    }
     endCall()
   }
-
 
   return (
     <div className="showp-container">

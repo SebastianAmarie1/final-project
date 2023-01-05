@@ -192,9 +192,25 @@ app.get("/api/allusers", async(req, res) => { // ", verify, (req,res)"
 app.post("/api/follow", verify, async (req, res) => {
     try {
         const { id, followedUser } = req.body
+
+        const friends = await pool.query("SELECT friendslist FROM users WHERE users_id = $1", [id])
         
-        const newUser = await pool.query("update users set friendslist = array_append(friendslist, $1) where users_id = $2", [followedUser, id])
-        res.json(newUser)
+        flag = true
+        if (friends.rows[0].friendslist){
+            friends.rows[0].friendslist.forEach((value) => {
+                if (value == followedUser){
+                    flag = false
+                }
+            })
+        }
+        if (flag) {
+            const user = await pool.query("SELECT * FROM users WHERE users_id = $1", [id])
+            await pool.query("update users set friendslist = array_append(friendslist, $1) where users_id = $2", [followedUser, id])
+            res.status(200).json({msg:"You Added This User Successfully", flag: true, user: user})
+        }
+        else {
+            res.status(200).json({msg:"Already A Friend", flag: false})
+        }
     } catch (error) {
         console.log(error)
     }
@@ -240,7 +256,6 @@ app.post("/api/create_conversation", verify, async(req, res) => { // create a if
     const { userDetails, partnerDetails } = req.body
 
     const conversations = await pool.query("SELECT * FROM conversations where $1 = ANY(members) AND $2 = ANY(members)", [userDetails.id, partnerDetails.id])
-    
     if(conversations.rows[0]){
         res.status(400).json("Conversation already started")
     } else if (userDetails.id === partnerDetails.id){
@@ -286,7 +301,6 @@ app.post("/api/retrieve_messages", verify, async(req, res) => {
 app.post("/api/create_message", verify, async(req, res) => { 
     try {
         const { conversation_id, senderId, recieverId, message, time_sent } = req.body
-        console.log(time_sent)
         const messages = await pool.query("INSERT INTO messages (conversation_id, senderId, recieverId, message, time_sent ) VALUES ($1, $2, $3, $4, $5) RETURNING *", [conversation_id, senderId, recieverId, message, time_sent])
         const activity = await pool.query("SELECT active FROM users WHERE users_id = $1", [recieverId])
         res.json(activity.rows[0])
