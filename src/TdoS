@@ -5,6 +5,7 @@ Chat)
 
 
 
-1)finalPhase, update the useContext when adding a user.
-
+2) make it so that when a message is sent it is saveed as last message in conversation
+3)filter by Date
+4)fix the chat real time
 

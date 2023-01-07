@@ -44,8 +44,6 @@ function SignIn() {
   }
 
   return (
-    <>
-    <div className="navbar-spacer"></div>
     <div className="credentials-main fcc">
       <div className="credentials-heart-container">
         <img className="credentials-heart" src={heart} />
@@ -95,10 +93,7 @@ function SignIn() {
             </form>
           </div>
         </div>
-        
-        
     </div>
-    </>
   )
 }
 

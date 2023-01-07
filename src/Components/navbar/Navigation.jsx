@@ -42,6 +42,7 @@ function Navigation() {
   }
 
   return (
+    <>
     <nav className="navigation-container">
         <Link to="/"><h2 className="navigation-logo">Whizz</h2></Link>
 
@@ -90,6 +91,8 @@ function Navigation() {
             }
         </div>
     </nav>
+    <div className="navbar-spacer"></div>
+    </>
   )
 }
 

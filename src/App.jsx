@@ -15,7 +15,6 @@ import Follow from "./Pages/Profile/Follow.jsx"
 import Chat from "./Components/Chat.jsx"
  
 function App() {
-  
   return(
     <Router>
       <Routes>

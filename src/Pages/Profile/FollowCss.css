@@ -22,16 +22,22 @@
     margin-bottom: 0.2em;
     padding: 0.5em;
     cursor: pointer;
-    color:white;
+    color:var(--clr-primary);
+    border-bottom: 1px solid var(--clr-primary);
 }
+.friends-individual-user-box:first-child:hover{
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+}
+.friends-individual-user-box:hover{
+    background-color: gray;
+}
+
 .following-individual-pp{
     width: 45px;
     height: 45px;
     margin-right: 1em;
     border-radius: 50%;
-}
-.friends-individual-name{
-    
 }
 
 .friends-individual-user-button{

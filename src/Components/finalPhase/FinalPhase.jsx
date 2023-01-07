@@ -11,14 +11,12 @@ function FinalPhase({ roomId, endCall, partnerId }) {
   const [answer, setAnswer] = useState(false)
   const [response, setResponse] = useState(false)
   const [partnerDetails, setPartnerDetails] = useState(null)
-  const [initiator, setInitiator] = useState(false)
   const [following, setFollowing] = useState(false)
 
   useEffect(() => {
     socket.current.on("responseFollow", (data) => {
       setResponse(true)
       setPartnerDetails(data.userDetails)
-      setInitiator(true)
     })
 
   },[])
@@ -41,6 +39,7 @@ function FinalPhase({ roomId, endCall, partnerId }) {
   },[user])
 
 
+  
   const handleAdd = () => {
     setAnswer(true)
 
@@ -57,14 +56,23 @@ function FinalPhase({ roomId, endCall, partnerId }) {
       { headers: 
         { authorization: "Bearer " + user.accessToken}
       })
+      console.log(res.data.user, "user")
+      console.log(res.data.user.rows[0], "rows")
+      console.log(res.data.user.rows[0].friendslist, "fr")
 
-      console.log(res.data.flag)
       
       if (res.data.flag) {
         setFlag(true)
-        setUser(res.data.user)
+        setUser((prev) => {
+          return {
+            ...prev,
+            friendslist: res.data.user.rows[0].friendslist
+          }
+        })
         
-        if(initiator){
+        if(partnerDetails.id < user.id){
+          console.log("ran")
+          console.log(partnerDetails.id, user.id, "ids")
           const response = await axiosAuth.post("/api/create_conversation", {userDetails: user, partnerDetails: partnerDetails}, 
           { headers: 
             { authorization: "Bearer " + user.accessToken}

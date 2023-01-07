@@ -30,7 +30,7 @@ function Chat() {
     }, [])
 
     useEffect(() => { //adds the arrived message to the messages
-        arrivalMessage && arrivalMessage.senderid === recieverId &&
+        arrivalMessage && JSON.stringify(arrivalMessage.senderid) === recieverId &&
         setMessages((prev) => [...prev, arrivalMessage])
     }, [arrivalMessage])
 

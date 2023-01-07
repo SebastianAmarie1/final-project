@@ -204,8 +204,8 @@ app.post("/api/follow", verify, async (req, res) => {
             })
         }
         if (flag) {
-            const user = await pool.query("SELECT * FROM users WHERE users_id = $1", [id])
             await pool.query("update users set friendslist = array_append(friendslist, $1) where users_id = $2", [followedUser, id])
+            const user = await pool.query("SELECT * FROM users WHERE users_id = $1", [id])
             res.status(200).json({msg:"You Added This User Successfully", flag: true, user: user})
         }
         else {
@@ -240,10 +240,10 @@ app.post("/api/retrieve_specific_conversation", verify, async(req, res) => {
 })
 
 //get specific Conversation
-app.get("/api/retrieve_conversations", verify, async(req, res) => {
+app.post("/api/retrieve_conversations", verify, async(req, res) => {
     try {
-        const { currentUser } = req.body
-        const conversations = await pool.query("SELECT * FROM conversations WHERE $1 = ANY(members)", [currentUser])
+        const { id } = req.body
+        const conversations = await pool.query("SELECT * FROM conversations WHERE $1 = ANY(members)", [id])
         res.json(conversations.rows)
     } catch (err) {
         console.error(err.message)
