@@ -232,6 +232,10 @@ app.post("/api/unfollow", verify, async (req, res) => {
 app.post("/api/retrieve_specific_conversation", verify, async(req, res) => {
     try {
         const { primaryUser, secondaryUser } = req.body
+
+        //mark seen as true
+
+
         const conversation = await pool.query("SELECT * FROM conversations WHERE $1 = ANY(members) AND $2 = ANY(members)", [primaryUser, secondaryUser])
         res.json(conversation.rows[0])
     } catch (err) {
@@ -243,6 +247,9 @@ app.post("/api/retrieve_specific_conversation", verify, async(req, res) => {
 app.post("/api/retrieve_conversations", verify, async(req, res) => {
     try {
         const { id } = req.body
+
+        const messages = await pool.query("SELECT * FROM conversations WHERE $1 = ANY(members)", [id])
+
         const conversations = await pool.query("SELECT * FROM conversations WHERE $1 = ANY(members)", [id])
         res.json(conversations.rows)
     } catch (err) {
@@ -273,25 +280,29 @@ app.post("/api/create_conversation", verify, async(req, res) => { // create a if
 //get Messages
 app.post("/api/retrieve_messages", verify, async(req, res) => {
     try {
-        const { conversation_id, userId } = req.body
-        let messages = await pool.query("SELECT * FROM messages WHERE conversation_id = $1", [conversation_id])
+        const { conversation_id, senderId } = req.body
+        let messages = await pool.query("SELECT * FROM messages WHERE conversation_id = $1 AND senderid = $2 AND seen = false", [conversation_id, senderId])
         
+        //turn all messages to seen
         await Promise.all(
             messages.rows.map(async (message) => {
-              if (!message.seen) {
-                await pool.query(
-                  "UPDATE messages SET seen = true WHERE message_id = $1 AND senderid != $2",
-                  [message.message_id, userId]
-                );
-              }
+                await pool.query("UPDATE messages SET seen = true WHERE message_id = $1", [message.message_id])
             })
-          );
-        messages = await pool.query(
-        "SELECT * FROM messages WHERE conversation_id = $1",
-        [conversation_id]
-        );
+          )
 
-        res.json(messages.rows)
+        //return the messages in order by date.
+        messages = await pool.query("SELECT * FROM messages WHERE conversation_id = $1",[conversation_id]);
+        
+        let sortedMessages
+
+        await Promise.all(
+            sortedMessages = messages.rows.sort((a, b) => {
+                // Compare the time_sent properties of the two objects
+                return new Date(a.time_sent) - new Date(b.time_sent);
+            })
+        )
+
+        res.json(sortedMessages)
     } catch (err) {
         console.error(err.message)
     }
@@ -301,7 +312,8 @@ app.post("/api/retrieve_messages", verify, async(req, res) => {
 app.post("/api/create_message", verify, async(req, res) => { 
     try {
         const { conversation_id, senderId, recieverId, message, time_sent } = req.body
-        const messages = await pool.query("INSERT INTO messages (conversation_id, senderId, recieverId, message, time_sent ) VALUES ($1, $2, $3, $4, $5) RETURNING *", [conversation_id, senderId, recieverId, message, time_sent])
+        await pool.query("INSERT INTO messages (conversation_id, senderId, recieverId, message, time_sent ) VALUES ($1, $2, $3, $4, $5) RETURNING *", [conversation_id, senderId, recieverId, message, time_sent])
+        await pool.query("UPDATE conversations SET last_message = $1, last_message_date = $2 WHERE conversation_id = $3", [message, time_sent, conversation_id])
         const activity = await pool.query("SELECT active FROM users WHERE users_id = $1", [recieverId])
         res.json(activity.rows[0])
     } catch (err) {

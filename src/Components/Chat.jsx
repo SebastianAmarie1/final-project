@@ -37,7 +37,10 @@ function Chat() {
     useEffect(() => { //retrieve the messages from the DB
         const getMessages = async() => {
             try {
-                const res = await axiosAuth.post("/api/retrieve_messages", { conversation_id: conversationId },
+                const res = await axiosAuth.post("/api/retrieve_messages", { 
+                    conversation_id: conversationId,
+                    senderId: recieverId,
+                },
                 { headers: 
                     { authorization: "Bearer " + user.accessToken}
                 })//sends a request to the server
@@ -55,9 +58,10 @@ function Chat() {
     setMessages((prev) => [...prev, {senderid: JSON.stringify(user.id), recieverid: JSON.stringify(recieverId), message: inputMessage, message_id: nanoid()}])
 
     let userActivity
+    const time_sent = new Date().toISOString()
 
     try { // sends messages to the Database
-        const res = await axiosAuth.post("/api/create_message", { conversation_id: conversationId, senderId: user.id, recieverId: recieverId, message: inputMessage },
+        const res = await axiosAuth.post("/api/create_message", { conversation_id: conversationId, senderId: user.id, recieverId: recieverId, message: inputMessage, time_sent: time_sent },
             { headers: 
                 { authorization: "Bearer " + user.accessToken}
             })

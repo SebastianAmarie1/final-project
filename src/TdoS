@@ -4,8 +4,7 @@ Chat)
 
 
 
-
+1) fix the sent, seen and convo in chat as it got discarded.
 2) make it so that when a message is sent it is saveed as last message in conversation
 3)filter by Date
 4)fix the chat real time
-
