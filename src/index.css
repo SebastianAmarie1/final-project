@@ -69,6 +69,20 @@ strong {font-weight: var(--fw-bold)}
     justify-content: center;
 }
 
+/* Scroll Bar */
+body::-webkit-scrollbar {
+    width: 6px;
+}
+
+body::-webkit-scrollbar-track {
+    background: var(--clr-secondary); 
+}
+
+body::-webkit-scrollbar-thumb {
+    background-color: var(--clr-primary);   
+    border-radius: 20px;       
+}
+
 
 /*   Footer   */
 .footer-container{

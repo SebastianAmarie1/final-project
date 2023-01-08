@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import noProfileIcon from "../../Assets/noProfileIcon.png"
 
-function Message({msg, self}) {
+function Message({msg, self, dpic}) {
 
     const [toggled, setToggled] = useState(false)
 
@@ -24,7 +24,12 @@ function Message({msg, self}) {
     } else {
         return(
             <div className="chat-container-reciever">
-                <img src={noProfileIcon} className="chat-message-image-reciever"></img>
+                {dpic 
+                    ?
+                    <img src={noProfileIcon} className="chat-message-image-reciever"></img>
+                    :
+                    <div className="chat-message-image-placeholder"></div>
+                }
                 <div onClick={() => {setToggled((prev) => !prev)}} key={msg.message_id} className="chat-message-box chat-message-box-reciever">
                     <h5 className="chat-message-box-msg">{msg.message}</h5>
                     {toggled &&

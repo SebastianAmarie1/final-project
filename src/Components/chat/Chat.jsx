@@ -12,6 +12,7 @@ import "./ChatCss.css"
 function Chat() {
 
     const { state } = useLocation()
+    const navigate = useNavigate()
     const { conversationId, recieverId, cname } = state // get the conversation and reciever IDs from the previous page
     const { socket } = useSocket()
     const { user, axiosAuth } = useAuth()
@@ -19,8 +20,10 @@ function Chat() {
     const [inputMessage, setInputMessage] = useState("")
     const [messages, setMessages] = useState()
     const [arrivalMessage, setArrivalMessage] = useState(null)
-    const navigate = useNavigate()
+    const messageEndRef = useRef(null)
+
     let compareDate = null
+    let previousMsgOwner = null
 
     useEffect(() => { 
         socket.current.on("messageRecieved", (data) => {
@@ -34,6 +37,10 @@ function Chat() {
             })
         })
     }, [])
+
+    useEffect(() => {
+        messageEndRef.current?.scrollIntoView({ behavior: "smooth" })
+    },[messages])
 
     useEffect(() => { //adds the arrived message to the messages
         arrivalMessage && JSON.stringify(arrivalMessage.senderid) === recieverId &&
@@ -99,12 +106,17 @@ function Chat() {
             <div className="chat-container-messages">
                 {messages?.map((current) => {
                     let flag = false
+                    let dpic = false
 
                     let date = current.time_sent.split("T")[0]
 
                     if (date != compareDate){
                         flag = true
                         compareDate = date
+                    }
+                    if (previousMsgOwner != current.senderid){
+                        dpic = true
+                        previousMsgOwner = current.senderid
                     }
 
                     return(
@@ -116,7 +128,8 @@ function Chat() {
                                     <div className="message-date-seperator-line"></div>
                                 </div>
                             }  
-                            <Message msg={current} self={current.senderid === JSON.stringify(user.id)}/>
+                            <Message msg={current} dpic={dpic} self={current.senderid === JSON.stringify(user.id)}/>
+                            <div ref={messageEndRef}/>
                         </Fragment>
                     )
                 }
@@ -127,6 +140,7 @@ function Chat() {
                     type="text"
                     id="message"
                     value={inputMessage}
+                    maxLength="255"
                     onChange={e => setInputMessage(e.target.value)} 
                     placeholder="Message... " />
                 <button className="chat-footer-button" onClick={(e) => handleSendMessage(e)}>&gt;</button>
