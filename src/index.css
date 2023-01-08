@@ -8,17 +8,17 @@
 
 /*   Variables   */
 :root {
-    --ff-primary : 'Bahnschrift';
+    --ff-primary : 'Arial';
   
     --fw-reg: 300;
     --fw-bold: 900;
   
     --clr-primary: #1a0c30;
     --clr-secondary: #444054;
-    --clr-contrast: lightgray;
+    --clr-contrast: #ededed;
     --clr-highlighted:#DB8A74;
     --clr-secondaryHighlighted: #FAC9B8;
-    --clr-ownMessage: rgb(173, 216, 230);
+    --clr-ownMessage: lightgray;
     --clr-white: white;
     --clr-black: black;
   
@@ -29,7 +29,7 @@
     --fs-h3: 1.25rem;
     --fs-h4: 1rem;
     --fs-a: 1.25rem;
-    --fs-p: 1rem;
+    --fs-p: 0.8rem;
     --fs-body: 1rem;
   }
 
@@ -52,6 +52,11 @@ h2{font-size: var(--fs-h2)}
 h3{font-size: var(--fs-h3)}
 h4{font-size: var(--fs-h4)}
 
+p{ 
+    font-size: var(--fs-p);
+    
+}
+
 a{font-size: var(--fs-a); text-decoration: none;}
 
 img {width: 100%;}
@@ -62,124 +67,6 @@ strong {font-weight: var(--fw-bold)}
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-
-
-/*    Chat Page   */
-/*    NAV   */
-.cnav-container{
-    position: relative;
-    width: 100%;
-    height: 60px;
-    display: flex;
-    color: white;
-    background-color: var(--clr-primary);
-}
-.cnav-container-left{
-    display: flex;
-    align-items: center;
-    margin-left: 0.75em;
-}
-.cnav-container-username{
-    margin-left: 4.5em;
-}
-
-.cnav-container-pp{
-    width:35px;
-    border-radius: 50%;
-    margin-left: 1em;
-}
-.cnav-container-arrow{
-    cursor: pointer;
-}
-
-/*   MAIN   */
-.chat-container-messages{
-    position:relative;
-    height:calc(100vh - 130px);
-    width:100%;
-    overflow-y: scroll;
-    display:flex;
-    flex-direction: column;
-    padding: 1em;
-    background-color: var(--clr-contrast);
-}
-
-/* OWN */
-.chat-message-box-own{
-    position: relative;
-    max-width: 65%;
-    margin-bottom:0.25em;
-    margin-left: auto;
-    line-height: 1;
-
-    padding: 0.5em;
-    border-radius: 10px;
-    display: inline-block;
-    background-color: var(--clr-ownMessage);
-}
-
-/*  partner  */
-
-.chat-container-reciever{
-    display: flex;
-    align-items: center;
-}
-
-.chat-message-image-reciever{
-    width: 30px;
-    height:30px;
-    border-radius: 50%;
-    margin-right: 0.35em;
-}
-.chat-message-box-reciever{
-    position: relative;
-    max-width: 65%;
-    margin-bottom:0.25em;
-    line-height: 1;
-
-    padding: 0.5em;
-    border-radius: 10px;
-    display: inline-block;
-    background-color: darkgray;
-}
-
-/*   Chat Footer   */
-.chat-footer{
-    position: relative;
-    width: 100%;
-    height:70px;;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    padding: 1em;
-    background-color: var(--clr-primary);
-}
-.chat-footer-textarea{
-    width:90%;
-    height: 45px;
-
-    border-radius: 10px;
-    border-width: 2px;
-    font-size:1.25em;
-    padding: 0.5em;
-    padding-top: 0.6em;
-    color: var(--clr-white);
-    border-color: var(--clr-white);
-    background-color: var(--clr-primary);
-}
-.chat-footer-button{
-    height: 35px;
-    width:35px;
-    margin-left: 0.5em;
-
-    cursor: pointer;
-    border-radius: 50%;
-    color: var(--clr-white);
-    border-color: var(--clr-white);
-    background-color: var(--clr-primary);
 }
 
 

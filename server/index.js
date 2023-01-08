@@ -229,29 +229,20 @@ app.post("/api/unfollow", verify, async (req, res) => {
 // Messaging System
 
 //get specific Conversation
-app.post("/api/retrieve_specific_conversation", verify, async(req, res) => {
-    try {
-        const { primaryUser, secondaryUser } = req.body
-
-        //mark seen as true
-
-
-        const conversation = await pool.query("SELECT * FROM conversations WHERE $1 = ANY(members) AND $2 = ANY(members)", [primaryUser, secondaryUser])
-        res.json(conversation.rows[0])
-    } catch (err) {
-        console.error(err.message)
-    }
-})
-
-//get specific Conversation
 app.post("/api/retrieve_conversations", verify, async(req, res) => {
     try {
         const { id } = req.body
-
-        const messages = await pool.query("SELECT * FROM conversations WHERE $1 = ANY(members)", [id])
-
+        //sort the conversations from most active to least and return it.
         const conversations = await pool.query("SELECT * FROM conversations WHERE $1 = ANY(members)", [id])
-        res.json(conversations.rows)
+        
+        const sortedConversations = conversations.rows.sort((a, b) => {
+            if (a.last_message_date === null) {
+              return new Date(b.time_created) - new Date(a.time_created);
+            }
+            return new Date(b.last_message_date) - new Date(a.last_message_date);
+          })
+        
+        res.json(sortedConversations)
     } catch (err) {
         console.error(err.message)
     }

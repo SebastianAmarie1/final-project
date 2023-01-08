@@ -1,0 +1,150 @@
+/*   MAIN   */
+.chat-main{
+    height: calc(100vh - 70px);
+    width: 100%;
+    padding-top: 2em;
+
+    background-color: var(--clr-secondary);
+}
+
+.chat-container{
+    position: relative;
+    max-width: 1000px;
+    height: calc(100vh - 70px - 4em);
+    margin: 0 auto;
+
+    border-radius: 5px;
+    background-color: var(--clr-contrast);
+}
+
+.chat-header{
+    height: 60px;
+    width: 100%;
+    border: 1px solid var(--clr-primary);
+    background-color: var(--clr-primary);
+}
+
+.chat-header-title{
+    color: white;
+    opacity: 0.9;
+}
+
+.chat-container-messages{
+    height: calc(100% - 130px);
+    display: flex;
+    flex-direction: column;
+
+    padding: 2em;
+    overflow-y: scroll;
+}
+
+/* Date Seperator */
+.message-date-seperator{
+    margin-block: 0.3em;
+}
+.message-date-seperator-line{
+    height: 2px;
+    width: 30%;
+    margin-inline: auto;
+
+    background-color: var(--clr-secondary);
+}
+
+/* Messages */
+.chat-message-box{
+    position: relative;
+    max-width: 65%;
+    margin-block: 0.3em;
+    line-height: 1.1;
+    padding: 0.7em;
+
+    border: 1px solid var(--clr-primary);
+    border-radius: 10px;
+    display: inline-block;
+}
+.chat-message-box h5{
+    font-weight: 600;
+}
+.chat-message-box-footer{
+    min-width: 120px;
+    display: flex;
+    border-top: 1px solid black;
+    margin-top: 0.2em;
+    padding-top: 0.3em;
+}
+
+.chat-message-box-footer-seen{
+    margin-left: auto;
+}   
+
+.footer-white{
+    border-top: 1px solid white;
+}
+
+/* OWN */
+.chat-message-box-own{
+    margin-left: auto;
+    background-color: var(--clr-ownMessage);
+}
+
+/*  PARTNER  */
+.chat-container-reciever{
+    display: flex;
+    align-items: center;
+}
+
+.chat-message-image-reciever{
+    width: 30px;
+    height:30px;
+    border-radius: 50%;
+    margin-right: 0.35em;
+}
+.chat-message-box-reciever{
+    color: var(--clr-white);
+    background-color: var(--clr-secondary);
+}
+.chat-message-box-reciever h5{
+    font-weight: 300;;
+}
+.chat-message-box-msg{
+    opacity: 0.9;
+}
+
+/*   Chat Footer   */
+.chat-footer{
+    position: absolute;
+    width: 100%;
+    height:70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    bottom:0;
+    
+
+    padding: 1em;
+    background-color: var(--clr-primary);
+}
+.chat-footer-textarea{
+    width:90%;
+    height: 45px;
+    padding: 0.5em;
+
+    border-radius: 10px;
+    border-width: 2px;
+    font-size:1.25em;
+    padding-top: 0.6em;
+    color: var(--clr-white);
+    border-color: var(--clr-white);
+    background-color: var(--clr-primary);
+}
+.chat-footer-button{
+    height: 35px;
+    width:35px;
+    margin-left: 0.5em;
+
+    cursor: pointer;
+    border-radius: 50%;
+    color: var(--clr-white);
+    border-color: var(--clr-white);
+    background-color: var(--clr-primary);
+}

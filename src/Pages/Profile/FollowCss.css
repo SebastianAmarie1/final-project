@@ -39,6 +39,16 @@
     margin-right: 1em;
     border-radius: 50%;
 }
+.friends-individual-user-lmsg{
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.friends-individual-user-lmsg-date{
+    margin-left: auto;
+}
 
 .friends-individual-user-button{
     margin-left: auto;

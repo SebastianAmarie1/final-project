@@ -12,7 +12,7 @@ import SignIn from "./Pages/LoginSystem/SignIn.jsx"
 import HomePage from "./Pages/HomePage/HomePage.jsx"
 import Profile from "./Pages/Profile/Profile.jsx";
 import Follow from "./Pages/Profile/Follow.jsx"
-import Chat from "./Components/Chat.jsx"
+import Chat from "./Components/chat/Chat.jsx"
  
 function App() {
   return(

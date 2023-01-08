@@ -78,6 +78,7 @@ io.on("connection", (socket) => {
             senderId: data.senderId,
             recieverId: data.recieverId,
             message: data.message,
+            time_sent: data.time_sent,
         })
     })
 
