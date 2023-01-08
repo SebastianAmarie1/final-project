@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useRef, Fragment } from 'react'
 import { useLocation } from 'react-router-dom'
 import { nanoid } from 'nanoid'
+import { useNavigate } from "react-router-dom"
+
 
 import { useAuth } from "../../Contexts/AuthContext"
 import { useSocket } from '../../Contexts/socketContext'
@@ -17,6 +19,7 @@ function Chat() {
     const [inputMessage, setInputMessage] = useState("")
     const [messages, setMessages] = useState()
     const [arrivalMessage, setArrivalMessage] = useState(null)
+    const navigate = useNavigate()
     let compareDate = null
 
     useEffect(() => { 
@@ -91,7 +94,7 @@ function Chat() {
         <div className="chat-container">
             <div className="chat-header fcc">
                 <h3 className="chat-header-title">{cname}</h3>
-
+                <h1 onClick={() => {navigate(`/homepage/follow/`)}} className="chat-header-back">&gt;</h1>
             </div>
             <div className="chat-container-messages">
                 {messages?.map((current) => {

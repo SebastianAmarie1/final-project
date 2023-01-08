@@ -37,6 +37,20 @@
     padding: 2em;
     overflow-y: scroll;
 }
+.chat-header-back{
+    position: absolute;
+    left:0;
+    margin-left: 0.75em;
+    rotate: 180deg;
+
+    cursor: pointer;
+    color:white;
+}
+
+.chat-header-back:hover,
+.chat-header-back:focus{
+    color: var(--clr-highlighted)
+}
 
 /* Date Seperator */
 .message-date-seperator{
