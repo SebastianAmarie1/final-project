@@ -8,9 +8,10 @@ import "./FollowCss.css"
 function Follow() {
 
   const { user, axiosAuth } = useAuth()
-  const [conversations, setConversations] = useState(null)
   const navigate = useNavigate()
 
+  const [conversations, setConversations] = useState(null)
+  const [searchUser, setSearchUser] = useState("")
   
   useEffect(() => {
     const getConvos = async() => {
@@ -26,9 +27,16 @@ function Follow() {
     }
     getConvos()
   },[user])
-
+  
   const followerUsers = conversations //filter for most recent
-  ? conversations.map((current) => {
+  ? conversations.filter((convo) => {
+      if(searchUser !== ""){
+        const cname = convo.members_names.filter((value) => value != user.username)[0]
+        return cname.toLowerCase().includes(searchUser.toLowerCase())
+      } else {
+        return convo
+      }
+    }).map((current) => {
 
       const id = current.members.filter((value) => value != user.id)[0]
       const cname = current.members_names.filter((value) => value != user.username)[0]
@@ -43,11 +51,13 @@ function Follow() {
             {current.last_message 
               ?
               <div className="friends-individual-user-lmsg"> 
-                <p>{current.last_message}</p>
-                <p className="friends-individual-user-lmsg-date">{date} {time}</p>
+                <p className="friends-individual-user-lmsg-msg">{current.last_message}</p>
+                <div className="friends-individual-user-lmsg-date">
+                  <p>{date} {time}</p>
+                </div>
               </div>
               :
-              <p>Start a new chat with this person</p>
+              <p className="friends-individual-user-lmsg-msg">Start a new chat with this person</p>
             }
           </div>
           <h1 className="friends-individual-arrow">&gt;</h1>
@@ -59,6 +69,15 @@ function Follow() {
   return (
     <div className="freinds-main-box">
       <div className="friends-container">
+        <div className="friends-container-header">
+          <h1 onClick={() => {navigate(`/homepage/`)}} className="chat-header-back-f">&gt;</h1>
+          <input 
+            className="friends-container-header-search" 
+            placeholder="Search for user..."
+            value={searchUser}
+            onChange ={(e) => setSearchUser(e.target.value)} 
+          />
+        </div>
         {followerUsers}
         <h5 className="friends-main-message">Add more friends</h5>
       </div>
