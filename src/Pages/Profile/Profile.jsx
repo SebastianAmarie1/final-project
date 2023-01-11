@@ -4,7 +4,7 @@ import { useAuth } from "../../Contexts/AuthContext"
 
 import "./ProfileCss.css"
 
-import noProfileIcon from "../../Assets/noProfileIcon.png"
+import noProfileIcon from "../../Assets/default-user-image.jpg"
 import { useEffect } from 'react'
 
 function Profile() {
@@ -13,6 +13,7 @@ function Profile() {
 
   const [newProfilePic, setNewProfilePic] = useState(null)
   const [switcherToggle, setSwitcherToggle] = useState(true)
+  const [dataURI, setDataURI] = useState(null)
 
   const fNameRef = useRef()
   const lNameRef = useRef()
@@ -46,6 +47,36 @@ function Profile() {
     }
   },[user, switcherToggle])
 
+  const handleImageChange = (e) => {
+    setNewProfilePic(e.target.files[0])
+  }
+
+  const handleUploadImage = async(e) => {
+    e.preventDefault()
+    if(!newProfilePic){
+      return console.log("Please select a file")
+    }
+
+    const formData = new FormData()
+    formData.append("id", user.id)
+    formData.append("file", newProfilePic)
+
+
+    const res = await axiosAuth.put("/api/profile_pic",formData,
+    { headers: 
+        { 
+          'Content-Type': 'multipart/form-data',
+          'authorization': "Bearer " + user.accessToken
+        }
+    })
+    setFlag(true)
+    setUser({
+      ...user,
+      profile_pic: res.data.profile_pic,
+    })
+    setNewProfilePic(null)
+  }
+
   const handleFormSubmit = async (e) => {
     e.preventDefault()
     
@@ -62,7 +93,14 @@ function Profile() {
           { authorization: "Bearer " + user.accessToken}
       })
       setFlag(true)
-      setUser(res.data.user)
+      setUser({
+        ...user,
+        fname: res.data.user.fname,
+        lname: res.data.user.lname,
+        email: res.data.user.email,
+        phone: res.data.user.phone,
+        region: res.data.user.region,
+      })
     } catch (error) {
         console.log(error)
     }
@@ -86,7 +124,16 @@ function Profile() {
           { authorization: "Bearer " + user.accessToken}
       })
       setFlag(true)
-      setUser(res.data.user)
+      setUser({
+        ...user,
+        bio: res.data.user.bio,
+        hobbie1: res.data.user.hobbie1,
+        hobbie2: res.data.user.hobbie2,
+        hobbie3: res.data.user.hobbie3,
+        fact1: res.data.user.fact1,
+        fact2: res.data.user.fact2,
+        lie: res.data.user.lie,
+      })
     } catch (error) {
         console.log(error)
     }
@@ -97,14 +144,14 @@ function Profile() {
       <div className="profile-contianer">
         <div className="profile-change-image-container fcc">
           <div className="profile-image-container fcc">
-            <img className="profile-image-current" src={noProfileIcon} />
+            <img className="profile-image-current" src={user.profile_pic ? user.profile_pic : noProfileIcon} />
             {newProfilePic &&
-              <img className="profile-image-current" src={noProfileIcon} />
+              <img className="profile-image-current" src={URL.createObjectURL(newProfilePic)} />
             }
         </div>
           <div className="profile-image-footer fcc">
-            <p>name of picture </p>
-            <button className="pButton">Change Profile Image <span></span></button>
+            <input type="file" onChange={handleImageChange} />
+            <button className="pButton" onClick={handleUploadImage}>Change Profile Image <span></span></button>
           </div>
 
         </div>
@@ -115,7 +162,7 @@ function Profile() {
                 <div className={`profile-switcher-line ${switcherToggle ? 'profile-switcher-line-bottom' : 'profile-switcher-line-bottom-active'}`}></div>
               </div>
               <h1 className="profile-details-title">{switcherToggle ? 'Details' : 'Profile'}</h1>
-              <img className="profile-details-image-current" src={noProfileIcon} />
+              <img className="profile-details-image-current" src={user.profile_pic ? user.profile_pic : noProfileIcon} />
               <h4>{user.username}</h4>
 
               {switcherToggle 

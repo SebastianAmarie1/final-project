@@ -57,8 +57,8 @@ function FinalPhase({ roomId, endCall, partnerId }) {
         { authorization: "Bearer " + user.accessToken}
       })
       console.log(res.data.user, "user")
-      console.log(res.data.user.rows[0], "rows")
-      console.log(res.data.user.rows[0].friendslist, "fr")
+      console.log(res.data.user, "rows")
+      console.log(res.data.user.friendslist, "fr")
 
       
       if (res.data.flag) {
@@ -66,20 +66,17 @@ function FinalPhase({ roomId, endCall, partnerId }) {
         setUser((prev) => {
           return {
             ...prev,
-            friendslist: res.data.user.rows[0].friendslist
+            friendslist: res.data.user.friendslist
           }
         })
         
         if(partnerDetails.id < user.id){
-          console.log("ran")
-          console.log(partnerDetails.id, user.id, "ids")
-          const response = await axiosAuth.post("/api/create_conversation", {userDetails: user, partnerDetails: partnerDetails}, 
+          const response = await axiosAuth.post("/api/create_conversation", {id: user.id, pid: partnerDetails.id}, 
           { headers: 
             { authorization: "Bearer " + user.accessToken}
           })
         }
       }
-
     } catch (error) {
       console.log(error)
     }

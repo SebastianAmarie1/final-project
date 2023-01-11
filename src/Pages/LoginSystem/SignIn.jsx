@@ -32,6 +32,7 @@ function SignIn() {
           lname: res.data.lname,
           email: res.data.email,
           phonenumber: res.data.phonenumber,
+          profile_pic: res.data.pfp,
           bio: res.data.bio,
           hobbie1: res.data.hobbie1,
           hobbie2: res.data.hobbie2,

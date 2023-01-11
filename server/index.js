@@ -5,13 +5,28 @@ const port = 5000
 const cors = require("cors")
 const pool = require("./db")
 const jwt = require("jsonwebtoken");
-
+const bodyParser = require("body-parser");
+const multer = require("multer");
+const { Buffer } = require('buffer');
 
 //middleware
 app.use(cors()) //cors ensures we send the right headers
 app.use(express.json())//gives us access to request.body and we can get JSON data
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 //Routes
+// methods
+function toBase64(pic){
+    const imageData = Buffer.from(Array.from(pic))
+    const base64 = imageData.toString('base64');
+    return `data:image/jpeg;base64,${base64}`
+}
+
+
 /************** LOGIN SYSTEM ****************************/
 //registering a user
 app.post("/api/register", async(req, res) => {
@@ -108,13 +123,18 @@ app.post("/api/login", async(req, res) => {
         const accessToken = generateAccessToken(user)
         const refreshToken = generateRefreshToken(user)
 
-        const {users_id, username, fname, lname, email, phonenumber, bio, hobbie1, hobbie2, hobbie3, fact1, fact2, lie, friendslist, gender, region} = user.rows[0]
+        const {users_id, username, fname, lname, email, phonenumber, profile_pic, bio, hobbie1, hobbie2, hobbie3, fact1, fact2, lie, friendslist, gender, region} = user.rows[0]
         try {
             const updateUser = await pool.query("UPDATE users SET refreshtoken = $1, accesstoken = $2, last_login = $3, active = $4 WHERE users_id = $5", [refreshToken, accessToken, last_login, true, users_id])
         } catch (error) {
             console.log(error)
         }
 
+        let pfp = null
+        if (profile_pic) {
+            pfp = toBase64(profile_pic)
+        }
+        
         res.json({
             users_id,
             username,
@@ -122,6 +142,7 @@ app.post("/api/login", async(req, res) => {
             lname,
             email,
             phonenumber,
+            pfp: pfp,
             bio,
             hobbie1,
             hobbie2,
@@ -199,7 +220,7 @@ app.put("/api/edit_details", verify, async (req, res) => {
         console.log(error)
     }
 })
-
+// edit profile
 app.put("/api/edit_profile", verify, async (req, res) => {
     try {
         const { id, bio, hobbie1, hobbie2, hobbie3, fact1, fact2, lie } = req.body;
@@ -209,6 +230,31 @@ app.put("/api/edit_profile", verify, async (req, res) => {
     
         res.status(200).json({
             user: newUser.rows[0]
+        })
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+app.put("/api/profile_pic", verify, upload.single("file"), async (req, res) => {
+    try {
+        const file = req.file
+        if(!file){
+            return res.status(400).json({
+                status: "error",
+                message: "File not found"
+            });
+        }
+
+        const fileBuffer = file.buffer
+        await pool.query("UPDATE users SET profile_pic = $1 WHERE users_id = $2", [fileBuffer, req.body.id])
+        
+        const newUser = await pool.query("SELECT * FROM users WHERE users_id = $1", [req.body.id])
+    
+        const pfp = toBase64(newUser.rows[0].profile_pic)
+
+        res.status(200).json({
+            profile_pic: pfp,
         })
     } catch (error) {
         console.log(error)
@@ -235,7 +281,7 @@ app.post("/api/follow", verify, async (req, res) => {
         if (flag) {
             await pool.query("update users set friendslist = array_append(friendslist, $1) where users_id = $2", [followedUser, id])
             const user = await pool.query("SELECT * FROM users WHERE users_id = $1", [id])
-            res.status(200).json({msg:"You Added This User Successfully", flag: true, user: user})
+            res.status(200).json({msg:"You Added This User Successfully", flag: true, user: user.rows[0]})
         }
         else {
             res.status(200).json({msg:"Already A Friend", flag: false})
@@ -259,17 +305,17 @@ app.post("/api/unfollow", verify, async (req, res) => {
 //make Conversations
 app.post("/api/create_conversation", verify, async(req, res) => { // create a if the conversation already exists, you dont create another instance of conversation
     
-    const { userDetails, partnerDetails } = req.body
+    const { id, pid } = req.body
 
-    const conversations = await pool.query("SELECT * FROM conversations where $1 = ANY(members) AND $2 = ANY(members)", [userDetails.id, partnerDetails.id])
+    const conversations = await pool.query("SELECT * FROM conversations where $1 = ANY(members) AND $2 = ANY(members)", [id, pid])
     if(conversations.rows[0]){
         res.status(400).json("Conversation already started")
-    } else if (userDetails.id === partnerDetails.id){
+    } else if (id === pid){
         res.status(400).json("Cannot start conversation with self")
     } else {
         try {
-            const conversation = await pool.query("INSERT INTO conversations (members, time_created, members_names) VALUES (ARRAY [$1, $2], $3, ARRAY [$4, $5]) RETURNING *", [userDetails.id, partnerDetails.id, new Date(), userDetails.username, partnerDetails.username])
-            res.json(conversation.rows[0])
+            await pool.query("INSERT INTO conversations (members, time_created) VALUES (ARRAY [$1, $2], $3) RETURNING *", [id, pid, new Date()])
+            res.status(200)
         } catch (err) {
             console.error(err.message)
         }
@@ -281,7 +327,7 @@ app.post("/api/retrieve_conversations", verify, async(req, res) => {
     try {
         const { id } = req.body
         //sort the conversations from most active to least and return it.
-        const conversations = await pool.query("SELECT * FROM conversations WHERE $1 = ANY(members)", [id])
+        let conversations = await pool.query("SELECT * FROM conversations WHERE $1 = ANY(members)", [id])
         
         const sortedConversations = conversations.rows.sort((a, b) => {
             if (a.last_message_date === null) {
@@ -290,7 +336,19 @@ app.post("/api/retrieve_conversations", verify, async(req, res) => {
             return new Date(b.last_message_date) - new Date(a.last_message_date);
           })
         
-        res.json(sortedConversations)
+        // get the convos and turn the members ids to objects.
+        conversations = await Promise.all(sortedConversations.map(async (current) => {
+            const [User1, User2] = await Promise.all([
+                pool.query("SELECT * FROM users WHERE users_id = $1", [current.members[0]]),
+                pool.query("SELECT * FROM users WHERE users_id = $1", [current.members[1]])
+            ])
+            const newMembers = [User1.rows[0], User2.rows[0]]
+            return {
+                ...current,
+                members: newMembers,
+            }
+        }))
+        res.json(conversations)
     } catch (err) {
         console.error(err.message)
     }

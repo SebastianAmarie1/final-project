@@ -27,27 +27,25 @@ function Follow() {
     }
     getConvos()
   },[user])
+
+  console.log(conversations)
   
   const followerUsers = conversations //filter for most recent
   ? conversations.filter((convo) => {
-      if(searchUser !== ""){
-        const cname = convo.members_names.filter((value) => value != user.username)[0]
-        return cname.toLowerCase().includes(searchUser.toLowerCase())
-      } else {
+        //fix filter
         return convo
-      }
+      
     }).map((current) => {
 
       const id = current.members.filter((value) => value != user.id)[0]
-      const cname = current.members_names.filter((value) => value != user.username)[0]
       const date = current.last_message_date?.split("T")[0]
       const time = current.last_message_date?.split("T")[1].split(".")[0] 
 
       return (
-        <div onClick={() => {navigate(`/homepage/follow/chat/${current.conversation_id}`, { state: { conversationId: current.conversation_id, recieverId: id, cname: cname } })}} className="friends-individual-user-box" key={id}>
+        <div onClick={() => {navigate(`/homepage/follow/chat/${current.conversation_id}`, { state: { conversationId: current.conversation_id, recieverId: id } })}} className="friends-individual-user-box" key={id}>
           <img src={noProfileIcon} className="following-individual-pp"></img>
           <div className="friends-individual-name">
-            <h2 className="friends-individual-user-name">{cname}</h2>
+            <h2 className="friends-individual-user-name">cname</h2>
             {current.last_message 
               ?
               <div className="friends-individual-user-lmsg"> 

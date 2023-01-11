@@ -10,6 +10,7 @@ CREATE TABLE users(
     gender VARCHAR(255) NOT NULL,
     region VARCHAR (255) NOT NULL,
     phonenumber VARCHAR(255) NOT NULL,
+    profile_pic BYTEA,
     bio VARCHAR(255),
     hobbie1 VARCHAR(255),
     hobbie2 VARCHAR(255),
@@ -28,7 +29,6 @@ CREATE TABLE users(
 CREATE TABLE conversations(
     conversation_id SERIAL PRIMARY KEY,
     members VARCHAR [] NOT NULL,
-    members_names VARCHAR [] NOT NULL,
     time_created TIMESTAMP NOT NULL,
     last_message VARCHAR (255),
     last_message_date TIMESTAMP
@@ -43,3 +43,7 @@ CREATE TABLE messages(
     seen BOOLEAN DEFAULT false,
     message VARCHAR(255) NOT NULL
 );
+
+
+ALTER TABLE conversations
+ADD FOREIGN KEY (members) REFERENCES users(users_id);
