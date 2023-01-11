@@ -67,7 +67,7 @@ function Navigation() {
                   <Link onClick={eventHandler} to="/homepage"> <h4 className='navigation-bottom-active-option'>Home</h4></Link>
                 </div>
                 <div className="navigation-bottom-individual fcc">
-                  <Link onClick={eventHandler} to="//homepage/follow"> <h4 className='navigation-bottom-active-option'>Friends</h4></Link>
+                  <Link onClick={eventHandler} to="/homepage/follow"> <h4 className='navigation-bottom-active-option'>Friends</h4></Link>
                 </div>
                 <div className="navigation-bottom-individual fcc">
                   <Link onClick={eventHandler} to="/homepage/profile"> <h4 className='navigation-bottom-active-option'>Profile</h4></Link> 

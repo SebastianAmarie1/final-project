@@ -12,6 +12,7 @@ app.use(cors()) //cors ensures we send the right headers
 app.use(express.json())//gives us access to request.body and we can get JSON data
 
 //Routes
+/************** LOGIN SYSTEM ****************************/
 //registering a user
 app.post("/api/register", async(req, res) => {
     try {
@@ -107,7 +108,7 @@ app.post("/api/login", async(req, res) => {
         const accessToken = generateAccessToken(user)
         const refreshToken = generateRefreshToken(user)
 
-        const {users_id, username, fname, lname, email, phonenumber, friendslist, gender, region} = user.rows[0]
+        const {users_id, username, fname, lname, email, phonenumber, bio, hobbie1, hobbie2, hobbie3, fact1, fact2, lie, friendslist, gender, region} = user.rows[0]
         try {
             const updateUser = await pool.query("UPDATE users SET refreshtoken = $1, accesstoken = $2, last_login = $3, active = $4 WHERE users_id = $5", [refreshToken, accessToken, last_login, true, users_id])
         } catch (error) {
@@ -121,6 +122,13 @@ app.post("/api/login", async(req, res) => {
             lname,
             email,
             phonenumber,
+            bio,
+            hobbie1,
+            hobbie2,
+            hobbie3,
+            fact1,
+            fact2,
+            lie,
             accessToken,
             refreshToken,
             friendslist,
@@ -175,16 +183,40 @@ app.post("/api/logout",verify,  async (req, res) => { // needs a verify function
     res.status(200).json("You Logged Out Successfully")
 })
 
-//get all users
-app.get("/api/allusers", async(req, res) => { // ", verify, (req,res)"
+/********************************* PROFILE *********************************/
+// edit details
+app.put("/api/edit_details", verify, async (req, res) => {
     try {
-        const allUsers = await pool.query("SELECT * FROM users")
-        res.json(allUsers.rows)
-    } catch (err) {
-        console.error(err.message)
+        const { id, fname, lname, email, phone, region } = req.body;
+
+        await pool.query("UPDATE users SET fname = $1, lname = $2, email = $3, phonenumber = $4, region = $5 WHERE users_id = $6 RETURNING *", [fname, lname, email, phone, region, id])
+        const newUser = await pool.query("SELECT * FROM users WHERE users_id = $1", [id])
+    
+        res.status(200).json({
+            user: newUser.rows[0]
+        })
+    } catch (error) {
+        console.log(error)
     }
 })
 
+app.put("/api/edit_profile", verify, async (req, res) => {
+    try {
+        const { id, bio, hobbie1, hobbie2, hobbie3, fact1, fact2, lie } = req.body;
+
+        await pool.query("UPDATE users SET bio = $1, hobbie1 = $2, hobbie2 = $3, hobbie3 = $4, fact1 = $5, fact2 = $6, lie = $7 WHERE users_id = $8 RETURNING *", [bio, hobbie1, hobbie2, hobbie3, fact1, fact2, lie, id])
+        const newUser = await pool.query("SELECT * FROM users WHERE users_id = $1", [id])
+    
+        res.status(200).json({
+            user: newUser.rows[0]
+        })
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+
+/******************************* FRIENDS ***************************************/
 //Follow a user
 app.post("/api/follow", verify, async (req, res) => {
     try {
@@ -223,7 +255,26 @@ app.post("/api/unfollow", verify, async (req, res) => {
     }
 })
 
-// Messaging System
+/*********************************** MESSAGING***********************************/
+//make Conversations
+app.post("/api/create_conversation", verify, async(req, res) => { // create a if the conversation already exists, you dont create another instance of conversation
+    
+    const { userDetails, partnerDetails } = req.body
+
+    const conversations = await pool.query("SELECT * FROM conversations where $1 = ANY(members) AND $2 = ANY(members)", [userDetails.id, partnerDetails.id])
+    if(conversations.rows[0]){
+        res.status(400).json("Conversation already started")
+    } else if (userDetails.id === partnerDetails.id){
+        res.status(400).json("Cannot start conversation with self")
+    } else {
+        try {
+            const conversation = await pool.query("INSERT INTO conversations (members, time_created, members_names) VALUES (ARRAY [$1, $2], $3, ARRAY [$4, $5]) RETURNING *", [userDetails.id, partnerDetails.id, new Date(), userDetails.username, partnerDetails.username])
+            res.json(conversation.rows[0])
+        } catch (err) {
+            console.error(err.message)
+        }
+    }
+})
 
 //get specific Conversation
 app.post("/api/retrieve_conversations", verify, async(req, res) => {
@@ -245,23 +296,16 @@ app.post("/api/retrieve_conversations", verify, async(req, res) => {
     }
 })
 
-//make Conversations
-app.post("/api/create_conversation", verify, async(req, res) => { // create a if the conversation already exists, you dont create another instance of conversation
-    
-    const { userDetails, partnerDetails } = req.body
-
-    const conversations = await pool.query("SELECT * FROM conversations where $1 = ANY(members) AND $2 = ANY(members)", [userDetails.id, partnerDetails.id])
-    if(conversations.rows[0]){
-        res.status(400).json("Conversation already started")
-    } else if (userDetails.id === partnerDetails.id){
-        res.status(400).json("Cannot start conversation with self")
-    } else {
-        try {
-            const conversation = await pool.query("INSERT INTO conversations (members, time_created, members_names) VALUES (ARRAY [$1, $2], $3, ARRAY [$4, $5]) RETURNING *", [userDetails.id, partnerDetails.id, new Date(), userDetails.username, partnerDetails.username])
-            res.json(conversation.rows[0])
-        } catch (err) {
-            console.error(err.message)
-        }
+//make Message
+app.post("/api/create_message", verify, async(req, res) => { 
+    try {
+        const { conversation_id, senderId, recieverId, message, time_sent } = req.body
+        await pool.query("INSERT INTO messages (conversation_id, senderId, recieverId, message, time_sent ) VALUES ($1, $2, $3, $4, $5) RETURNING *", [conversation_id, senderId, recieverId, message, time_sent])
+        await pool.query("UPDATE conversations SET last_message = $1, last_message_date = $2 WHERE conversation_id = $3", [message, time_sent, conversation_id])
+        const activity = await pool.query("SELECT active FROM users WHERE users_id = $1", [recieverId])
+        res.json(activity.rows[0])
+    } catch (err) {
+        console.error(err.message)
     }
 })
 
@@ -296,41 +340,8 @@ app.post("/api/retrieve_messages", verify, async(req, res) => {
     }
 })
 
-//make Message
-app.post("/api/create_message", verify, async(req, res) => { 
-    try {
-        const { conversation_id, senderId, recieverId, message, time_sent } = req.body
-        await pool.query("INSERT INTO messages (conversation_id, senderId, recieverId, message, time_sent ) VALUES ($1, $2, $3, $4, $5) RETURNING *", [conversation_id, senderId, recieverId, message, time_sent])
-        await pool.query("UPDATE conversations SET last_message = $1, last_message_date = $2 WHERE conversation_id = $3", [message, time_sent, conversation_id])
-        const activity = await pool.query("SELECT active FROM users WHERE users_id = $1", [recieverId])
-        res.json(activity.rows[0])
-    } catch (err) {
-        console.error(err.message)
-    }
-})
+/*********************** GENERAL USE ****************************************/
 
-//get a specific users
-app.get("/users/:id", verify, async(req, res) => {//:id specifies what column to get
-    try {
-        const { id } = req.params
-        const user = await pool.query("SELECT * FROM users WHERE users_id = $1", [id])
-        res.json(user.rows[0])
-    } catch (err) {
-        console.error(err.message)
-    }
-})
-
-//update a user
-app.put("/users",verify, async(req, res) => {
-    try {
-        const { id } = req.params
-        const { description } = req.body
-        const updateUser = await pool.query("UPDATE users SET description = $1 WHERE users_id = $2", [description, id])
-        res.json("User Was updated")
-    } catch (err) {
-        console.error(err.message)
-    }
-})
 
 // used to start the server
 app.listen(port, () =>{
