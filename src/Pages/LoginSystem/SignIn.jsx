@@ -28,6 +28,8 @@ function SignIn() {
         setUser({
           id: res.data.users_id,
           username: res.data.username,
+          fname: res.data.fname,
+          lname: res.data.lname,
           email: res.data.email,
           phonenumber: res.data.phonenumber,
           accessToken: res.data.accessToken,

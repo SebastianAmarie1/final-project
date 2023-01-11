@@ -48,6 +48,90 @@ app.post("/api/checkue", async(req, res) => {
 })
 
 //Login System
+const generateAccessToken = (user) => {
+    return jwt.sign({
+        id: user.users_id,
+        username: user.username,
+        fName: user.fName,
+        lName: user.lName,
+        email: user.email,
+        friendslist: user.friendslist,
+        phonenumber: user.phonenumber,
+        gender: user.gender
+    }, 
+    "mySecretAccessKey", 
+    { expiresIn: "10s"})//change my secret to a env.file
+}
+const generateRefreshToken = (user) => {
+    return jwt.sign({
+        id: user.users_id,
+        username: user.username,
+        fName: user.fName,
+        lName: user.lName,
+        email: user.email,
+        friendslist: user.friendslist,
+        phonenumber: user.phonenumber,
+        gender: user.gender
+    }, 
+    "mySecretRefreshKey") 
+}
+
+const verify = (req, res, next) => {
+    const authHeader = req.headers.authorization
+
+    if(authHeader){
+        const token = authHeader.split(" ")[1]
+
+        jwt.verify(token, "mySecretAccessKey", (err, user) => {
+            if(err){
+                return res.status(401).json("Token is not valid")
+            }
+            req.user = user;
+            next();
+        })
+    } else {
+        res.status(401).json("You are not authenticated")
+    }
+}
+
+app.post("/api/login", async(req, res) => {
+
+    const { username, password } = req.body; //gets username and password from body
+    //add last_login
+    last_login = new Date()
+    
+    const user = await pool.query("SELECT * FROM users WHERE username = $1 AND pwd = $2", [username, password])
+
+    if(user.rows[0]) {
+        //generating a access token with the user id and wether the user is admin. sevret key is used to compare keys.
+        const accessToken = generateAccessToken(user)
+        const refreshToken = generateRefreshToken(user)
+
+        const {users_id, username, fname, lname, email, phonenumber, friendslist, gender, region} = user.rows[0]
+        try {
+            const updateUser = await pool.query("UPDATE users SET refreshtoken = $1, accesstoken = $2, last_login = $3, active = $4 WHERE users_id = $5", [refreshToken, accessToken, last_login, true, users_id])
+        } catch (error) {
+            console.log(error)
+        }
+
+        res.json({
+            users_id,
+            username,
+            fname,
+            lname,
+            email,
+            phonenumber,
+            accessToken,
+            refreshToken,
+            friendslist,
+            gender,
+            region,
+        })
+    }
+    else{
+        res.status(400).json("Username or Password incorrect!")
+    }
+})
 
 app.post("/api/refresh", async(req, res) => {//used to generate a refresh token
     //take the refresh token and id from the user
@@ -78,93 +162,6 @@ app.post("/api/refresh", async(req, res) => {//used to generate a refresh token
         })
     })
 })
-
-const generateAccessToken = (user) => {
-    return jwt.sign({
-        id: user.users_id,
-        username: user.username,
-        fName: user.fName,
-        lName: user.lName,
-        email: user.email,
-        friendslist: user.friendslist,
-        phonenumber: user.phonenumber,
-        gender: user.gender
-    }, 
-    "mySecretAccessKey", 
-    { expiresIn: "10s"})//change my secret to a env.file
-}
-const generateRefreshToken = (user) => {
-    return jwt.sign({
-        id: user.users_id,
-        username: user.username,
-        fName: user.fName,
-        lName: user.lName,
-        email: user.email,
-        friendslist: user.friendslist,
-        phonenumber: user.phonenumber,
-        gender: user.gender
-    }, 
-    "mySecretRefreshKey") 
-}
-
-app.post("/api/login", async(req, res) => {
-
-    const { username, password } = req.body; //gets username and password from body
-    //add last_login
-    last_login = new Date()
-    
-    const user = await pool.query("SELECT * FROM users WHERE username = $1 AND pwd = $2", [username, password])
-
-    if(user.rows[0]) {
-        //generating a access token with the user id and wether the user is admin. sevret key is used to compare keys.
-        const accessToken = generateAccessToken(user)
-        const refreshToken = generateRefreshToken(user)
-
-        const {users_id, username, fName, lName, email, phonenumber, friendslist, gender, region} = user.rows[0]
-        try {
-            const updateUser = await pool.query("UPDATE users SET refreshtoken = $1, accesstoken = $2, last_login = $3, active = $4 WHERE users_id = $5", [refreshToken, accessToken, last_login, true, users_id])
-        } catch (error) {
-            console.log(error)
-        }
-
-        res.json({
-            users_id,
-            username,
-            fName,
-            lName,
-            email,
-            phonenumber,
-            accessToken,
-            refreshToken,
-            friendslist,
-            gender,
-            region,
-        })
-    }
-    else{
-        res.status(400).json("Username or Password incorrect!")
-    }
-})
-
-
-const verify = (req, res, next) => {
-    const authHeader = req.headers.authorization
-
-    if(authHeader){
-        const token = authHeader.split(" ")[1]
-
-        jwt.verify(token, "mySecretAccessKey", (err, user) => {
-            if(err){
-                return res.status(401).json("Token is not valid")
-            }
-            req.user = user;
-            next();
-        })
-    } else {
-        res.status(401).json("You are not authenticated")
-    }
-}
-
 
 //Log Out
 app.post("/api/logout",verify,  async (req, res) => { // needs a verify function
