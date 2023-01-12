@@ -212,7 +212,8 @@ app.put("/api/edit_details", verify, async (req, res) => {
 
         await pool.query("UPDATE users SET fname = $1, lname = $2, email = $3, phonenumber = $4, region = $5 WHERE users_id = $6 RETURNING *", [fname, lname, email, phone, region, id])
         const newUser = await pool.query("SELECT * FROM users WHERE users_id = $1", [id])
-    
+        
+        console.log(newUser.rows[0], "rows")
         res.status(200).json({
             user: newUser.rows[0]
         })
@@ -227,7 +228,7 @@ app.put("/api/edit_profile", verify, async (req, res) => {
 
         await pool.query("UPDATE users SET bio = $1, hobbie1 = $2, hobbie2 = $3, hobbie3 = $4, fact1 = $5, fact2 = $6, lie = $7 WHERE users_id = $8 RETURNING *", [bio, hobbie1, hobbie2, hobbie3, fact1, fact2, lie, id])
         const newUser = await pool.query("SELECT * FROM users WHERE users_id = $1", [id])
-    
+        
         res.status(200).json({
             user: newUser.rows[0]
         })

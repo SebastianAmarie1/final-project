@@ -13,37 +13,40 @@ function Profile() {
 
   const [newProfilePic, setNewProfilePic] = useState(null)
   const [switcherToggle, setSwitcherToggle] = useState(true)
-  const [dataURI, setDataURI] = useState(null)
 
-  const fNameRef = useRef()
-  const lNameRef = useRef()
-  const emailRef= useRef()
-  const phoneRef = useRef()
-  const regionReg = useRef()
+  const [fName, setFname] = useState("")
+  const [lName, setLname] = useState("")
+  const [email, setEmail] = useState("")
+  const [phone, setPhone] = useState("")
+  const [region, setRegion] = useState("")
 
-  const bioRef = useRef()
-  const hobbie1Ref= useRef()
-  const hobbie2Ref= useRef()
-  const hobbie3Ref= useRef()
-  const fact1Ref = useRef()
-  const fact2Ref = useRef()
-  const lieRef = useRef()
+  const [bio, setBio] = useState("")
+  const [hobbie1, setHobbie1] = useState("")
+  const [hobbie2, setHobbie2] = useState("")
+  const [hobbie3, setHobbie3] = useState("")
+  const [fact1, setFact1] = useState("")
+  const [fact2, setFact2] = useState("")
+  const [lie, setLie] = useState("")
 
   useEffect(() => {
     if (switcherToggle) {
-      fNameRef.current.value = user.fname
-      lNameRef.current.value = user.lname
-      emailRef.current.value = user.email
-      phoneRef.current.value = user.phonenumber
-      regionReg.current.value = user.region
+      if(user.id){
+        setFname(user.fname)
+        setLname(user.lname)
+        setEmail(user.email)
+        setPhone(user.phonenumber)
+        setRegion(user.region)
+      }
     } else {
-      bioRef.current.value = user.bio
-      hobbie1Ref.current.value = user.hobbie1
-      hobbie2Ref.current.value = user.hobbie2
-      hobbie3Ref.current.value = user.hobbie3
-      fact1Ref.current.value = user.fact1
-      fact2Ref.current.value = user.fact2
-      lieRef.current.value = user.lie
+      if (user.id){
+        setBio(user.bio)
+        setHobbie1(user.hobbie1)
+        setHobbie2(user.hobbie2)
+        setHobbie3(user.hobbie3)
+        setFact1(user.fact1)
+        setFact2(user.fact2)
+        setLie(user.lie)
+      }
     }
   },[user, switcherToggle])
 
@@ -83,11 +86,11 @@ function Profile() {
     try { 
       const res = await axiosAuth.put("/api/edit_details", { 
         id: user.id,
-        fname: fNameRef.current.value,
-        lname: lNameRef.current.value,
-        email: emailRef.current.value,
-        phone: phoneRef.current.value,
-        region: regionReg.current.value,
+        fname: fName,
+        lname: lName,
+        email: email,
+        phone: phone,
+        region: region,
       },
       { headers: 
           { authorization: "Bearer " + user.accessToken}
@@ -98,7 +101,7 @@ function Profile() {
         fname: res.data.user.fname,
         lname: res.data.user.lname,
         email: res.data.user.email,
-        phone: res.data.user.phone,
+        phonenumber: res.data.user.phonenumber,
         region: res.data.user.region,
       })
     } catch (error) {
@@ -112,13 +115,13 @@ function Profile() {
     try { 
       const res = await axiosAuth.put("/api/edit_profile", { 
         id: user.id,
-        bio: bioRef.current.value,
-        hobbie1: hobbie1Ref.current.value,
-        hobbie2: hobbie2Ref.current.value,
-        hobbie3: hobbie3Ref.current.value,
-        fact1: fact1Ref.current.value,
-        fact2: fact2Ref.current.value,
-        lie: lieRef.current.value,
+        bio: bio,
+        hobbie1: hobbie1,
+        hobbie2: hobbie2,
+        hobbie3: hobbie3,
+        fact1: fact1,
+        fact2: fact2,
+        lie: lie,
       },
       { headers: 
           { authorization: "Bearer " + user.accessToken}
@@ -150,7 +153,7 @@ function Profile() {
             }
         </div>
           <div className="profile-image-footer fcc">
-            <input type="file" onChange={handleImageChange} />
+            <input type="file" class="profile-image-file-input" onChange={handleImageChange}/>
             <button className="pButton" onClick={handleUploadImage}>Change Profile Image <span></span></button>
           </div>
 
@@ -161,89 +164,172 @@ function Profile() {
                 <div className={`profile-switcher-line ${switcherToggle ? 'profile-switcher-line-top' : 'profile-switcher-line-top-active'}`}></div>
                 <div className={`profile-switcher-line ${switcherToggle ? 'profile-switcher-line-bottom' : 'profile-switcher-line-bottom-active'}`}></div>
               </div>
-              <h1 className="profile-details-title">{switcherToggle ? 'Details' : 'Profile'}</h1>
+              <h2 className="profile-details-title">{switcherToggle ? 'Details' : 'Profile'}</h2>
               <img className="profile-details-image-current" src={user.profile_pic ? user.profile_pic : noProfileIcon} />
-              <h4>{user.username}</h4>
+              <h2>{user.username}</h2>
 
               {switcherToggle 
                 ?
                   <form onSubmit={handleFormSubmit} className="profile-details-form">
-                    <input
-                      type="text" 
-                      ref={fNameRef}
-                      className="profile-details-form-input"
-                      placeholder="First Name"
-                    />
-                    <input
-                      type="text"
-                      ref={lNameRef}
-                      className="profile-details-form-input"
-                      placeholder="Last Name"
-                    />
-                    <input 
-                      type="text"
-                      ref={emailRef}
-                      className="profile-details-form-input"
-                      placeholder="Email"
-                    />
-                    <input 
-                      type="text"
-                      ref={phoneRef}
-                      className="profile-details-form-input"
-                      placeholder="Phone Number"
-                    />
-                    <input 
-                      type="text"
-                      ref={regionReg}
-                      className="profile-details-form-input"
-                      placeholder="Region"
-                    />
+                      <div className={`wave-group ${fName ?'wave-group-active' : 'wave-group-deactive'} small-input`}>
+                        <input required="" value={fName} type="text" className="input small-input" onChange={(e) => {setFname(e.target.value)}}/>
+                        <span className="bar small-input"></span>
+                        <label className="label">
+                          <span className="label-char" style={{'--index': 0}}>F</span>
+                          <span className="label-char" style={{'--index': 1}}>.</span>
+                          <span className="label-char" style={{'--index': 2}}>N</span>
+                          <span className="label-char" style={{'--index': 3}}>a</span>
+                          <span className="label-char" style={{'--index': 4}}>m</span>
+                          <span className="label-char" style={{'--index': 5}}>e</span>
+                        </label>
+                      </div>
+
+                    <div className={`wave-group ${lName ?'wave-group-active' : 'wave-group-deactive'} small-input`} >
+                      <input required="" value={lName} type="text" className="input small-input" onChange={(e) => {setLname(e.target.value)}}/>
+                      <span className="bar small-input"></span>
+                      <label className="label">
+                        <span className="label-char" style={{'--index': 0}}>L</span>
+                        <span className="label-char" style={{'--index': 1}}>.</span>
+                        <span className="label-char" style={{'--index': 2}}>N</span>
+                        <span className="label-char" style={{'--index': 3}}>a</span>
+                        <span className="label-char" style={{'--index': 4}}>m</span>
+                        <span className="label-char" style={{'--index': 5}}>e</span>
+                      </label>
+                    </div>
+
+                    <div className={`wave-group ${email ?'wave-group-active' : 'wave-group-deactive'} small-input`} >
+                      <input required="" value={email} type="text" className="input small-input" onChange={(e) => {setEmail(e.target.value)}}/>
+                      <span className="bar small-input"></span>
+                      <label className="label">
+                        <span className="label-char" style={{'--index': 0}}>E</span>
+                        <span className="label-char" style={{'--index': 1}}>m</span>
+                        <span className="label-char" style={{'--index': 2}}>a</span>
+                        <span className="label-char" style={{'--index': 3}}>i</span>
+                        <span className="label-char" style={{'--index': 4}}>l</span>
+                      </label>
+                    </div>
+
+                    <div className={`wave-group ${phone ?'wave-group-active' : 'wave-group-deactive'} small-input`} >
+                      <input required="" value={phone} type="text" className="input small-input" onChange={(e) => {setPhone(e.target.value)}}/>
+                      <span className="bar small-input"></span>
+                      <label className="label">
+                        <span className="label-char" style={{'--index': 0}}>P</span>
+                        <span className="label-char" style={{'--index': 1}}>h</span>
+                        <span className="label-char" style={{'--index': 2}}>o</span>
+                        <span className="label-char" style={{'--index': 3}}>n</span>
+                        <span className="label-char" style={{'--index': 4}}>e</span>
+                      </label>
+                    </div>
+
+                    <div className={`wave-group ${region ?'wave-group-active' : 'wave-group-deactive'} small-input`} >
+                      <input required="" value={region} type="text" className="input small-input" onChange={(e) => {setRegion(e.target.value)}}/>
+                      <span className="bar small-input"></span>
+                      <label className="label">
+                        <span className="label-char" style={{'--index': 0}}>R</span>
+                        <span className="label-char" style={{'--index': 1}}>e</span>
+                        <span className="label-char" style={{'--index': 2}}>g</span>
+                        <span className="label-char" style={{'--index': 3}}>i</span>
+                        <span className="label-char" style={{'--index': 4}}>o</span>
+                        <span className="label-char" style={{'--index': 5}}>n</span>
+                      </label>
+                    </div>
+
                     <button className="pButton profile-details-form-button">Submit <span></span></button>
                   </form>
                 :
                   <form onSubmit={handleFormSubmitProfile} className="profile-details-form">
-                    <input
-                      type="text" 
-                      ref={bioRef}
-                      className="profile-details-form-input"
-                      placeholder="Bio"
-                    />
-                    <input
-                      type="text"
-                      ref={hobbie1Ref}
-                      className="profile-details-form-input"
-                      placeholder="Hobbie 1"
-                    />
-                    <input 
-                      type="text"
-                      ref={hobbie2Ref}
-                      className="profile-details-form-input"
-                      placeholder="Hobbie 2"
-                    />
-                    <input 
-                      type="text"
-                      ref={hobbie3Ref}
-                      className="profile-details-form-input"
-                      placeholder="Hobbie 3"
-                    />
-                    <input 
-                      type="text"
-                      ref={fact1Ref}
-                      className="profile-details-form-input"
-                      placeholder="Fact 1"
-                    />
-                    <input 
-                      type="text"
-                      ref={fact2Ref}
-                      className="profile-details-form-input"
-                      placeholder="Fact 2"
-                    />
-                    <input 
-                      type="text"
-                      ref={lieRef}
-                      className="profile-details-form-input"
-                      placeholder="Lie"
-                    />
+                    
+                    <div className={`wave-group ${bio ?'wave-group-active' : 'wave-group-deactive'} small-input`} >
+                      <input required="" value={bio} type="text" className="input small-input" onChange={(e) => {setBio(e.target.value)}}/>
+                      <span className="bar small-input"></span>
+                      <label className="label">
+                        <span className="label-char" style={{'--index': 0}}>B</span>
+                        <span className="label-char" style={{'--index': 1}}>i</span>
+                        <span className="label-char" style={{'--index': 2}}>o</span>
+                      </label>
+                    </div>
+
+                    <div className={`wave-group ${hobbie1 ?'wave-group-active' : 'wave-group-deactive'} small-input`} >
+                      <input required="" value={hobbie1} type="text" className="input small-input" onChange={(e) => {setHobbie1(e.target.value)}}/>
+                      <span className="bar small-input"></span>
+                      <label className="label">
+                        <span className="label-char" style={{'--index': 0}}>H</span>
+                        <span className="label-char" style={{'--index': 1}}>o</span>
+                        <span className="label-char" style={{'--index': 2}}>b</span>
+                        <span className="label-char" style={{'--index': 3}}>b</span>
+                        <span className="label-char" style={{'--index': 4}}>i</span>
+                        <span className="label-char" style={{'--index': 5}}>e</span>
+                        <span className="label-char" style={{'--index': 6}}>-</span>
+                        <span className="label-char" style={{'--index': 5}}>1</span>
+                      </label>
+                    </div>
+
+                    <div className={`wave-group ${hobbie2 ?'wave-group-active' : 'wave-group-deactive'} small-input`} >
+                      <input required="" value={hobbie2} type="text" className="input small-input" onChange={(e) => {setHobbie2(e.target.value)}}/>
+                      <span className="bar small-input"></span>
+                      <label className="label">
+                        <span className="label-char" style={{'--index': 0}}>H</span>
+                        <span className="label-char" style={{'--index': 1}}>o</span>
+                        <span className="label-char" style={{'--index': 2}}>b</span>
+                        <span className="label-char" style={{'--index': 3}}>b</span>
+                        <span className="label-char" style={{'--index': 4}}>i</span>
+                        <span className="label-char" style={{'--index': 5}}>e</span>
+                        <span className="label-char" style={{'--index': 6}}>-</span>
+                        <span className="label-char" style={{'--index': 5}}>2</span>
+                      </label>
+                    </div>
+
+                    <div className={`wave-group ${hobbie3 ?'wave-group-active' : 'wave-group-deactive'} small-input`} >
+                      <input required="" value={hobbie3} type="text" className="input small-input" onChange={(e) => {setHobbie3(e.target.value)}}/>
+                      <span className="bar small-input"></span>
+                      <label className="label">
+                        <span className="label-char" style={{'--index': 0}}>H</span>
+                        <span className="label-char" style={{'--index': 1}}>o</span>
+                        <span className="label-char" style={{'--index': 2}}>b</span>
+                        <span className="label-char" style={{'--index': 3}}>b</span>
+                        <span className="label-char" style={{'--index': 4}}>i</span>
+                        <span className="label-char" style={{'--index': 5}}>e</span>
+                        <span className="label-char" style={{'--index': 6}}>-</span>
+                        <span className="label-char" style={{'--index': 5}}>3</span>
+                      </label>
+                    </div>
+
+                    <div className={`wave-group ${fact1 ?'wave-group-active' : 'wave-group-deactive'} small-input`} >
+                      <input required="" value={fact1} type="text" className="input small-input" onChange={(e) => {setFact1(e.target.value)}}/>
+                      <span className="bar small-input"></span>
+                      <label className="label">
+                        <span className="label-char" style={{'--index': 0}}>F</span>
+                        <span className="label-char" style={{'--index': 1}}>a</span>
+                        <span className="label-char" style={{'--index': 2}}>c</span>
+                        <span className="label-char" style={{'--index': 3}}>t</span>
+                        <span className="label-char" style={{'--index': 4}}>-</span>
+                        <span className="label-char" style={{'--index': 5}}>1</span>
+                      </label>
+                    </div>
+
+                    <div className={`wave-group ${fact2 ?'wave-group-active' : 'wave-group-deactive'} small-input`} >
+                      <input required="" value={fact2} type="text" className="input small-input" onChange={(e) => {setFact2(e.target.value)}}/>
+                      <span className="bar small-input"></span>
+                      <label className="label">
+                        <span className="label-char" style={{'--index': 0}}>F</span>
+                        <span className="label-char" style={{'--index': 1}}>a</span>
+                        <span className="label-char" style={{'--index': 2}}>c</span>
+                        <span className="label-char" style={{'--index': 3}}>t</span>
+                        <span className="label-char" style={{'--index': 4}}>-</span>
+                        <span className="label-char" style={{'--index': 5}}>2</span>
+                      </label>
+                    </div>
+
+                    <div className={`wave-group ${lie ?'wave-group-active' : 'wave-group-deactive'} small-input`} >
+                      <input required="" value={lie} type="text" className="input small-input" onChange={(e) => {setLie(e.target.value)}}/>
+                      <span className="bar small-input"></span>
+                      <label className="label">
+                        <span className="label-char" style={{'--index': 0}}>L</span>
+                        <span className="label-char" style={{'--index': 1}}>i</span>
+                        <span className="label-char" style={{'--index': 2}}>e</span>
+                      </label>
+                    </div>
+
                     <button className="pButton profile-details-form-button">Submit <span></span></button>
                   </form>
               }

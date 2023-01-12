@@ -4,6 +4,4 @@ Chat)
 
 cretate .env file to hide refreshtoken keys
 
-1) fix setUser. only set the specific thing changed and return the image as base64 instead of image
-1) fix the images profile pics 
 2) style the profile page.

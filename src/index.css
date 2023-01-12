@@ -84,7 +84,7 @@ body::-webkit-scrollbar-thumb {
 }
 
 
-
+/************ Buttons *************/
 /* Primary Button */
 button {
     border: none;
@@ -140,6 +140,94 @@ button {
    button:active span::before {
     background: var(--clr-primary);
    }
+
+
+
+
+
+
+
+
+
+/******************* Inputs ********************/
+/* For Wave Effect dont add wave-gropup-active in the classname */
+.wave-group {
+    position: relative;
+}
+  
+.wave-group .input { /*BottomLine Before*/
+    font-size: 14px;
+    padding: 10px 10px 3px 5px;
+    display: block;
+    border: none;
+    border-bottom: 1px solid var(--clr-secondary);
+    background: transparent;
+}   
+
+.wave-group .input:focus {
+    outline: none;
+}
+
+.wave-group .label { /*Label After*/
+    color: var(--clr-primary);
+    font-size: 14px;
+    font-weight: normal;
+    position: absolute;
+    pointer-events: none;
+    left: 5px;
+    top: 13px;
+    display: flex;
+}
+
+.wave-group .label-char {
+    transition: 0.2s ease all;
+    transition-delay: calc(var(--index) * .05s);
+}
+
+.wave-group-active .input:focus ~ label .label-char,
+.wave-group-active .input:valid ~ label .label-char {
+    transform: translateY(-20px);
+    font-size: 14px;
+    color: var(--clr-primary);
+}
+
+.wave-group-deactive .input:focus ~ label .label-char {
+    transform: translateY(-20px);
+    font-size: 14px;
+    color: var(--clr-primary);
+}
+
+.wave-group .bar {
+    position: relative;
+    display: block;
+}
+
+.wave-group .bar:before,.wave-group .bar:after {
+    content: '';
+    height: 2px;
+    width: 0;
+    bottom: 1px;
+    position: absolute;
+    background: var(--clr-primary);
+    transition: 0.2s ease all;
+    -moz-transition: 0.2s ease all;
+    -webkit-transition: 0.2s ease all;
+}
+
+.wave-group .bar:before {
+    left: 50%;
+}
+
+.wave-group .bar:after {
+    right: 50%;
+}
+
+.wave-group .input:focus ~ .bar:before,
+.wave-group .input:focus ~ .bar:after {
+    width: 50%;
+}
+
+  
 
 
 /*   Footer   */
