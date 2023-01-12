@@ -13,7 +13,7 @@ function Chat() {
 
     const { state } = useLocation()
     const navigate = useNavigate()
-    const { conversationId, recieverId, cname } = state // get the conversation and reciever IDs from the previous page
+    const { conversationId, recieverId, cname, profile_pic } = state // get the conversation and reciever IDs from the previous page
     const { socket } = useSocket()
     const { user, axiosAuth } = useAuth()
 
@@ -43,7 +43,7 @@ function Chat() {
     },[messages])
 
     useEffect(() => { //adds the arrived message to the messages
-        arrivalMessage && JSON.stringify(arrivalMessage.senderid) === recieverId &&
+        arrivalMessage && arrivalMessage.senderid === recieverId &&
         setMessages((prev) => [...prev, arrivalMessage])
     }, [arrivalMessage])
 
@@ -128,7 +128,7 @@ function Chat() {
                                     <div className="message-date-seperator-line"></div>
                                 </div>
                             }  
-                            <Message msg={current} dpic={dpic} self={current.senderid === JSON.stringify(user.id)}/>
+                            <Message msg={current} dpic={dpic} profile_pic={profile_pic} self={current.senderid === JSON.stringify(user.id)}/>
                             <div ref={messageEndRef}/>
                         </Fragment>
                     )

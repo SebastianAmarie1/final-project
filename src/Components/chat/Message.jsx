@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import noProfileIcon from "../../Assets/noProfileIcon.png"
 
-function Message({msg, self, dpic}) {
+function Message({msg, self, dpic, profile_pic}) {
 
     const [toggled, setToggled] = useState(false)
 
@@ -26,7 +26,7 @@ function Message({msg, self, dpic}) {
             <div className="chat-container-reciever">
                 {dpic 
                     ?
-                    <img src={noProfileIcon} className="chat-message-image-reciever"></img>
+                    <img src={profile_pic} className="chat-message-image-reciever"></img>
                     :
                     <div className="chat-message-image-placeholder"></div>
                 }

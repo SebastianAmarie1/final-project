@@ -338,11 +338,28 @@ app.post("/api/retrieve_conversations", verify, async(req, res) => {
         
         // get the convos and turn the members ids to objects.
         conversations = await Promise.all(sortedConversations.map(async (current) => {
-            const [User1, User2] = await Promise.all([
+            let [User1, User2] = await Promise.all([
                 pool.query("SELECT * FROM users WHERE users_id = $1", [current.members[0]]),
                 pool.query("SELECT * FROM users WHERE users_id = $1", [current.members[1]])
             ])
-            const newMembers = [User1.rows[0], User2.rows[0]]
+
+            let User1pic
+            let User2pic
+
+            if(User1.rows[0].profile_pic){
+                console.log("ran")
+                User1pic = toBase64(User1.rows[0].profile_pic)
+            }
+            if(User2.rows[0].profile_pic){
+                User2pic = toBase64(User2.rows[0].profile_pic)
+            }
+
+            User1 = {...User1.rows[0], profile_pic: User1pic}
+            User2 = {...User2.rows[0], profile_pic: User2pic}
+
+            //console.log(User1)
+            const newMembers = [User1, User2]
+
             return {
                 ...current,
                 members: newMembers,
