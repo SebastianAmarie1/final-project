@@ -8,21 +8,21 @@
 
 /*   Variables   */
 :root {
-    --ff-primary : 'Arial';
+    --ff-primary : 'Helvetica', 'Arial';
   
     --fw-reg: 300;
     --fw-bold: 900;
-  
-    --clr-primary: #1a0c30;
-    --clr-secondary: #444054;
-    --clr-contrast: #ededed;
+    
+    --clr-primary: #2C2442;
+    --clr-secondary: #835D7A;
+    --clr-contrast: #EAEBEB;
     --clr-highlighted:#DB8A74;
-    --clr-secondaryHighlighted: #FAC9B8;
-    --clr-ownMessage: lightgray;
-    --clr-white: white;
-    --clr-black: black;
-  
+    --clr-ownMessage: #EAEBEB;
+    --clr-white: #F5F5F5;
+    --clr-black: #0A0A0A;
+
     --bs-titles: rgba(0, 0, 0, 0.45) 0px 5px 20px;
+    --bs-light: inset 5px 5px 50px -10px rgba(0,0,0,0.23);
   
     --fs-h1: 2rem;
     --fs-h2: 1.5rem;
@@ -54,7 +54,6 @@ h4{font-size: var(--fs-h4)}
 
 p{ 
     font-size: var(--fs-p);
-    
 }
 
 a{font-size: var(--fs-a); text-decoration: none;}
@@ -86,7 +85,7 @@ body::-webkit-scrollbar-thumb {
 
 /************ Buttons *************/
 /* Primary Button */
-button {
+.pButton {
     border: none;
     display: block;
     position: relative;
@@ -100,9 +99,9 @@ button {
     z-index: 1;
     font-family: inherit;
     font-weight: 500;
-   }
-   
-   button span {
+}
+
+.pButton span {
     position: absolute;
     left: 0;
     top: 0;
@@ -111,39 +110,37 @@ button {
     background: transparent;
     z-index: -1;
     border: 4px solid var(--clr-primary);
-   }
-   
-   button span::before {
+}
+
+.pButton span::before {
     content: "";
     display: block;
     position: absolute;
     width: 8%;
     height: 500%;
-    background: var(--clr-contrast);
+    background: var(--clr-white);
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) rotate(-60deg);
     transition: all 0.3s;
-   }
-   
-   button:hover span::before {
+}
+
+.pButton:hover span::before {
     transform: translate(-50%, -50%) rotate(-90deg);
     width: 100%;
     height: 700%;
     background: var(--clr-primary);
-   }
-   
-   button:hover {
-    color: white;
-   }
-   
-   button:active span::before {
+}
+
+.pButton:hover {
+    color: white; 
+}
+
+.pButton:active span::before {
     background: var(--clr-primary);
-   }
+}
 
-
-
-
+  
 
 
 
@@ -227,7 +224,61 @@ button {
     width: 50%;
 }
 
-  
+/*  File Inputs */
+
+.file {
+    opacity: 0;
+    width: 0.1px;
+    height: 0.1px;
+    position: absolute;
+}
+
+.file-input label {
+    position: relative;
+    width: 200px;
+    height: 50px;
+    display: block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1em;
+    
+    cursor: pointer;
+    color: #fff;
+    transition: transform .2s ease-out;
+    background-color: var(--clr-primary);
+    box-shadow: 0 4px 7px rgba(0, 0, 0, 0.4);
+}
+
+input:hover + label,
+input:focus + label {
+  transform: scale(1.02);
+}
+
+input:focus + label {
+    outline: 1px solid #000;
+    outline: -webkit-focus-ring-color auto 2px;
+  }
+
+/* arrow */
+
+.arrow {
+    border: solid black;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 6px;
+    margin-right: 10px;
+}
+
+.right {
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+}
+
+.left {
+    transform: rotate(135deg);
+    -webkit-transform: rotate(135deg);
+}
 
 
 /*   Footer   */

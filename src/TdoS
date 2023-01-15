@@ -1,7 +1,5 @@
-Chat)
-1)change background
-2) use a Template
 
 cretate .env file to hide refreshtoken keys
 
-2) style the profile page.
+1) Hobbies 2 and 3 are bugging when u mess around. it gets phone and region values for some reason
+2) chat console log a invalid token error at line 62.

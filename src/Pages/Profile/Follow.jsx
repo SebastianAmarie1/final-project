@@ -30,8 +30,15 @@ function Follow() {
 
   const followerUsers = conversations //filter for most recent
   ? conversations.filter((convo) => {
-        //fix filter
-        return convo
+        const partner = convo.members.filter((value) => value.users_id != user.id)[0]
+        
+        if(searchUser) {
+          if(partner.username.toLowerCase().includes(searchUser.toLowerCase())){
+            return convo
+          }
+        } else{
+          return convo
+        }
       
     }).map((current) => {
 
@@ -57,7 +64,7 @@ function Follow() {
               <p className="friends-individual-user-lmsg-msg">Start a new chat with this person</p>
             }
           </div>
-          <h1 className="friends-individual-arrow">&gt;</h1>
+          <p><i className="arrow right"></i></p>
         </div>
       )
     })
@@ -67,7 +74,7 @@ function Follow() {
     <div className="freinds-main-box">
       <div className="friends-container">
         <div className="friends-container-header">
-          <h1 onClick={() => {navigate(`/homepage/`)}} className="chat-header-back-f">&gt;</h1>
+          <p onClick={() => {navigate(`/homepage/`)}}><i className="arrow right chat-header-back-f"></i></p>
           <input 
             className="friends-container-header-search" 
             placeholder="Search for user..."

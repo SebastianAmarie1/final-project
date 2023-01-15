@@ -1,8 +1,9 @@
 .home-main{ 
-    background: var(--clr-secondary);
     padding: 5%;
     height: 100vh;
     width: 100%;
+
+    background-image: url("../../Assets/background.jpg");
 }
 /*  Header  */
 .home-container-headbar{

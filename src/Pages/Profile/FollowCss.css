@@ -4,11 +4,8 @@
     width: 100%;
     padding-top: 2em;
 
-    -webkit-box-shadow: inset 0px 0px 50px 13px rgba(0,0,0,0.26); 
-    box-shadow: inset 0px 0px 50px 13px rgba(0,0,0,0.26);
-    background: rgb(68,64,84);
-    background: linear-gradient(135deg, rgba(68,64,84,1) 0%, rgba(45,40,70,1) 50%, rgba(101,97,121,1) 100%);
-
+    box-shadow: var(--bs-light);
+    background-image: url("../../Assets/background.jpg");
 }
 
 .friends-container{
@@ -17,8 +14,8 @@
     margin: 0 auto;
 
     border-radius: 10px;
-    border: 1px solid var(--clr-primary);
-    background-color: var(--clr-contrast);
+    border: 3px solid var(--clr-primary);
+    background-color: var(--clr-white);
 }
 
 .friends-container-header{
@@ -30,8 +27,9 @@
     margin-bottom: 0.3em;
     padding-inline: 1em;
 
-    -webkit-box-shadow: 0px 10px 10px 0px rgba(0,0,0,0.36); 
-    box-shadow: 0px 10px 10px 0px rgba(0,0,0,0.36);
+    box-shadow: var(--bs-light);
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
     background-color: var(--clr-primary);
 }
 
@@ -42,8 +40,12 @@
 
     color: white;
     border: none;
-    border-bottom: 1px solid var(--clr-white);
-    background-color: var(--clr-primary);
+    border-bottom: 3px solid var(--clr-white);
+    background-color: transparent;
+}
+
+.friends-container-header-search:focus{
+    outline: none;
 }
 
 .chat-header-back-f{
@@ -51,12 +53,19 @@
     rotate: 180deg;
 
     color: white;
+    cursor: pointer;
+    border-color: white;
+}
+.chat-header-back-f:hover,
+.chat-header-back-f:focus{
+    border-color: var(--clr-highlighted);
 }
 
 .friends-individual-user-box{
     width: 100%;
     height: 65px;
     display: flex;
+    align-items: center;
     margin-bottom: 0.2em;
     padding: 0.5em;
 
@@ -66,10 +75,13 @@
 }
 
 .following-individual-pp{/* pfp*/
-    width: 45px;
-    height: 45px;
+    width: 47px;
+    height: 47px;
     margin-right: 1em;
+
+
     border-radius: 50%;
+    border: 1px solid var(--clr-primary);
 }
 
 .friends-individual-user-box:first-child:hover{
@@ -77,7 +89,7 @@
     border-top-left-radius: 10px;
 }
 .friends-individual-user-box:hover{
-    background-color: gray;
+    background-color: var(--clr-contrast);
 }
 
 .friends-individual-name{
@@ -126,5 +138,10 @@
 
     .friends-individual-user-lmsg-date{
         display: none;
+    }
+
+    .friends-container-header{
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
     }
 }

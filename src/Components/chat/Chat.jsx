@@ -101,13 +101,17 @@ function Chat() {
         <div className="chat-container">
             <div className="chat-header fcc">
                 <h3 className="chat-header-title">{cname}</h3>
-                <h1 onClick={() => {navigate(`/homepage/follow/`)}} className="chat-header-back">&gt;</h1>
+                <p onClick={() => {navigate(`/homepage/follow/`)}}><i className="arrow right chat-header-back"></i></p>
             </div>
             <div className="chat-container-messages">
-                {messages?.map((current) => {
+                {
+                (messages != undefined & messages?.length != 0)
+                ?
+                messages.map((current) => {
                     let flag = false
                     let dpic = false
-
+                    
+                   
                     let date = current.time_sent.split("T")[0]
 
                     if (date != compareDate){
@@ -132,8 +136,10 @@ function Chat() {
                             <div ref={messageEndRef}/>
                         </Fragment>
                     )
-                }
-                )}
+                })
+                :
+                <p className="chat-no-message">No Messages. Be The First To Send A Message</p>
+            }
             </div>
             <div className="chat-footer">
                 <textarea className="chat-footer-textarea"
