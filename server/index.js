@@ -417,7 +417,25 @@ app.post("/api/retrieve_messages", verify, async(req, res) => {
 })
 
 /*********************** GENERAL USE ****************************************/
+//get Messages
+app.post("/api/retrieve_user", verify, async(req, res) => {
+    try {
+        const { usersId } = req.body
+        
+        const newUser = await pool.query("SELECT * FROM users WHERE users_id = $1", [usersId])
 
+        const User = {
+            ...newUser.rows[0],
+            profile_pic: toBase64(newUser.rows[0].profile_pic)
+        }
+
+        console.log(User)
+
+        res.json(User)
+    } catch (err) {
+        console.error(err.message)
+    }
+})
 
 // used to start the server
 app.listen(port, () =>{

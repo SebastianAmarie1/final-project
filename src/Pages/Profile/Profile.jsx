@@ -39,13 +39,13 @@ function Profile() {
       }
     } else {
       if (user.id){
-        setBio(user.bio)
-        setHobbie1(user.hobbie1)
-        setHobbie2(user.hobbie2)
-        setHobbie3(user.hobbie3)
-        setFact1(user.fact1)
-        setFact2(user.fact2)
-        setLie(user.lie)
+        setBio(user.profile.bio)
+        setHobbie1(user.profile.hobbie1)
+        setHobbie2(user.profile.hobbie2)
+        setHobbie3(user.profile.hobbie3)
+        setFact1(user.profile.fact1)
+        setFact2(user.profile.fact2)
+        setLie(user.profile.lie)
       }
     }
   },[user, switcherToggle])
@@ -75,7 +75,10 @@ function Profile() {
     setFlag(true)
     setUser({
       ...user,
-      profile_pic: res.data.profile_pic,
+      profile: {
+        ...user.profile,
+        profile_pic: res.data.profile_pic,
+      }
     })
     setNewProfilePic(null)
   }
@@ -129,13 +132,16 @@ function Profile() {
       setFlag(true)
       setUser({
         ...user,
-        bio: res.data.user.bio,
-        hobbie1: res.data.user.hobbie1,
-        hobbie2: res.data.user.hobbie2,
-        hobbie3: res.data.user.hobbie3,
-        fact1: res.data.user.fact1,
-        fact2: res.data.user.fact2,
-        lie: res.data.user.lie,
+        profile: {
+          ...user.profile,
+          bio: res.data.user.bio,
+          hobbie1: res.data.user.hobbie1,
+          hobbie2: res.data.user.hobbie2,
+          hobbie3: res.data.user.hobbie3,
+          fact1: res.data.user.fact1,
+          fact2: res.data.user.fact2,
+          lie: res.data.user.lie,
+        },
       })
     } catch (error) {
         console.log(error)
@@ -151,7 +157,7 @@ function Profile() {
               <div className="profile-pfp-box profile-pfp-box1"/>
               <div className="profile-pfp-box profile-pfp-box2"/>
               <div className="profile-pfp-box profile-pfp-box3"/>
-              <img className="profile-image-current" src={user.profile_pic ? user.profile_pic : noProfileIcon} />
+              <img className="profile-image-current" src={user.profile?.profile_pic ? user.profile?.profile_pic : noProfileIcon} />
             </div>
             
             
@@ -161,9 +167,9 @@ function Profile() {
         </div>
           <div className="profile-image-footer fcc">
             
-            <div class="file-input">
-              <input type="file" onChange={handleImageChange} id="file" class="file"/>
-              <label for="file">Select file</label>
+            <div className="file-input">
+              <input type="file" onChange={handleImageChange} id="file" className="file"/>
+              <label htmlFor="file">Select file</label>
             </div>
 
            
@@ -178,7 +184,7 @@ function Profile() {
                 <div className={`profile-switcher-line ${switcherToggle ? 'profile-switcher-line-bottom' : 'profile-switcher-line-bottom-active'}`}></div>
               </div>
               <h2 className="profile-details-title">{switcherToggle ? 'Details' : 'Profile'}</h2>
-              <img className="profile-details-image-current" src={user.profile_pic ? user.profile_pic : noProfileIcon} />
+              <img className="profile-details-image-current" src={user.profile?.profile_pic ? user.profile?.profile_pic : noProfileIcon} />
               <h2>{user.username}</h2>
 
               {switcherToggle 

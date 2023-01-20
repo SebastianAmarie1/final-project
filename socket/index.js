@@ -55,11 +55,6 @@ const checkAvailableRoom = (id, gender, socket) =>{
 }
 
 io.on("connection", (socket) => {
-
-    socket.on('printUsers', () => {
-        console.log(rooms)
-        console.log(activeRooms)
-    })
  
 ///////////////////////// Adding Users //////////////////////////
 

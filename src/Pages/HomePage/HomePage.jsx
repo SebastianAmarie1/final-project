@@ -19,9 +19,8 @@ import speakerOn from "../../Assets/homepage/home-speaker-on.png"
 
 function HomePage() {
 
-  const { user } = useAuth()
+  const { user, axiosAuth } = useAuth()
   const { socket } = useSocket()
-
 
   //Connections
   const [stream, setStream] = useState() 
@@ -30,9 +29,11 @@ function HomePage() {
   const [callAccepted, setCallAccepted] = useState(false)
   const [roomId, setRoomId] = useState(null)
   const [partnerId, setPartnerId] = useState(null)
+  const [partnerProfile, setPartnerProfile] = useState(null)
   const [initiator, setInitiator] = useState(null)
   const [callerSignal, setCallerSignal] = useState(null)
 
+  console.log(partnerProfile)
   //Camera Settings
   const [mute, setMute] = useState(false)
   const [partnerMute, setPartnerMute] = useState(false)
@@ -88,6 +89,23 @@ function HomePage() {
     });
   }, [])
 
+  useEffect(() => {
+    if(partnerId) {
+      const getPartnerProfile = async() => {
+        try {
+          const res = await axiosAuth.post("/api/retrieve_user", { usersId: partnerId },
+          { headers: 
+              { authorization: "Bearer " + user.accessToken}
+          })//sends a request to the server
+          setPartnerProfile(res.data)
+      } catch (error) {
+          console.log(error)
+      }
+      }
+      getPartnerProfile()
+    }
+  },[partnerId])
+
 //// initiating the call ////
 const searchForCall = () => {
     
@@ -111,7 +129,7 @@ const searchForCall = () => {
         socket.current.emit("callUser", {
           signal: data,
           roomId: roomId,
-          id: user.id
+          id: user.id,
         })
       })
       
@@ -246,12 +264,6 @@ const nextPhase = () => {
 
 }
 
-  const practise = () => {
-    //socket.current.emit("printUsers", {})
-    //partnerVideo.current.play()
-    console.log(pStream)
-    //setShowTimer(!showTimer)
-  }
 
   let MyVideo = <video onClick={() => {setMyVideoToggled((oldValue) => !oldValue)}} className="home-video-me" ref={myVideo} autoPlay playsInline/>
   let PartnersVideo = <video onClick={() => {setPartnerVideoToggled((oldValue) => !oldValue)}} className="home-video-partner-video" ref={partnerVideo} autoPlay playsInline muted/>
@@ -260,10 +272,7 @@ const nextPhase = () => {
     <div className="home-main"> {/*Container for the whole page*/}
     
       <div className="home-container-headbar"> {/*Container for the title for the webpage */}
-        <h2>{callAccepted ? 'CHANGE TO USER NAME' : 'Currently Not In Call'}</h2>
-        <button onClick={practise}>
-          Practise
-        </button>
+        <h2>{callAccepted ? partnerProfile?.username : 'Currently Not In Call'}</h2>
         <div className="home-container-timer"> {/*Timer container */}
           {showTimer && <Counter time={phaseTime[currentPhase]} onCountdownEnd={handleCountdownEnd}/>}
         </div>
@@ -274,20 +283,21 @@ const nextPhase = () => {
           {!callAccepted ?
               searching ?
                   <div className="home-video-search" onClick={stopSearch}>
-                    <div className="search-outer-circle fcc outer-circle-animation"></div>
-                    <div className="search-middle-circle fcc middle-circle-animation"></div>
-                    <div className="search-inner-circle fcc inner-circle-animation"></div>
+                    <div className="loader home-video-loader">
+                        <div className="face">
+                            <div className="circle"></div>
+                        </div>
+                        <div className="face">
+                            <div className="circle"></div>
+                        </div>
+                    </div>
                     <h3 className="home-video-search-text">Searching</h3>
                   </div>
                   :
                   <div className="home-video-search" onClick={searchForCall}>
-                    <div className="search-outer-circle fcc">
-                      <div className="search-middle-circle fcc">
-                        <div className="search-inner-circle fcc">
-                          <h3 className="home-video-search-text">Click To Find Partner</h3>
-                        </div> 
-                      </div>
-                    </div>
+                    <div className="home-video-search-static"/>
+                    <h3 className="home-video-search-text">Click To Find Partner</h3>
+                    <div className="home-video-search-static home-video-search-static-secondary"/>
                   </div>
                 :
                 (currentPhase === 3 && decisionScreen)
@@ -296,11 +306,11 @@ const nextPhase = () => {
                 :
                   decisionScreen
                     ?
-                      <Decision roomId={roomId} nextPhase = {nextPhase}/>
+                      <Decision roomId={roomId} nextPhase = {nextPhase} currentPhase={currentPhase}/>
                     :
                       currentPhase === 1 
                       ?
-                        <ShowProfile />
+                        <ShowProfile partnerProfile={partnerProfile} />
                       :
                       <div className="home-video-partner fcc">
                         <div onClick={() => {setPartnerVideoToggled((oldValue) => !oldValue)}} className={`hideCamera fcc ${partnerCamera && 'hide'}`} >

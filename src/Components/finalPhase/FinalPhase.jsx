@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { useAuth } from "../../Contexts/AuthContext"
 import { useSocket } from "../../Contexts/socketContext"
 
+import "./FinalPhaseCss.css"
+
 function FinalPhase({ roomId, endCall, partnerId }) {
 
   const { user, setUser, setFlag, axiosAuth } = useAuth()
@@ -85,7 +87,7 @@ function FinalPhase({ roomId, endCall, partnerId }) {
   }
 
   return (
-    <div className="showp-container">
+    <div className="final-container">
       <h2>FINAL PHASE</h2>
       <h3>Would you like to add this user?</h3>
       { following ? <button>You are Already Following This user!</button> : <button onClick={handleAdd}>Add User!</button>}

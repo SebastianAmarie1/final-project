@@ -4,10 +4,16 @@ import "./landingpage.css"
 import "./landingPageAnimations.css"
 import { reviews } from "./reviews.jsx"
 
-import InformationImage from "../../Assets/LandingPage/landingPage-ww.jpg"
+import InformationImage from "../../Assets/LandingPage/landing-page-gif.gif"
 import GooglePlay from "../../Assets/LandingPage/googlePlayIcon.png"
 import AppleStore from "../../Assets/LandingPage/appleDownloadIcon.png"
+import SignIn from "../../Assets/LandingPage/signin-img.png"
+import Profile from "../../Assets/LandingPage/profile-img.png"
+import Video from "../../Assets/LandingPage/videocall-img.png"
+import Chat from "../../Assets/LandingPage/chat-img.png"
+import SpeachMarks from "../../Assets/LandingPage/speachmarks.png"
 
+import Noprofile from "../../Assets/noProfileIcon.png"
 
 function LandingPage() {
 
@@ -15,15 +21,13 @@ function LandingPage() {
 
   const [scrollPosition, setScrollPosition] = useState(0)
   const [totalHeight, setTotalHeight] = useState()
-  const [scrollPosPercentage, setScrollPosPercentage] = useState(0)
-  const [peachDraw, setPeachDraw] = useState(0)
-  const [purpleDraw, setPurpleDraw] = useState(0)
-  const peachPath = useRef()
-  const purplePath = useRef()
+
 
   const [shuffle, setShuffle] = useState(false)
   const [indexes, setIndexes] = useState([])
 
+
+  // Card Shuffling
   useEffect(() => {
     getRandomIndexes()
   },[])
@@ -49,10 +53,8 @@ function LandingPage() {
       setShuffle(false)
     }, 1500)
   }
-  
-  let peachPathLength = peachPath.current?.getTotalLength()
-  let purplePathLength = purplePath.current?.getTotalLength()
- 
+
+  // y pos 
   const handleScroll = () => {
     const position = window.pageYOffset;
     setScrollPosition(position);
@@ -63,29 +65,6 @@ function LandingPage() {
   }
   
   useEffect(() => {
-    setScrollPosPercentage((scrollPosition/totalHeight) * 100)
-    
-    setPeachDraw(peachPathLength * scrollPosPercentage)
-    setPurpleDraw((peachPathLength * 0.825) * scrollPosPercentage)
-
-    if(peachPath.current){
-      peachPath.current.style.strokeDashoffset = peachPathLength - (peachDraw) /50
-    }
-    if(purplePath.current){
-      purplePath.current.style.strokeDashoffset = purplePathLength - (purpleDraw) / 50
-    }
-
-  }, [scrollPosition])
-
-
-  useEffect(() => {
-    if(peachPath.current){
-      peachPath.current.style.strokeDasharray = peachPathLength 
-      peachPath.current.style.strokeDashoffset = peachPathLength
-
-      purplePath.current.style.strokeDasharray = purplePathLength 
-      purplePath.current.style.strokeDashoffset = purplePathLength
-    }
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => {
         window.removeEventListener('scroll', handleScroll);
@@ -97,11 +76,14 @@ function LandingPage() {
       setDiv(true)
     }, 4000)
 
-
     window.addEventListener('resize', updateSize);
     updateSize();
     return () => window.removeEventListener('resize', updateSize);
   }, [])
+
+  useEffect(() => {
+    console.log(scrollPosition)
+  },[scrollPosition])
 
   return (
     <>
@@ -114,7 +96,6 @@ function LandingPage() {
             <div className="landing-top-button-container">
               <button className="landing-top-button landing-bg-primary landing-loading-desc-animation"><Link className="landing-top-link landing-clr-highlighted" to="/signup">Sign Up</Link></button>
               <button className="landing-top-button landing-bg-primary landing-loading-desc-animation"><Link className="landing-top-link landing-clr-highlighted" to="/signin">Sign In</Link></button>
-              <h5 >Add GooglePlay / Apple Store </h5>
             </div>
           </div>
         </div>
@@ -136,89 +117,146 @@ function LandingPage() {
         </div>
       </div>
 
-      { /*Infrotmation*/ }
+      { /*Information*/ }
 
       <div className="landing-info">
         <div className="landing-info-ww">
-          <h1 className="landing-info-ww-title grid-t">What Is WhizzEros?</h1>
-          <div className="landing-info-ww-left grid-s">
-            <img className="landing-info-ww-img" src={InformationImage}></img>
-            
-          </div>
-          <div className="landing-info-ww-right grid-i">
-            <h5 className="landing-info-ww-text">
-                WhizzEros is a new dating tool which can be used by anyone with an
-                account. The purpose behind WhizzEros is to connect people in a more
-                visual manner. The concept behind the app is that you are mathced with
-                a random person and you will then have a one minuite conversation with
-                them. after the one minuite you will then decide wether you would like
-                to continue for another minuite or leave. after 3 minuites of talking
-                you will then get an option to add the person.
+          <div className="landing-info-ww-container">
+            <div className="landgng-info-ww-info">
+              <h1 className="landing-info-ww-title">What Is WhizzEros?</h1>
+              <h5 className="landing-info-ww-text">
+              WhizzEros is a modern dating tool with user-friendly interface and 
+              intuitive functionality. It connects users for five-minute conversations
+              to quickly evaluate compatibility and decide to continue or move on. 
+              After five minutes, users can add the person to their contact list for
+                potential future interactions.
               </h5>
+            </div>
+            <img className="landing-info-ww-img" src={InformationImage}></img>
           </div>
         </div>
-
-      {/* REVIEWS */}
-      <div className="card-main-container">
-        <section className={`card-section ${shuffle ? "" : "activate-shuffle"}`}>
-            {
-              indexes.map((index, i) => {
-                return(
-                  <div key={i} className={`big-card ${shuffle ? "shuffle" : "move"}`}>
-                    <div className="big-card-title">
-                      <h1>{reviews[index].username}</h1>
-                    </div>
-                    <div className="big-card-body">
-                      <p>{reviews[index].message}</p>
-                    </div>
-                    <div className="big-card-footer">
-                      <footer>{reviews[index].footer}</footer>
-                    </div>
-                  </div>
-                ) 
-              })
-          }
-          <div className="placeholder"></div>
-          <div className="placeholder2"></div>
-        </section>
-          <button onClick={handleShuffle} className="card-button">Shuffle</button>
-      </div>
-
-
 
       {/* Workings */}
 
-        <div className="landing-info-works">
-          <div className="landing-info-works-title-container">
-            <h3 className="landing-info-works-title">How WizzEros Works</h3>
+        <div className="landing-info-works-container">
+          <div className="landing-info-works-title">
+            <h1 className="landing-info-ww-title">How WhizzEros Works</h1>
           </div>
-          <div className="landing-info-svg-purple-container">
-            
-            <div className="landing-info-works-steps-box">
-              <div className="landing-info-works-steps-container step-f">
-                <div className="landing-info-works-step">.1</div>
-                  <h5 className="landing-info-works-text">WhizzEros is a new dating tool which can be used by anyone with an
-                  account. The purpose behind WhizzEros is to connect people in a more
-                  visual manner. The concept behind the app is that you are mathced with
-                  a random person and you will then have.</h5>
+
+          <div className="landing-info-works-steps-box">
+            <div className="landing-info-works-individual">
+              <div className="landing-info-works-indv">
+                <div className="landing-info-works-indv-left">
+                  <div className={`landing-info-works-indv-step ${scrollPosition > 1150 && 'landing-info-works-indv-step-animation'}`}>1</div>
+                  <h2>Login</h2>
+                  <p>To access features and benefits of our platform, first create an 
+                    account by navigating to the landing page and locate the 
+                    "Sign Up" button. Carefully and accurately enter all required 
+                    information during the account creation process to avoid delays 
+                    or complications.
+                  </p>
                 </div>
-                <div className="landing-info-works-steps-container step-s">
-                  <div className="landing-info-works-step">.2</div>
-                    <h5 className="landing-info-works-text">WhizzEros is a new dating tool which can be used by anyone with an
-                    account. The purpose behind WhizzEros is to connect people in a more
-                    visual manner. The concept behind the app is that you are mathced with
-                    a random person and you will then have.</h5>
-                </div>
-                <div className="landing-info-works-steps-container step-t">
-                  <div className="landing-info-works-step">.3</div>
-                    <h5 className="landing-info-works-text">WhizzEros is a new dating tool which can be used by anyone with an
-                    account. The purpose behind WhizzEros is to connect people in a more
-                    visual manner. The concept behind the app is that you are mathced with
-                    a random person and you will then have.</h5>
+                <div className="landing-info-works-indv-right fcc">
+                  <img className={`landing-info-works-indv-img ${scrollPosition > 1150 && 'landing-info-works-indv-img-animation'}`} src={SignIn}></img>
                 </div>
               </div>
             </div>
+
+            <div className="landing-info-works-individual ">
+              <div className="landing-info-works-indv landing-reversed">
+                <div className="landing-info-works-indv-left">
+                  <div className={`landing-info-works-indv-step ${scrollPosition > 1900 && 'landing-info-works-indv-step-animation'}`}>2</div>
+                  <h2>Profile</h2>
+                  <p>Upon successful login, you will be granted access to the full 
+                  spectrum of features and services available on our platform. 
+                  However, we strongly recommend that you take a moment to visit 
+                  your profile and create a comprehensive profile for others to view,
+                  so others can learn more about you and connect with you in a
+                  meaningful way.
+                  </p>
+                </div>
+                <div className="landing-info-works-indv-right fcc">
+                  <img className={`landing-info-works-indv-img ${scrollPosition > 1900 && 'landing-info-works-indv-img-animation'}`} src={Profile}></img>
+                </div>
+              </div>
+            </div>
+
+            <div className="landing-info-works-individual">
+              <div className="landing-info-works-indv">
+                <div className="landing-info-works-indv-left">
+                  <div className={`landing-info-works-indv-step ${scrollPosition > 2600 && 'landing-info-works-indv-step-animation'}`}>3</div>
+                  <h2>Video Call</h2>
+                  <p>You can now fully immerse yourself in the main features of our application
+                    that is centered around connecting with other users through a simple and 
+                    easy-to-use process of three steps to establish connections with like-minded
+                    individuals. The first step is to initiate a connection with a random user 
+                    by clicking on the "Connect" button located within the user's profile, after 
+                    that you can engage in conversation with the other user and learn more about 
+                    their interests, background, and goals.
+                  </p>
+                </div>
+                <div className="landing-info-works-indv-right fcc">
+                  <img className={`landing-info-works-indv-img ${scrollPosition > 2600 && 'landing-info-works-indv-img-animation'}`} src={Video}></img>
+                </div>
+              </div>
+            </div>
+
+            <div className="landing-info-works-individual landing-info-works-individual-dark">
+              <div className="landing-info-works-indv landing-reversed">
+                <div className="landing-info-works-indv-left">
+                  <div className={`landing-info-works-indv-step ${scrollPosition > 3400 && 'landing-info-works-indv-step-animation'}`}>4</div>
+                  <h2>Chat</h2>
+                  <p>After completing a video call, you can take your connection to the next level 
+                  by arranging real-life activities with the other user using our direct messaging
+                    feature that allows you to easily and efficiently communicate, plan activities,
+                    and even share information such as location and contact details.
+                  </p>
+                </div>
+                <div className="landing-info-works-indv-right fcc">
+                  <img className={`landing-info-works-indv-img ${scrollPosition > 3400 && 'landing-info-works-indv-img-animation'}`} src={Chat}></img>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+
+
+        {/* REVIEWS */}
+        <div className="card-main-container">
+          <h1 className="landing-info-ww-title">WhizzEros Reviews</h1>
+          <section className={`card-section ${shuffle ? "" : "activate-shuffle"}`}>
+              {
+                indexes.map((index, i) => {
+                  return(
+                    <div key={i} className={`big-card ${shuffle ? "shuffle" : "move"}`}>
+                      <div className="big-card-title">
+                        <img className="big-card-title-speachmarks" src={SpeachMarks}></img>
+                        <div className="big-card-title-container">
+                          <h3 className="big-card-title-rating">4.7</h3>
+                        </div>
+                      </div>
+                      <div className="big-card-body">
+                        <h1>Title</h1>
+                        <p>{reviews[index].message}</p>
+                      </div>
+                      <div className="big-card-footer">
+                        <img className="big-card-pfp" src={Noprofile}></img>
+                        <div className="big-card-title-footer">
+                          <h1 >{reviews[index].username}</h1>
+                          <p>{reviews[index].footer}</p>
+                        </div>
+                        <img className="big-card-title-speachmarks footer-speachmarks" src={SpeachMarks}></img>
+                      </div>
+                    </div>
+                  ) 
+                })
+            }
+            <div className="placeholder"></div>
+            <div className="placeholder2"></div>
+          </section>
+            <button onClick={handleShuffle} className="card-button">Shuffle</button>
+        </div>
+
       </div>
     </div>
     </>

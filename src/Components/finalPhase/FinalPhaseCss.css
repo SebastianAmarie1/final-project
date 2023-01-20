@@ -1,0 +1,11 @@
+.final-container{
+    position: relative;
+    max-width: 1850px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    grid-area: v;
+    border-radius: 5px;
+    color: white;
+    background-color: var(--clr-black);
+}
