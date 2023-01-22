@@ -250,11 +250,9 @@ function LandingPage() {
                     </div>
                   ) 
                 })
-            }
-            <div className="placeholder"></div>
-            <div className="placeholder2"></div>
+              }
           </section>
-            <button onClick={handleShuffle} className="card-button">Shuffle</button>
+            <button onClick={handleShuffle} className="pButton profile-details-form-button card-button">Submit <span></span></button>
         </div>
 
       </div>

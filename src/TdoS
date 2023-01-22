@@ -1,5 +1,9 @@
 
 cretate .env file to hide refreshtoken keys
+create proper login with sessions
+use 3 performance enchancing techniques
+apply some security features
 
 1) Hobbies 2 and 3 are bugging when u mess around. it gets phone and region values for some reason
 2) chat console log a invalid token error at line 62.
+3) fix the card shuffle component

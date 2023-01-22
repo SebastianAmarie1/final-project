@@ -3,8 +3,7 @@
     position: relative;
     width: 100%;
 
-    box-shadow: var(--bs-light);
-    background-color: var(--clr-white);
+    background-color: white;
 }
 
 /*   Loading   */
@@ -368,14 +367,12 @@
     align-items: center;
     padding-top: 5em;
     padding-bottom: 10em; 
-
-    background-color: white;
 }
 
 .card-section{
     position: relative;
     width: 100%;
-    height: 65vh; 
+    height: 80vh; 
     margin-bottom: 1em;
     overflow: hidden;
 }
@@ -384,8 +381,6 @@
     position: absolute;
     height: 450px;
     width: 20%;
-    min-width: 200px;
-    min-width: 250px;
     top: calc(50% - 225px);
     transition: transform 2s ease-in-out;
 
@@ -403,7 +398,7 @@
 }
 
 .big-card-title-speachmarks{
-    width: 75px;
+    max-width: 75px;
 }
 
 .big-card-title-container{
@@ -484,7 +479,8 @@
 }
 
 .big-card-pfp{
-    width: 60px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
 }
 
@@ -519,16 +515,11 @@
 
 /* Shuffle Button */
 .card-button{
-    position: relative;
-    z-index: 10;
-    width: 200px;
-    height: 50px;
-    margin: 0 auto;
-    font-size: 1.5rem;
-    cursor: pointer;
-    background-color: #ededed;
+ 
 }
-
+.pButton span::before {
+    background-color: white;
+}
 /* scrollbar */
 .big-card-body::-webkit-scrollbar {width: 5px;}
 .big-card-body::-webkit-scrollbar-track {background: #f1f1f1; }
@@ -543,7 +534,6 @@
     }
     .card-main-container{
         animation: scaleDown 1s ease-in forwards;
-
      }
 
     @keyframes scaleDown {
@@ -555,6 +545,9 @@
         }
     }
 
+    .big-card{
+        width: 35%;
+    }
 
     .activate-shuffle {
         pointer-events: auto;
@@ -569,12 +562,12 @@
             height: 100vh;
         }
         100%{
-            height: 130vh;
+            height: 170vh;
         }
     }
 
     .card-main-container:hover .activate-shuffle{
-        height: 60vh;
+        height: 80vh;
     }
 
     .card-section:hover{
@@ -624,95 +617,114 @@
         width: 90%;
     }
 
-    .card-section{
-        overflow:visible;
-        height: auto;
-        width: calc(100%);
-        padding: 2em;
-        transform: none;
-        transition: none
+    .card-section,
+    .card-section:hover,
+    .card-section:focus,
+    .card-main-container,
+    .card-main-container:hover,
+    .card-main-container:focus,
+    .activate-shuffle,
+    .activate-shuffle:hover,
+    .activate-shuffle:focus,
+    .big-card,
+    .shuffle,
+    .move{
+        all: revert;
+        transition: none;
     }
+
+    .card-main-container,
+    .card-main-container:hover{
+        background-color: white;
+    }
+
+    .activate-shuffle:hover,
+    .card-sction:hover,
+    .card-main-container:hover{
+        height: 185vh;
+    }
+
+
     .big-card{
-        position: relative;
-        height: auto;
-        transform: none;
-        transition: none;
-        width: 100%;
-        transform: rotate(0deg);
-        left:0;
-        top: 0;
-        border-radius: 0;
-        margin-bottom: 2em;
+        margin: 0 auto;
+        width: 90%;
+        border-radius: 10px;
+        margin-bottom: 2em;;
+        border: 1px solid var(--clr-primary);
+        background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,217,217,1) 100%);
     }
-    .big-card:nth-child(1),
-    .big-card:nth-child(2),
-    .big-card:nth-child(3),
-    .big-card:nth-child(4){
-        left: 0;
-        top: 0;
-        transform: rotate(0deg);
-    }
-    .activate-shuffle:hover > .move:nth-child(1),
-    .activate-shuffle:hover > .move:nth-child(2),
-    .activate-shuffle:hover > .move:nth-child(3),
-    .activate-shuffle:hover > .move:nth-child(4),
-    .activate-shuffle:hover .card-button,
-    .card-section:hover{
-        transition: none;
-        transform: none;
-    }
-}
 
-
-
-/* MEDIA QUERY WIDTH < 360PX   */
-@media (max-width: 359px){
-    .landing-info-ww-img{
+    .card-main-container:hover .card-button{
         position: relative;
-        margin-top: 0;
-    }
-    .landing-info-ww-text{
-        position: relative;
-        left:0;
-        max-width: 80%;
-        margin-top: 1em;
-        margin-bottom: 2em;
-        margin-left: auto;
-        
-    }
-    .landing-info-works-title{
+        z-index: 10;
+        transform: translateY(92vh);
         margin: 0 auto;
     }
-    .landing-info-svg-purple-container{
-        width: 100%;
-        transform: translate(0px);
-    }
-    .landing-info-works-steps-box{
-        margin: 0 auto;
-        padding-left: 1em;
-        
-    }
-    .landing-info-works-steps-box{
-        position: relative;
 
+    /* original Positions of the cards */
+    .big-card:nth-child(1) {
+        left: calc(0%);
+        top: calc(0%);
+        transform: rotate(0deg);
     }
-    .landing-top-download-icons{
-        display: flex;
-        flex-direction: column; 
+    .big-card:nth-child(2) {
+        left: calc(0%);
+        top: calc(0%);
+        transform: rotate(0deg);
     }
-    .landing-top-download-pics:last-child{
-        margin-top: 1em;
-        margin-left: 0;
+    .big-card:nth-child(3) {
+        left: calc(0%);
+        top: calc(0%);
+        transform: rotate(0deg);
     }
+    .big-card:nth-child(4) {
+        left: calc(0%);
+        top: calc(0%);
+        transform: rotate(0deg);
+    }
+    
+    /* Cards arranging themselves for reading */
+    .activate-shuffle:hover > .move:nth-child(1){
+        transition: transform 2s ease-in-out;
+        transform: translate(0%);
+    }
+    .activate-shuffle:hover > .big-card:nth-child(2){
+        transition: transform 2s ease-in-out;
+        transform: translate(0%) ;
+    }
+    .activate-shuffle:hover > .big-card:nth-child(3){
+        transition: transform 2s ease-in-out;
+        transform: translate(0%) ;
+    }
+    .activate-shuffle:hover > .big-card:nth-child(4){
+        transition: transform 2s ease-in-out;
+        transform: translate(0%) ;
+    }
+
+
+    /* Cards going down to shuffle */
+    .shuffle:nth-child(1){
+        transition: transform 2s ease-in-out;
+        transform: translateY(0%) translateX(0%) scale(1);
+    }
+    .shuffle:nth-child(2){
+        transition: transform 2s ease-in-out;
+        transform: translateY(0%) translateX(0%) scale(1) ;
+    }
+    .shuffle:nth-child(3){
+        transition: transform 2s ease-in-out;
+        transform: translateY(0%) translateX(0%) scale(1) ;
+    }
+    .shuffle:nth-child(4){
+        transition: transform 2s ease-in-out; 
+        transform: translateY(0%) translateX(0%) scale(1) ;
+    }
+
+    .activate-shuffle, .card-section:hover .card-section{
+        transition: none;
+        animation: none;
+    }
+
 }
 
 
-.landing-bg-primary{
-    background-color: var(--clr-primary);
-}
-.landing-clr-primary{
-    color: var(--clr-primary)
-}
-.landing-clr-highlighted{
-    color: var(--clr-highlighted)
-}
