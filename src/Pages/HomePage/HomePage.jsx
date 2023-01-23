@@ -94,6 +94,13 @@ function HomePage() {
     socket.current.on("onlineUsers", (data) => {
       setOnlineUsers(data.onlineUsers)
     })
+
+    socket.current.emit("seeOnlineUsers")
+
+    socket.current.on("recieveOnlineUsers", (data) => {
+      setOnlineUsers(data.onlineUsers)
+    })
+
   }, [])
 
   useEffect(() => {
@@ -112,6 +119,7 @@ function HomePage() {
       getPartnerProfile()
     }
   },[partnerId])
+
 
 //// initiating the call ////
 const searchForCall = () => {
@@ -226,7 +234,6 @@ const stopSearch = () => {
   }
 
 ///// Camera settings /////
-
   const muteAudio = () => {
     if (myVideo.current) {
       setMute((prev) => !prev)

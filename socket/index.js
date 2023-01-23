@@ -64,10 +64,12 @@ io.on("connection", (socket) => {
         } else {
             usersHash[data.userId] = {socketId: socket.id, username:data.name, id:data.userId}
         }
-        console.log(usersHash, "users")
         io.emit('onlineUsers', { onlineUsers: usersHash })
     })
 
+    socket.on('seeOnlineUsers', (data) => {
+        io.to(socket.id).emit('recieveOnlineUsers', { onlineUsers: usersHash })
+    })
 ///////////////////////// Messaging System ///////////////////////
 
     socket.on('sendMessage', (data) => {

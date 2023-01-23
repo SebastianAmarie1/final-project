@@ -15,7 +15,6 @@ function Online({onlineUsers}) {
     useEffect(() => {
         const getFriends = async() => {
             try {
-                console.log("RAN AXIOS")
                 const res = await axiosAuth.post("/api/retrieve_friends", { 
                     id: user.id,
                 },
@@ -34,12 +33,16 @@ function Online({onlineUsers}) {
 
 
     useEffect(() => {
-        if(friends){
-            setOnlineFriends(friends.filter((value) => {
-            if (onlineUsers[value.users_id]){
-                return value
+        try {
+            if(friends){
+                setOnlineFriends(friends.filter((value) => {
+                if (onlineUsers[value.users_id]){
+                    return value
+                }
+               }))
             }
-           }))
+        } catch (error) {
+            console.log(error)
         }
     },[onlineUsers, friends])
 
