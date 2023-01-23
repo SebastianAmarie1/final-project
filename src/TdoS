@@ -7,3 +7,4 @@ apply some security features
 1) Hobbies 2 and 3 are bugging when u mess around. it gets phone and region values for some reason
 2) chat console log a invalid token error at line 62.
 3) fix the card shuffle component
+4) friends list its only adding to 1 persons list. instead of both lsits

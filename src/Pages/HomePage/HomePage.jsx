@@ -8,6 +8,7 @@ import Counter from "../../Components/Counter"
 import ShowProfile from "../../Components/showProfile/ShowProfile"
 import Decision from "../../Components/decision/Decision"
 import FinalPhase from '../../Components/finalPhase/FinalPhase'
+import Online from "../../Components/Online-Hints/Online"
 
 import endCallIcon from "../../Assets/homepage/homepage-end-call.webp"
 import cameraOff from "../../Assets/homepage/homepage-camera-toggle-off.png"
@@ -16,6 +17,8 @@ import audioOn from "../../Assets/homepage/home-page-audio-on.png"
 import audioOff from "../../Assets/homepage/home-page-audio-off.png"
 import speakerOff from "../../Assets/homepage/home-speaker-off.png"
 import speakerOn from "../../Assets/homepage/home-speaker-on.png"
+
+
 
 function HomePage() {
 
@@ -31,9 +34,9 @@ function HomePage() {
   const [partnerId, setPartnerId] = useState(null)
   const [partnerProfile, setPartnerProfile] = useState(null)
   const [initiator, setInitiator] = useState(null)
+  const [onlineUsers, setOnlineUsers] = useState(null)
   const [callerSignal, setCallerSignal] = useState(null)
 
-  console.log(partnerProfile)
   //Camera Settings
   const [mute, setMute] = useState(false)
   const [partnerMute, setPartnerMute] = useState(false)
@@ -87,6 +90,10 @@ function HomePage() {
       setPartnerCamera(data.active);
       data.active ? partnerVideo.current.play() : partnerVideo.current.pause()
     });
+
+    socket.current.on("onlineUsers", (data) => {
+      setOnlineUsers(data.onlineUsers)
+    })
   }, [])
 
   useEffect(() => {
@@ -345,8 +352,7 @@ const nextPhase = () => {
                         }
                   </div> 
           }
-          <div className="home-video-hints" >
-          </div>
+          <Online onlineUsers={onlineUsers} />
           <div className="home-video-user">
             <div onClick={() => {setMyVideoToggled((oldValue) => !oldValue)}} className={`hideCamera fcc ${!viewCamera && 'hide'}`}>
               <h2 className="hideCamera-title">Camera Turned Off</h2>

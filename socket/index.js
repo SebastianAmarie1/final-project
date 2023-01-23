@@ -62,8 +62,10 @@ io.on("connection", (socket) => {
         if(data.userId == undefined || data.name == undefined){
             console.log("No User Data Sent To Socket")
         } else {
-            usersHash[data.userId] = {socketId: socket.id, username:data.name}
+            usersHash[data.userId] = {socketId: socket.id, username:data.name, id:data.userId}
         }
+        console.log(usersHash, "users")
+        io.emit('onlineUsers', { onlineUsers: usersHash })
     })
 
 ///////////////////////// Messaging System ///////////////////////
@@ -135,6 +137,7 @@ socket.on("Follow", (data) => {
     socket.on("rmvUser", (data) => {
         delete usersHash[data.userId]
         deleteRoomsById(data.userId)
+        io.emit('onlineUsers', { onlineUsers: usersHash })
     })
     socket.on("disconnect", () => {console.log("a user has disconnected")})
 })

@@ -222,38 +222,7 @@ function LandingPage() {
 
 
         {/* REVIEWS */}
-        <div className="card-main-container">
-          <h1 className="landing-info-ww-title">WhizzEros Reviews</h1>
-          <section className={`card-section ${shuffle ? "" : "activate-shuffle"}`}>
-              {
-                indexes.map((index, i) => {
-                  return(
-                    <div key={i} className={`big-card ${shuffle ? "shuffle" : "move"}`}>
-                      <div className="big-card-title">
-                        <img className="big-card-title-speachmarks" src={SpeachMarks}></img>
-                        <div className="big-card-title-container">
-                          <h3 className="big-card-title-rating">4.7</h3>
-                        </div>
-                      </div>
-                      <div className="big-card-body">
-                        <h1>Title</h1>
-                        <p>{reviews[index].message}</p>
-                      </div>
-                      <div className="big-card-footer">
-                        <img className="big-card-pfp" src={Noprofile}></img>
-                        <div className="big-card-title-footer">
-                          <h1 >{reviews[index].username}</h1>
-                          <p>{reviews[index].footer}</p>
-                        </div>
-                        <img className="big-card-title-speachmarks footer-speachmarks" src={SpeachMarks}></img>
-                      </div>
-                    </div>
-                  ) 
-                })
-              }
-          </section>
-            <button onClick={handleShuffle} className="pButton profile-details-form-button card-button">Submit <span></span></button>
-        </div>
+        
 
       </div>
     </div>

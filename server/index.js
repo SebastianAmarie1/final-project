@@ -8,6 +8,7 @@ const jwt = require("jsonwebtoken");
 const bodyParser = require("body-parser");
 const multer = require("multer");
 const { Buffer } = require('buffer');
+const { channelConfig } = require("simple-peer");
 
 //middleware
 app.use(cors()) //cors ensures we send the right headers
@@ -432,6 +433,38 @@ app.post("/api/retrieve_user", verify, async(req, res) => {
         console.log(User)
 
         res.json(User)
+    } catch (err) {
+        console.error(err.message)
+    }
+})
+
+//get userfriends
+app.post("/api/retrieve_friends", verify, async(req, res) => {
+    try {
+        const { id } = req.body
+        //sort the conversations from most active to least and return it.
+        let friends = await pool.query("SELECT friendslist FROM users WHERE users_id = $1", [id])
+        
+        friends = friends.rows[0].friendslist
+        let friendslist = []
+
+        friends = await Promise.all(friends.map(async (current) => {
+            let User1 = await pool.query("SELECT * FROM users WHERE users_id = $1", [current])
+            let User1pic
+
+            if(User1.rows[0].profile_pic){
+                User1pic = toBase64(User1.rows[0].profile_pic)
+            }
+
+            User1 = {...User1.rows[0], profile_pic: User1pic}
+            let tempList = []
+            tempList.push(User1)
+            
+            return tempList
+        }))
+        friendslist = [].concat(...friends)
+
+        res.json(friendslist)
     } catch (err) {
         console.error(err.message)
     }

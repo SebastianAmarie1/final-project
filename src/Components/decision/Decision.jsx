@@ -38,14 +38,14 @@ function Decision({roomId, nextPhase, currentPhase}) {
             ?
             <div className="home-video-search">
                 <div className="loader home-video-loader">
-                        <div className="face">
-                            <div className="circle"></div>
-                        </div>
-                        <div className="face">
-                            <div className="circle"></div>
-                        </div>
+                    <div className="face">
+                        <div className="circle"></div>
                     </div>
-                    <h3 className="home-video-search-text">Waiting For Partner Response</h3>
+                    <div className="face">
+                        <div className="circle"></div>
+                    </div>
+                </div>
+                <h3 className="home-video-search-text">Waiting For Partner Response</h3>
             </div>
             :
             <div className="home-video-search" onClick={acceptNextPhase}>
