@@ -102,6 +102,15 @@ function LandingPage() {
       </div>
     <div className="landing-main">
       <div className="landing-top">
+
+        <div className="heart heart-1" style={{'--index': 0}}></div>
+        <div className="heart heart-2" style={{'--index': 1}}></div>
+        <div className="heart heart-3" style={{'--index': 2}}></div>
+        <div className="heart heart-4" style={{'--index': 3}}></div>
+        <div className="heart heart-5" style={{'--index': 4}}></div>
+        <div className="heart heart-6" style={{'--index': 5}}></div>
+        
+        
         <div className="landing-top-container">
           <h1 className="landing-top-title landing-loading-title-animation">Meeting The Right Person With WhizzEros</h1>
           <h4 className='landing-top-decription landing-loading-desc-animation'>Are you tired of normal dating applications? have some fun with WhizzEros's 
