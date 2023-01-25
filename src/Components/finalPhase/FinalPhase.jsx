@@ -30,26 +30,30 @@ function FinalPhase({ roomId, endCall, partnerId }) {
     
   },[answer, response])
 
-
   useEffect(() => {
     const checkFollowing = () => {
       if (user.friendslist){
-        console.log(user.friendslist, "friendsList")
-      }
+        user.friendslist.forEach((value) => {
+          console.log(value, partnerId, "ran")
+          if (JSON.stringify(partnerId) == JSON.stringify(value)){
+            setFollowing(true)
+            console.log("Ran")
+          }
+        })}
     }
+
     checkFollowing()
   },[user])
-
-
   
   const handleAdd = () => {
-    setAnswer(true)
+    setAnswer(true) 
 
     socket.current.emit("Follow", {
       roomId: roomId,
       userDetails: user
     })
   }
+  console.log(following)
 
   //used to follow a user and create a blank conversation
   const followRequest = async() => {
@@ -58,10 +62,6 @@ function FinalPhase({ roomId, endCall, partnerId }) {
       { headers: 
         { authorization: "Bearer " + user.accessToken}
       })
-      console.log(res.data.user, "user")
-      console.log(res.data.user, "rows")
-      console.log(res.data.user.friendslist, "fr")
-
       
       if (res.data.flag) {
         setFlag(true)
@@ -88,10 +88,41 @@ function FinalPhase({ roomId, endCall, partnerId }) {
 
   return (
     <div className="final-container">
-      <h2>FINAL PHASE</h2>
-      <h3>Would you like to add this user?</h3>
-      { following ? <button>You are Already Following This user!</button> : <button onClick={handleAdd}>Add User!</button>}
-        
+      <div className="final-main fcc">
+        <h1>Final Phase</h1>
+        <h2>Would you like to add this user?</h2>
+        <div className="final-body fcc">
+          { following 
+            ? 
+              <button>You are Already Following This user!</button> 
+            : 
+            answer 
+            ?
+            <>
+              <div className="loader home-video-loader">
+                  <div className="face">
+                      <div className="circle"></div>
+                  </div>
+                  <div className="face">
+                      <div className="circle"></div>
+                  </div>
+              </div>
+              <h3 className="home-video-search-text">Waiting For Partner Response</h3>
+            </>
+            :
+              <>
+                <div className="final-button-container">
+                  <button className="final-button final-button-p" onClick={handleAdd}>Add User!</button>
+                  <div className="final-button-blur final-button-blur-p" />
+                </div>
+                <div className="final-button-container ">
+                  <button className="final-button final-button-p"> Find Next User</button>
+                  <div className="final-button-blur final-button-blur-p" />
+                </div>
+              </>
+          }
+        </div>
+      </div>
     </div>
   )
 }

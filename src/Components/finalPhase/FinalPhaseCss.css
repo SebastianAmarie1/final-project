@@ -9,3 +9,79 @@
     color: white;
     background-color: var(--clr-black);
 }
+
+.final-main{
+    width: 70%;
+    height: 100%;
+    flex-direction: column;
+}
+
+.final-main h1{
+    font-family: "Arial Black";
+    letter-spacing: -2px;
+    font-size: 36px;
+    text-align: center;
+}
+.final-main h2{
+    font-family: "Arial Black";
+    letter-spacing: -2px;
+    text-align: center;
+    margin-top: 2%;
+}
+
+.final-body{
+    height: 50%;
+    width: 100%;
+    gap: 5em;
+}
+
+.final-button{
+    position: relative;
+    z-index: 2;
+    height: 125px;
+    width: 250px;
+    border-radius: 5px;
+    font-size: large;
+    cursor: pointer;
+}
+
+.final-button-p{
+    color: var(--clr-highlighted);
+    background-color: var(--clr-primary);
+}
+
+.final-button-h{
+    color: var(--clr-primary);
+    background-color: var(--clr-highlighted);
+}
+
+.final-button-container{
+    position: relative;
+}
+
+.final-button-blur{
+    position: absolute;
+    width: 300px;
+    height: 200px;
+    border-radius: 50%;
+    transform: translate(-25px, -160px);
+    filter: blur(100px);
+}
+.final-button-blur-p{
+    background-color: var(--clr-primary);
+}
+
+.final-button-blur-h{
+    background-color: var(--clr-highlighted);
+}
+
+.final-button-p:hover,
+.final-button-p:focus{
+    background-color: var(--clr-highlighted);
+    color: var(--clr-primary)
+}
+
+.final-button-p:hover + .final-button-blur-p{
+    background-color: var(--clr-highlighted);
+}
+

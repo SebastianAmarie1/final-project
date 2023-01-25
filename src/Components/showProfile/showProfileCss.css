@@ -70,7 +70,7 @@
 
 .showp-user-details p{
     font-family: "Arial Black";
-    color: var(--clr-white);
+    color: var(--clr-secondary);
     opacity: 0.95;
     line-height: 1.5;
     font-size: 1em;
@@ -78,12 +78,12 @@
 
 .showp-user-details li{
     font-family: "Arial Black";
-    color: var(--clr-highlighted);
+    color: var(--clr-secondary);
     opacity: 0.95;
     line-height: 1.5;
     font-size: 1em;
     margin-left: 2.5em;
 }
 li span{
-    color: var(--clr-white)
+    color: var(--clr-secondary)
 }

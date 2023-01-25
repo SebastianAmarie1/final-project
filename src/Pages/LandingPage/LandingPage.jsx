@@ -94,9 +94,9 @@ function LandingPage() {
             <h4 className='landing-top-decription landing-clr-primary landing-loading-desc-animation'>Are you tired of normal dating applications? have some fun with WhizzEros's 
             3-step video call function. Sign up now for FREE.</h4>
             <div className="landing-top-button-container">
-              <button className="landing-top-button landing-bg-primary landing-loading-desc-animation"><Link className="landing-top-link landing-clr-highlighted" to="/signup">Sign Up</Link></button>
-              <button className="landing-top-button landing-bg-primary landing-loading-desc-animation"><Link className="landing-top-link landing-clr-highlighted" to="/signin">Sign In</Link></button>
-            </div>
+              <Link to="/signup"><button className="lButton landing-loading-desc-animation"><span>Sign Up</span></button></Link>
+              <Link to="/signin"><button className="lButton landing-loading-desc-animation"><span>Sign In</span></button></Link>
+              </div>
           </div>
         </div>
       </div>
@@ -116,8 +116,8 @@ function LandingPage() {
           <h4 className='landing-top-decription landing-loading-desc-animation'>Are you tired of normal dating applications? have some fun with WhizzEros's 
           3-step video call function. Sign up now for FREE.</h4>
           <div className="landing-top-button-container">
-            <button className="landing-top-button landing-loading-btn-animation"><Link className="landing-top-link" to="/signup">Sign Up</Link></button>
-            <button className="landing-top-button landing-loading-btn-animation"><Link className="landing-top-link" to="/signin">Sign In</Link></button>
+            <Link to="/signup"><button className="lButton"><span>Sign Up</span></button></Link>
+            <Link to="/signin"><button className="lButton"><span>Sign In</span></button></Link>
             <div className="landing-top-download-icons">
               <img className="landing-top-download-pics" src={GooglePlay}></img>
               <img className="landing-top-download-pics" src={AppleStore}></img>

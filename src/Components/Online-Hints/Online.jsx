@@ -54,6 +54,10 @@ function Online({onlineUsers}) {
             <div className={`online-body ${!onlineUsers && !friends && 'fcc'} `}>
                 {onlineUsers 
                     ?
+                    onlineFriends?.length == 0
+                    ?
+                    <p className="online-noonline">No Friends Online</p>
+                    :
                     onlineFriends?.map((value) => {
                         return(
                             <div key={value.users_id} className="online-indv">

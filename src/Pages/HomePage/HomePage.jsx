@@ -320,7 +320,7 @@ const nextPhase = () => {
                 :
                   decisionScreen
                     ?
-                      <Decision roomId={roomId} nextPhase = {nextPhase} currentPhase={currentPhase}/>
+                      <Decision roomId={roomId} nextPhase = {nextPhase} currentPhase={currentPhase} endCall={endCall}/>
                     :
                       currentPhase === 1 
                       ?
