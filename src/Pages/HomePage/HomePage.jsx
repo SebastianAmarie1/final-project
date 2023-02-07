@@ -27,7 +27,7 @@ function HomePage() {
 
   //Connections
   const [stream, setStream] = useState() 
-  const [pStream, setPStream] = useState()
+  const [pStream, setPStream] = useState(null)
   const [searching, setSearching] = useState(false)
   const [callAccepted, setCallAccepted] = useState(false)
   const [roomId, setRoomId] = useState(null)
@@ -57,7 +57,19 @@ function HomePage() {
   const [showTimer, setShowTimer] = useState(false)
   const [decisionScreen, setDecisionScreen] = useState(false)
 
+  /*
+  console.log(pStream, "pStream")
+  console.log(searching, "searching")
+  console.log(roomId, "roomId")
+  console.log(partnerProfile, "PartnerProfile")
+  console.log(initiator, "Initiator")
+  console.log(callerSignal, "callerSignal")
+  console.log(partnerVideo?.current, "partnerVideo")
+  console.log(connectionRef?.current, "connectionRef")
+  */
+
   useEffect(() => {
+    
     const settingMyStream = async() => { //sets up my stream.
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true })
@@ -166,6 +178,7 @@ const searchForCall = () => {
       
       connectionRef.current = peer
     }
+
   }, [initiator])
 
   useEffect(() => {
@@ -223,7 +236,10 @@ const stopSearch = () => {
     })
 
     connectionRef.current = null
-    partnerVideo.current = null
+    partnerVideo?.current?.srcObect.destroy()
+    setPStream(null)
+    setPartnerId(null)
+    setPartnerProfile(null)
     setPartnerViewCamera(false)
     setPartnerMute(false)
     setCallerSignal(null)
@@ -231,6 +247,9 @@ const stopSearch = () => {
     setRoomId(null)
     setCallAccepted(false)
     setSearching(false)
+    setDecisionScreen(false)
+    setCurrentPhase(1)
+    setShowTimer(false)
   }
 
 ///// Camera settings /////
@@ -275,7 +294,6 @@ const nextPhase = () => {
     setShowTimer(true)
     setDecisionScreen(false)
   }
-
 }
 
 

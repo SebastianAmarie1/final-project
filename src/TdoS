@@ -5,7 +5,13 @@ apply some security features
 add tooltips 
 
 2) chat console log a invalid token error at line 62.
-3) fix the card shuffle component
+
 5) fix the camera and audio on voice call
 6) end call when refreshing page, going on another page ect.
 7) when calling more than 3 times and ending call. it bugs out. u ened to refresh
+8) make it so that when you are following someone the add user option isnt a option
+
+3) fix the card shuffle component.
+9) make how many unread messages on the follow page.
+10) make online/offline status on follow page aswell
+11) make a arrow pointing down on the main page that scroll to the next section
