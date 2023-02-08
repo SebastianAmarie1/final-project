@@ -5,6 +5,11 @@ import App from './App';
 import { AuthProvider } from "./Contexts/AuthContext"
 import { SocketProvider } from "./Contexts/socketContext"
 
+import * as process from 'process';
+
+(window).global = window;
+(window).process = process;
+(window).Buffer = [];
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
