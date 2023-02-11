@@ -98,7 +98,6 @@ socket.on('search', ({id, gender}) => { // user_id, gender
 })
 
 socket.on("callUser", (data) => {
-
     users = activeRooms[data.roomId]
     let send 
     if (users.first === data.id){
@@ -106,6 +105,8 @@ socket.on("callUser", (data) => {
     } else{
         send = users.first
     }
+
+    console.log(usersHash[send], "user")
 
     io.to(usersHash[send].socketId).emit("answerUser", { signal: data.signal, roomId: data.roomId, partnerId: data.id })
 })

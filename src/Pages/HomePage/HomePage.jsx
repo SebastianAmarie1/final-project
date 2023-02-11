@@ -93,6 +93,7 @@ function HomePage() {
       setCallerSignal(data.signal)
       setShowTimer(true)
       setPartnerId(data.partnerId)
+      
     })
 
     socket.current.on("callEnded", () => {
@@ -131,10 +132,6 @@ function HomePage() {
       getPartnerProfile()
     }
   },[partnerId])
- 
-  useEffect(() => {
-    //console.log(connectionRef.current, "cc")
-  },[connectionRef.current])
 
 //// initiating the call ////
   const searchForCall = () => {
@@ -150,11 +147,10 @@ function HomePage() {
   useEffect(() => {
     
   if(initiator) {
-
+    
     if (connectionRef.current){
       connectionRef.current = undefined
     }
-    console.log(connectionRef.current, "beginning")
     const peer = new Peer({
       initiator: true,
       trickle: false,
@@ -179,20 +175,21 @@ function HomePage() {
       }
     });
 
+    let flag = false
     socket.current.on("callAccepted", (data) => {
-      console.log("RANN INSIDE")
-      setCallerSignal(data.signal);
-      setCallAccepted(true);
-      setShowTimer(true);
-      setPartnerId(data.partnerId);
-      console.log(connectionRef.current, "cci")
-      console.log("////////////////////////////////////////");
-      connectionRef.current.signal(data.signal);
+      if (!flag){
+        console.log(connectionRef.current, "peer")
+        setCallerSignal(data.signal);
+        setCallAccepted(true);
+        setShowTimer(true);
+        setPartnerId(data.partnerId);
+        flag = true
+        connectionRef.current.signal(data.signal);
+      }
     });
     
+    console.log("/////////////////")
     connectionRef.current = peer;
-    console.log(connectionRef.current, "cc");
-
   }
 
 }, [initiator]);
@@ -207,7 +204,6 @@ function HomePage() {
 //// recieving the call ////
   useEffect(() => { 
     if(callerSignal != null & initiator === false) {
-      console.log("RAN UYSE EFFECT")
       setCallAccepted(true)
 
       const peer = new Peer({ //create peer
@@ -217,7 +213,6 @@ function HomePage() {
       })
 
       peer.on("signal", (data) => {
-        console.log(data, "RAN SIGNAL INSIDE")
         socket.current.emit("answerCall", {
           signal: data,
           roomId: roomId,
@@ -233,7 +228,6 @@ function HomePage() {
         }
       })
 
-      console.log(peer, "peer")
       peer.signal(callerSignal)
       connectionRef.current = peer
     }

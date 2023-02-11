@@ -367,7 +367,6 @@ function Profile() {
                         </label>
                       </div>
                     </div>
-
                     <button className="pButton profile-details-form-button">Submit <span></span></button>
                   </form>
               }
