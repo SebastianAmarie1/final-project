@@ -34,7 +34,6 @@ const checkRooms = (roomId) => {
 
 const checkAvailableRoom = (id, gender, socket) =>{
     let available = false
-    console.log("RAN")
 
     for (let i =0 ; i < rooms.length; i++){
         if(rooms[i].gender !== gender) {
@@ -99,12 +98,28 @@ socket.on('search', ({id, gender}) => { // user_id, gender
 })
 
 socket.on("callUser", (data) => {
-    socket.broadcast.to(data.roomId).emit("answerUser", { signal: data.signal, roomId: data.roomId, partnerId: data.id })
+
+    users = activeRooms[data.roomId]
+    let send 
+    if (users.first === data.id){
+        send = users.second
+    } else{
+        send = users.first
+    }
+
+    io.to(usersHash[send].socketId).emit("answerUser", { signal: data.signal, roomId: data.roomId, partnerId: data.id })
 })
 
 socket.on("answerCall", (data) => {
-    console.log("RAN ANSWER CALL")
-    socket.broadcast.to(data.roomId).emit("callAccepted", { signal: data.signal, partnerId: data.id })
+    users = activeRooms[data.roomId]
+    let send 
+    if (users.first === data.id){
+        send = users.second
+    } else{
+        send = users.first
+    }
+
+    io.to(usersHash[send].socketId).emit("callAccepted", { signal: data.signal, partnerId: data.id })
 })
 
 socket.on("endCall", (data) => {
@@ -133,8 +148,6 @@ socket.on("Follow", (data) => {
             delete activeRooms[roomId]
         }
         socket.leave(roomId)
-
-        console.log(rooms)
     })
     socket.on("rmvUser", (data) => {
         delete usersHash[data.userId]

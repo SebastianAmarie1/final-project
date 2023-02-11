@@ -131,55 +131,71 @@ function HomePage() {
       getPartnerProfile()
     }
   },[partnerId])
-
+ 
+  useEffect(() => {
+    //console.log(connectionRef.current, "cc")
+  },[connectionRef.current])
 
 //// initiating the call ////
-const searchForCall = () => {
-    
-  setSearching(true)
-
-  socket.current.emit("search", {  
-    id: user.id,
-    gender: user.gender,
-  })
-}
-
-  useEffect(() => { 
-    if(initiator) {
-      const peer = new Peer({ // create peer
-        initiator: true,
-        trickle: false,
-        stream: stream
-      })
+  const searchForCall = () => {
       
-      peer.on("signal", (data) => {//sending signal to reciever
+    setSearching(true)
+
+    socket.current.emit("search", {  
+      id: user.id,
+      gender: user.gender,
+    })
+  }
+
+  useEffect(() => {
+    
+  if(initiator) {
+
+    if (connectionRef.current){
+      connectionRef.current = undefined
+    }
+    console.log(connectionRef.current, "beginning")
+    const peer = new Peer({
+      initiator: true,
+      trickle: false,
+      stream: stream
+    });
+
+    if (peer){
+      peer.on("signal", (data) => {
         socket.current.emit("callUser", {
           signal: data,
           roomId: roomId,
           id: user.id,
-        })
-      })
-      
-      peer.on("stream", (stream) => {//setting stream of partner
-        setPStream(stream)
-        if (partnerVideo.current) {
-          partnerVideo.current.srcObject = stream
-          partnerVideo.current.pause()
-        }
-      })
-      
-      socket.current.on("callAccepted", (data) => { //for recieving answer
-        setCallerSignal(data.signal)
-        setCallAccepted(true)
-        setShowTimer(true)
-        setPartnerId(data.partnerId)
-        peer.signal(data.signal)
-      })
-      
-      connectionRef.current = peer
+        });
+      });
     }
+    
+    peer.on("stream", (stream) => {
+      setPStream(stream);
+      if (partnerVideo.current) {
+        partnerVideo.current.srcObject = stream;
+        partnerVideo.current.pause();
+      }
+    });
 
-  }, [initiator])
+    socket.current.on("callAccepted", (data) => {
+      console.log("RANN INSIDE")
+      setCallerSignal(data.signal);
+      setCallAccepted(true);
+      setShowTimer(true);
+      setPartnerId(data.partnerId);
+      console.log(connectionRef.current, "cci")
+      console.log("////////////////////////////////////////");
+      connectionRef.current.signal(data.signal);
+    });
+    
+    connectionRef.current = peer;
+    console.log(connectionRef.current, "cc");
+
+  }
+
+}, [initiator]);
 
   useEffect(() => {
     if(partnerVideo.current){
@@ -191,6 +207,7 @@ const searchForCall = () => {
 //// recieving the call ////
   useEffect(() => { 
     if(callerSignal != null & initiator === false) {
+      console.log("RAN UYSE EFFECT")
       setCallAccepted(true)
 
       const peer = new Peer({ //create peer
@@ -200,6 +217,7 @@ const searchForCall = () => {
       })
 
       peer.on("signal", (data) => {
+        console.log(data, "RAN SIGNAL INSIDE")
         socket.current.emit("answerCall", {
           signal: data,
           roomId: roomId,
@@ -215,6 +233,7 @@ const searchForCall = () => {
         }
       })
 
+      console.log(peer, "peer")
       peer.signal(callerSignal)
       connectionRef.current = peer
     }
@@ -235,8 +254,13 @@ const stopSearch = () => {
       roomId: roomId,
     })
 
-    connectionRef.current = null
-    partnerVideo?.current?.srcObect.destroy()
+    connectionRef.current.on('close', () => {
+      // clean up resources when the connection is closed
+    });
+    connectionRef.current.destroy();
+    if (partnerVideo.current){
+      partnerVideo.current.srcObject = null;
+    }
     setPStream(null)
     setPartnerId(null)
     setPartnerProfile(null)
