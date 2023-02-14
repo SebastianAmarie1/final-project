@@ -106,8 +106,6 @@ socket.on("callUser", (data) => {
         send = users.first
     }
 
-    console.log(usersHash[send], "user")
-
     io.to(usersHash[send].socketId).emit("answerUser", { signal: data.signal, roomId: data.roomId, partnerId: data.id })
 })
 
@@ -137,6 +135,8 @@ socket.on("responseNextStage", (data) => {
 })
 
 socket.on("Follow", (data) => {
+    console.log("RAN FOLLOW")
+    console.log(data.userDetails.username, "user")
     socket.broadcast.to(data.roomId).emit("responseFollow", { response: data.response, userDetails: data.userDetails })
 })
 

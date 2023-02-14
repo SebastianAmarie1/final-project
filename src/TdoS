@@ -1,14 +1,16 @@
 cretate .env file to hide refreshtoken keys
 create proper login with sessions
-use 3 performance enchancing techniques
+use 3 performance enchEancing techniques
 apply some security features
 add tooltips 
+
+
+
 
 2) chat console log a invalid token error at line 62.
 
 5) fix the camera and audio on voice call
 6) end call when refreshing page, going on another page ect.
-8) make it so that when you are following someone the add user option isnt a option
 
 3) fix the card shuffle component.
 9) make how many unread messages on the follow page.

@@ -81,10 +81,6 @@ function LandingPage() {
     return () => window.removeEventListener('resize', updateSize);
   }, [])
 
-  useEffect(() => {
-    console.log(scrollPosition)
-  },[scrollPosition])
-
   return (
     <>
     <div className={`landing-loading-main landing-loading-animation ${div && `hide`}`}>

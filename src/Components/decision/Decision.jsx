@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useSocket } from "../../Contexts/socketContext"
 
 
-function Decision({roomId, nextPhase, currentPhase, endCall}) {
+function Decision({roomId, nextPhase, currentPhase, endCall, skipCall}) {
 
     const { socket } = useSocket()
 
@@ -63,7 +63,7 @@ function Decision({roomId, nextPhase, currentPhase, endCall}) {
                     </div>
 
                     <div className="home-video-search-footer fcc">
-                        <button className="home-video-search-buttons"> Skip</button>
+                        <button onClick={skipCall} className="home-video-search-buttons"> Skip</button>
                         <button onClick={endCall} className="home-video-search-buttons end-call"> End Call</button>
                     </div>
 

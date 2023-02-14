@@ -4,7 +4,7 @@ import { useSocket } from "../../Contexts/socketContext"
 
 import "./FinalPhaseCss.css"
 
-function FinalPhase({ roomId, endCall, partnerId }) {
+function FinalPhase({ roomId, endCall, partnerId, skipCall }) {
 
   const { user, setUser, setFlag, axiosAuth } = useAuth()
   const { socket } = useSocket()
@@ -20,49 +20,44 @@ function FinalPhase({ roomId, endCall, partnerId }) {
       setResponse(true)
       setPartnerDetails(data.userDetails)
     })
-
   },[])
 
   useEffect(() => {
     if (answer && response){
-      followRequest()
+      handleFollow()
     }
-    
   },[answer, response])
 
   useEffect(() => {
     const checkFollowing = () => {
       if (user.friendslist){
         user.friendslist.forEach((value) => {
-          console.log(value, partnerId, "ran")
-          if (JSON.stringify(partnerId) == JSON.stringify(value)){
+          if (JSON.stringify(partnerId) === value){
             setFollowing(true)
-            console.log("Ran")
           }
-        })}
+        })
+      }
     }
 
     checkFollowing()
-  },[user])
+  },[user.friendslist])
   
   const handleAdd = () => {
-    setAnswer(true) 
+    setAnswer(true)
 
     socket.current.emit("Follow", {
       roomId: roomId,
       userDetails: user
     })
   }
-  console.log(following)
 
-  //used to follow a user and create a blank conversation
-  const followRequest = async() => {
+  const handleFollow = async () => {
     try {
       const res = await axiosAuth.post("/api/follow", {id: user.id, followedUser: partnerDetails.id}, 
       { headers: 
         { authorization: "Bearer " + user.accessToken}
       })
-      
+
       if (res.data.flag) {
         setFlag(true)
         setUser((prev) => {
@@ -71,30 +66,26 @@ function FinalPhase({ roomId, endCall, partnerId }) {
             friendslist: res.data.user.friendslist
           }
         })
-        
-        if(partnerDetails.id < user.id){
-          const response = await axiosAuth.post("/api/create_conversation", {id: user.id, pid: partnerDetails.id}, 
-          { headers: 
-            { authorization: "Bearer " + user.accessToken}
-          })
-        }
       }
+      endCall()
     } catch (error) {
       console.log(error)
     }
-
-    endCall()
   }
+  
 
   return (
     <div className="final-container">
       <div className="final-main fcc">
         <h1>Final Phase</h1>
-        <h2>Would you like to add this user?</h2>
+        <h2>{following ? 'You are already following this user' : 'Would you like to add this user?'}</h2>
         <div className="final-body fcc">
           { following 
             ? 
-              <button>You are Already Following This user!</button> 
+              <div className="final-button-container ">
+                <button onClick={skipCall} className="final-button final-button-p"> Find Next Partner</button>
+                <div className="final-button-blur final-button-blur-p" />
+              </div>
             : 
             answer 
             ?
@@ -116,12 +107,16 @@ function FinalPhase({ roomId, endCall, partnerId }) {
                   <div className="final-button-blur final-button-blur-p" />
                 </div>
                 <div className="final-button-container ">
-                  <button className="final-button final-button-p"> Find Next User</button>
+                  <button onClick={skipCall} className="final-button final-button-p"> Find Next User</button>
                   <div className="final-button-blur final-button-blur-p" />
                 </div>
               </>
           }
         </div>
+      </div>
+      <div className="home-video-search-footer fcc">
+          <button onClick={skipCall} className="home-video-search-buttons">Skip</button>
+          <button onClick={endCall} className="home-video-search-buttons end-call"> End Call</button>
       </div>
     </div>
   )

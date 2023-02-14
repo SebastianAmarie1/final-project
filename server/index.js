@@ -214,7 +214,6 @@ app.put("/api/edit_details", verify, async (req, res) => {
         await pool.query("UPDATE users SET fname = $1, lname = $2, email = $3, phonenumber = $4, region = $5 WHERE users_id = $6 RETURNING *", [fname, lname, email, phone, region, id])
         const newUser = await pool.query("SELECT * FROM users WHERE users_id = $1", [id])
         
-        console.log(newUser.rows[0], "rows")
         res.status(200).json({
             user: newUser.rows[0]
         })
@@ -284,6 +283,9 @@ app.post("/api/follow", verify, async (req, res) => {
             await pool.query("update users set friendslist = array_append(friendslist, $1) where users_id = $2", [followedUser, id])
             const user = await pool.query("SELECT * FROM users WHERE users_id = $1", [id])
             res.status(200).json({msg:"You Added This User Successfully", flag: true, user: user.rows[0]})
+            if (id < followedUser){
+                createConversation(id, followedUser)
+            }
         }
         else {
             res.status(200).json({msg:"Already A Friend", flag: false})
@@ -305,24 +307,21 @@ app.post("/api/unfollow", verify, async (req, res) => {
 
 /*********************************** MESSAGING***********************************/
 //make Conversations
-app.post("/api/create_conversation", verify, async(req, res) => { // create a if the conversation already exists, you dont create another instance of conversation
     
-    const { id, pid } = req.body
-
+const createConversation = async(id, pid) => {
     const conversations = await pool.query("SELECT * FROM conversations where $1 = ANY(members) AND $2 = ANY(members)", [id, pid])
     if(conversations.rows[0]){
-        res.status(400).json("Conversation already started")
+        console.log("Conversation already started")
     } else if (id === pid){
-        res.status(400).json("Cannot start conversation with self")
+        console.log("Cannot start conversation with self")
     } else {
         try {
             await pool.query("INSERT INTO conversations (members, time_created) VALUES (ARRAY [$1, $2], $3) RETURNING *", [id, pid, new Date()])
-            res.status(200)
         } catch (err) {
             console.error(err.message)
         }
     }
-})
+}
 
 //get specific Conversation
 app.post("/api/retrieve_conversations", verify, async(req, res) => {
@@ -349,7 +348,6 @@ app.post("/api/retrieve_conversations", verify, async(req, res) => {
             let User2pic
 
             if(User1.rows[0].profile_pic){
-                console.log("ran")
                 User1pic = toBase64(User1.rows[0].profile_pic)
             }
             if(User2.rows[0].profile_pic){
@@ -359,7 +357,6 @@ app.post("/api/retrieve_conversations", verify, async(req, res) => {
             User1 = {...User1.rows[0], profile_pic: User1pic}
             User2 = {...User2.rows[0], profile_pic: User2pic}
 
-            //console.log(User1)
             const newMembers = [User1, User2]
 
             return {
@@ -430,8 +427,6 @@ app.post("/api/retrieve_user", verify, async(req, res) => {
             profile_pic: toBase64(newUser.rows[0].profile_pic)
         }
 
-        console.log(User)
-
         res.json(User)
     } catch (err) {
         console.error(err.message)
@@ -447,22 +442,24 @@ app.post("/api/retrieve_friends", verify, async(req, res) => {
         
         friends = friends.rows[0].friendslist
         let friendslist = []
-
-        friends = await Promise.all(friends.map(async (current) => {
-            let User1 = await pool.query("SELECT * FROM users WHERE users_id = $1", [current])
-            let User1pic
-
-            if(User1.rows[0].profile_pic){
-                User1pic = toBase64(User1.rows[0].profile_pic)
-            }
-
-            User1 = {...User1.rows[0], profile_pic: User1pic}
-            let tempList = []
-            tempList.push(User1)
-            
-            return tempList
-        }))
-        friendslist = [].concat(...friends)
+        
+        if (friends){
+            friends = await Promise.all(friends.map(async (current) => {
+                let User1 = await pool.query("SELECT * FROM users WHERE users_id = $1", [current])
+                let User1pic
+    
+                if(User1.rows[0].profile_pic){
+                    User1pic = toBase64(User1.rows[0].profile_pic)
+                }
+    
+                User1 = {...User1.rows[0], profile_pic: User1pic}
+                let tempList = []
+                tempList.push(User1)
+                
+                return tempList
+            }))
+            friendslist = [].concat(...friends)
+        }
 
         res.json(friendslist)
     } catch (err) {

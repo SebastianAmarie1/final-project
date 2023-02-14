@@ -52,21 +52,10 @@ function HomePage() {
   const connectionRef = useRef()
 
   //Phases
-  const [currentPhase, setCurrentPhase] = useState(1)// out of 3
+  const [currentPhase, setCurrentPhase] = useState(3)// out of 3
   const [phaseTime, setPhaseTime] = useState([0, 0.05, 0.05, 0.05])
   const [showTimer, setShowTimer] = useState(false)
   const [decisionScreen, setDecisionScreen] = useState(false)
-
-  /*
-  console.log(pStream, "pStream")
-  console.log(searching, "searching")
-  console.log(roomId, "roomId")
-  console.log(partnerProfile, "PartnerProfile")
-  console.log(initiator, "Initiator")
-  console.log(callerSignal, "callerSignal")
-  console.log(partnerVideo?.current, "partnerVideo")
-  console.log(connectionRef?.current, "connectionRef")
-  */
 
   useEffect(() => {
     
@@ -114,6 +103,12 @@ function HomePage() {
       setOnlineUsers(data.onlineUsers)
     })
 
+    window.addEventListener('unload', async (e) => {
+      await endCall(e);
+    });
+    return () => {
+      window.removeEventListener('unload', endCall);
+    };
   }, [])
 
   useEffect(() => {
@@ -135,7 +130,6 @@ function HomePage() {
 
 //// initiating the call ////
   const searchForCall = () => {
-      
     setSearching(true)
 
     socket.current.emit("search", {  
@@ -178,7 +172,6 @@ function HomePage() {
     let flag = false
     socket.current.on("callAccepted", (data) => {
       if (!flag){
-        console.log(connectionRef.current, "peer")
         setCallerSignal(data.signal);
         setCallAccepted(true);
         setShowTimer(true);
@@ -188,11 +181,9 @@ function HomePage() {
       }
     });
     
-    console.log("/////////////////")
     connectionRef.current = peer;
   }
-
-}, [initiator]);
+  }, [initiator]);
 
   useEffect(() => {
     if(partnerVideo.current){
@@ -241,33 +232,43 @@ const stopSearch = () => {
     roomId: roomId,
   })
 }
+
 //// End Call ////
-  const endCall = () => {
+  const endCall = async () => {
+    if (connectionRef.current) {
+      await new Promise((resolve) => {
+        socket.current.emit("endCall", {
+          roomId: roomId,
+        });
+        resolve();
+      });
 
-    socket.current.emit("endCall", {
-      roomId: roomId,
-    })
-
-    connectionRef.current.on('close', () => {
-      // clean up resources when the connection is closed
-    });
-    connectionRef.current.destroy();
-    if (partnerVideo.current){
-      partnerVideo.current.srcObject = null;
+      connectionRef.current.on('close', () => {
+        // clean up resources when the connection is closed
+      });
+      connectionRef.current.destroy();
+      if (partnerVideo.current) {
+        partnerVideo.current.srcObject = null;
+      }
+      setPStream(null);
+      setPartnerId(null);
+      setPartnerProfile(null);
+      setPartnerViewCamera(false);
+      setPartnerMute(false);
+      setCallerSignal(null);
+      setInitiator(null);
+      setRoomId(null);
+      setCallAccepted(false);
+      setSearching(false);
+      setDecisionScreen(false);
+      setCurrentPhase(1);
+      setShowTimer(false);
     }
-    setPStream(null)
-    setPartnerId(null)
-    setPartnerProfile(null)
-    setPartnerViewCamera(false)
-    setPartnerMute(false)
-    setCallerSignal(null)
-    setInitiator(null)
-    setRoomId(null)
-    setCallAccepted(false)
-    setSearching(false)
-    setDecisionScreen(false)
-    setCurrentPhase(1)
-    setShowTimer(false)
+  }
+
+  const skipCall = async () => {
+    await endCall()
+    searchForCall()
   }
 
 ///// Camera settings /////
@@ -352,11 +353,11 @@ const nextPhase = () => {
                 :
                 (currentPhase === 3 && decisionScreen)
                 ?
-                  <FinalPhase roomId={roomId} endCall={endCall} partnerId={partnerId}/>
+                  <FinalPhase roomId={roomId} endCall={endCall} partnerId={partnerId} skipCall={skipCall}/>
                 :
                   decisionScreen
                     ?
-                      <Decision roomId={roomId} nextPhase = {nextPhase} currentPhase={currentPhase} endCall={endCall}/>
+                      <Decision roomId={roomId} nextPhase = {nextPhase} currentPhase={currentPhase} endCall={endCall} skipCall={skipCall}/>
                     :
                       currentPhase === 1 
                       ?
