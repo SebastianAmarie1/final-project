@@ -23,7 +23,6 @@ function Online({onlineUsers}) {
                 })
                 setFriends(res.data)
             } catch (error) {
-                console.log(error)
             }
         }
 
@@ -42,7 +41,6 @@ function Online({onlineUsers}) {
                }))
             }
         } catch (error) {
-            console.log(error)
         }
     },[onlineUsers, friends])
 

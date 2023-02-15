@@ -8,7 +8,6 @@ const jwt = require("jsonwebtoken");
 const bodyParser = require("body-parser");
 const multer = require("multer");
 const { Buffer } = require('buffer');
-const { channelConfig } = require("simple-peer");
 
 //middleware
 app.use(cors()) //cors ensures we send the right headers
