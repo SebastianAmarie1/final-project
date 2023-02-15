@@ -8,6 +8,7 @@ const jwt = require("jsonwebtoken");
 const bodyParser = require("body-parser");
 const multer = require("multer");
 const { Buffer } = require('buffer');
+require('dotenv').config();
 
 //middleware
 app.use(cors()) //cors ensures we send the right headers
@@ -26,6 +27,8 @@ function toBase64(pic){
     return `data:image/jpeg;base64,${base64}`
 }
 
+const accessKey = process.env.ACCESS_KEY
+const refreshKey = process.env.REFRESH_KEY
 
 /************** LOGIN SYSTEM ****************************/
 //registering a user
@@ -75,7 +78,7 @@ const generateAccessToken = (user) => {
         phonenumber: user.phonenumber,
         gender: user.gender
     }, 
-    "mySecretAccessKey", 
+    accessKey, 
     { expiresIn: "10s"})//change my secret to a env.file
 }
 const generateRefreshToken = (user) => {
@@ -89,7 +92,7 @@ const generateRefreshToken = (user) => {
         phonenumber: user.phonenumber,
         gender: user.gender
     }, 
-    "mySecretRefreshKey") 
+    refreshKey) 
 }
 
 const verify = (req, res, next) => {
@@ -98,7 +101,7 @@ const verify = (req, res, next) => {
     if(authHeader){
         const token = authHeader.split(" ")[1]
 
-        jwt.verify(token, "mySecretAccessKey", (err, user) => {
+        jwt.verify(token, accessKey, (err, user) => {
             if(err){
                 return res.status(401).json("Token is not valid")
             }
@@ -174,7 +177,7 @@ app.post("/api/refresh", async(req, res) => {//used to generate a refresh token
         return res.status(403).json("Refresh token is not valid")
     }
     //if everything is good creates a new access token, refresh token and sends to user
-    jwt.verify(refreshToken, "mySecretRefreshKey", async(err, user) => {
+    jwt.verify(refreshToken, refreshKey, async(err, user) => {
         err && console.log(err)
         
         const newAccessToken = generateAccessToken(user)
