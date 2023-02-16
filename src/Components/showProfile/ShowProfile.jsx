@@ -3,7 +3,7 @@ import "./showProfileCss.css"
 
 import defaultPic from "../../Assets/default-user-image.jpg"
 
-function ShowProfile({partnerProfile}) {
+function ShowProfile({partnerProfile, endCall, skipCall}) {
   return (
     <div className="showp-container">
       <div className="showp-main">
@@ -31,6 +31,10 @@ function ShowProfile({partnerProfile}) {
               <li><span> {partnerProfile?.lie ? partnerProfile.lie : 'No Hobbie'} </span></li>
             </ul>
         </div>
+      </div>
+      <div className="home-video-search-footer fcc">
+          <button onClick={skipCall} className="home-video-search-buttons"> Skip</button>
+          <button onClick={endCall} className="home-video-search-buttons end-call"> End Call</button>
       </div>
     </div>
   )

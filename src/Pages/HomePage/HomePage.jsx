@@ -52,8 +52,8 @@ function HomePage() {
   const connectionRef = useRef()
 
   //Phases
-  const [currentPhase, setCurrentPhase] = useState(3)// out of 3
-  const [phaseTime, setPhaseTime] = useState([0, 0.05, 0.05, 0.05])
+  const [currentPhase, setCurrentPhase] = useState(1)// out of 3
+  const [phaseTime, setPhaseTime] = useState([0, 100, 0.05, 0.05])
   const [showTimer, setShowTimer] = useState(false)
   const [decisionScreen, setDecisionScreen] = useState(false)
 
@@ -361,7 +361,7 @@ const nextPhase = () => {
                     :
                       currentPhase === 1 
                       ?
-                        <ShowProfile partnerProfile={partnerProfile} />
+                        <ShowProfile endCall={endCall} skipCall={skipCall} partnerProfile={partnerProfile} />
                       :
                       <div className="home-video-partner fcc">
                         <div onClick={() => {setPartnerVideoToggled((oldValue) => !oldValue)}} className={`hideCamera fcc ${partnerCamera && 'hide'}`} >
