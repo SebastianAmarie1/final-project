@@ -57,6 +57,8 @@ function HomePage() {
   const [showTimer, setShowTimer] = useState(false)
   const [decisionScreen, setDecisionScreen] = useState(false)
 
+
+
   useEffect(() => {
     
     const settingMyStream = async() => { //sets up my stream.
@@ -115,6 +117,7 @@ function HomePage() {
     if(partnerId) {
       const getPartnerProfile = async() => {
         try {
+          
           const res = await axiosAuth.post("/api/retrieve_user", { usersId: partnerId },
           { headers: 
               { authorization: "Bearer " + user.accessToken}
@@ -299,7 +302,6 @@ const stopSearch = () => {
     setPartnerViewCamera((prev) => !prev)
     viewPartnerCamera ? partnerVideo.current.play() : partnerVideo.current.pause()
   }
-
 
 /// PHASES /// 
 const handleCountdownEnd = () => {
