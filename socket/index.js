@@ -126,6 +126,11 @@ socket.on("endCall", (data) => {
     socket.broadcast.to(data.roomId).emit("callEnded")
 })
 
+socket.on("refreshedCall", (data) => {
+    console.log("RAN ")
+    socket.broadcast.to(data.roomId).emit("callEnded")
+})
+
 socket.on("editVideo", (data) => {
     socket.broadcast.to(data.roomId).emit("changeVideo", { active: data.active })
 })

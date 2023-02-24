@@ -53,11 +53,9 @@ function HomePage() {
 
   //Phases
   const [currentPhase, setCurrentPhase] = useState(1)// out of 3
-  const [phaseTime, setPhaseTime] = useState([0, 100, 0.05, 0.05])
+  const [phaseTime, setPhaseTime] = useState([0, 0.05, 0.05, 0.05])
   const [showTimer, setShowTimer] = useState(false)
   const [decisionScreen, setDecisionScreen] = useState(false)
-
-
 
   useEffect(() => {
     
@@ -103,15 +101,11 @@ function HomePage() {
 
     socket.current.on("recieveOnlineUsers", (data) => {
       setOnlineUsers(data.onlineUsers)
-    })
+    }) 
 
-    window.addEventListener('unload', async (e) => {
-      await endCall(e);
-    });
-    return () => {
-      window.removeEventListener('unload', endCall);
-    };
   }, [])
+
+
 
   useEffect(() => {
     if(partnerId) {
@@ -183,6 +177,11 @@ function HomePage() {
         connectionRef.current.signal(data.signal);
       }
     });
+
+    peer.on('error', (error) => {
+      // check if the error is an RTCError with User-Initiated Abort reason
+      endCall()
+    });
     
     connectionRef.current = peer;
   }
@@ -222,6 +221,11 @@ function HomePage() {
         }
       })
 
+      peer.on('error', (error) => {
+        // check if the error is an RTCError with User-Initiated Abort reason
+        endCall()
+      });
+
       peer.signal(callerSignal)
       connectionRef.current = peer
     }
@@ -236,14 +240,14 @@ const stopSearch = () => {
   })
 }
 
+
+
 //// End Call ////
-  const endCall = async () => {
+  const endCall = () => {
     if (connectionRef.current) {
-      await new Promise((resolve) => {
-        socket.current.emit("endCall", {
-          roomId: roomId,
-        });
-        resolve();
+
+      socket.current.emit("endCall", {
+        roomId: roomId,
       });
 
       connectionRef.current.on('close', () => {
@@ -270,7 +274,7 @@ const stopSearch = () => {
   }
 
   const skipCall = async () => {
-    await endCall()
+    endCall()
     searchForCall()
   }
 
