@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react"
+import React, { useContext, useEffect, useState, useRef } from "react"
 import jwt_decode from "jwt-decode"
 import axios from "./axiosConfig.jsx"
 import useSocket from "./socketContext"
@@ -13,6 +13,8 @@ export function AuthProvider({ children }) {
     
     const [user, setUser] = useState("a")//used to store user details after retrieved from DB
     const [flag, setFlag] = useState(false)
+    const [roomId, setRoomId] = useState(null)
+    const connectionRef = useRef()
 
     useEffect(()=> {
         if(flag) {
@@ -66,6 +68,9 @@ export function AuthProvider({ children }) {
         setUser,
         flag,
         setFlag,
+        connectionRef,
+        roomId,
+        setRoomId,
     }
 
     return (

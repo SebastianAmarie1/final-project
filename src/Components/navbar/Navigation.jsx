@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from "../../Contexts/AuthContext"
-import { useNavigate } from 'react-router-dom';
 import friendsIcon from "../../Assets/friendsIcon.png"
 import { useSocket } from "../../Contexts/socketContext"
 
@@ -9,10 +8,21 @@ import "./NavigationStyle.css"
 
 function Navigation() {
 
-  const { user, setUser, axiosAuth } = useAuth()
+  const { user, setUser, axiosAuth, connectionRef, roomId } = useAuth()
   const { socket } = useSocket()
   const [toggled, setToggled] = useState(false)
   const navigate = useNavigate()
+  const location = useLocation()
+
+  useEffect(() => {
+    if (location.pathname !== "/homepage/" || location.pathname !=="/homepage"){
+      if (connectionRef.current && roomId) {
+        socket.current.emit("endCall", {
+          roomId: roomId,
+        });
+      }
+    }
+  },[location.pathname])
 
   useEffect(()=> {
     if (user !== "a" && user !== null) {

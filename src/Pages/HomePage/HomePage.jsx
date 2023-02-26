@@ -22,7 +22,7 @@ import speakerOn from "../../Assets/homepage/home-speaker-on.png"
 
 function HomePage() {
 
-  const { user, axiosAuth } = useAuth()
+  const { user, axiosAuth, connectionRef, setRoomId, roomId } = useAuth()
   const { socket } = useSocket()
 
   //Connections
@@ -30,7 +30,6 @@ function HomePage() {
   const [pStream, setPStream] = useState(null)
   const [searching, setSearching] = useState(false)
   const [callAccepted, setCallAccepted] = useState(false)
-  const [roomId, setRoomId] = useState(null)
   const [partnerId, setPartnerId] = useState(null)
   const [partnerProfile, setPartnerProfile] = useState(null)
   const [initiator, setInitiator] = useState(null)
@@ -49,11 +48,10 @@ function HomePage() {
   const [myVideoToggled, setMyVideoToggled] = useState(false)
   const partnerVideo = useRef()
   const [partnerVideoToggled, setPartnerVideoToggled] = useState(false)
-  const connectionRef = useRef()
 
   //Phases
   const [currentPhase, setCurrentPhase] = useState(1)// out of 3
-  const [phaseTime, setPhaseTime] = useState([0, 0.05, 0.05, 0.05])
+  const phaseTime = [0, 0.05, 0.5, 0.05]
   const [showTimer, setShowTimer] = useState(false)
   const [decisionScreen, setDecisionScreen] = useState(false)
 
@@ -88,6 +86,7 @@ function HomePage() {
     socket.current.on("callEnded", () => {
       endCall()
     })
+
     socket.current.on('changeVideo', (data) => {
       setPartnerCamera(data.active);
       data.active ? partnerVideo.current.play() : partnerVideo.current.pause()
@@ -104,8 +103,6 @@ function HomePage() {
     }) 
 
   }, [])
-
-
 
   useEffect(() => {
     if(partnerId) {
@@ -179,7 +176,7 @@ function HomePage() {
     });
 
     peer.on('error', (error) => {
-      // check if the error is an RTCError with User-Initiated Abort reason
+      console.log(error)
       endCall()
     });
     
@@ -222,7 +219,7 @@ function HomePage() {
       })
 
       peer.on('error', (error) => {
-        // check if the error is an RTCError with User-Initiated Abort reason
+        console.log(error)
         endCall()
       });
 
@@ -232,18 +229,16 @@ function HomePage() {
 
   }, [callerSignal])
 
-const stopSearch = () => {
-  setSearching(false)
-  setRoomId(null)
-  socket.current.emit("leaveRoom", {  
-    roomId: roomId,
-  })
-}
-
-
+  const stopSearch = () => {
+    setSearching(false)
+    setRoomId(null)
+    socket.current.emit("leaveRoom", {  
+      roomId: roomId,
+    })
+  }
 
 //// End Call ////
-  const endCall = () => {
+  const endCall = async() => {
     if (connectionRef.current) {
 
       socket.current.emit("endCall", {
@@ -254,9 +249,11 @@ const stopSearch = () => {
         // clean up resources when the connection is closed
       });
       connectionRef.current.destroy();
+
       if (partnerVideo.current) {
         partnerVideo.current.srcObject = null;
       }
+
       setPStream(null);
       setPartnerId(null);
       setPartnerProfile(null);
