@@ -98,27 +98,37 @@ socket.on('search', ({id, gender}) => { // user_id, gender
 })
 
 socket.on("callUser", (data) => {
-    users = activeRooms[data.roomId]
-    let send 
-    if (users.first === data.id){
-        send = users.second
-    } else{
-        send = users.first
+    try {
+        users = activeRooms[data.roomId]
+        let send 
+        if (users.first === data.id){
+            send = users.second
+        } else{
+            send = users.first
+        }
+    
+        io.to(usersHash[send].socketId).emit("answerUser", { signal: data.signal, roomId: data.roomId, partnerId: data.id })
+    } catch (error) {
+        console.log("FAILED CALL")
+        socket.to(data.roomId).emit("callFailed")
     }
-
-    io.to(usersHash[send].socketId).emit("answerUser", { signal: data.signal, roomId: data.roomId, partnerId: data.id })
 })
 
 socket.on("answerCall", (data) => {
-    users = activeRooms[data.roomId]
-    let send 
-    if (users.first === data.id){
-        send = users.second
-    } else{
-        send = users.first
+    try {
+        users = activeRooms[data.roomId]
+        let send 
+        if (users.first === data.id){
+            send = users.second
+        } else{
+            send = users.first
+        }
+    
+        io.to(usersHash[send].socketId).emit("callAccepted", { signal: data.signal, partnerId: data.id })
+    } catch (error) {
+        console.log("FAILED CALL")
+        socket.to(data.roomId).emit("callFailed")
     }
-
-    io.to(usersHash[send].socketId).emit("callAccepted", { signal: data.signal, partnerId: data.id })
 })
 
 socket.on("endCall", (data) => {

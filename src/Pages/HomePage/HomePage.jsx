@@ -51,7 +51,7 @@ function HomePage() {
 
   //Phases
   const [currentPhase, setCurrentPhase] = useState(1)// out of 3
-  const phaseTime = [0, 0.05, 0.5, 0.05]
+  const phaseTime = [0, 0.05, 50, 0.05]
   const [showTimer, setShowTimer] = useState(false)
   const [decisionScreen, setDecisionScreen] = useState(false)
 
@@ -100,6 +100,11 @@ function HomePage() {
 
     socket.current.on("recieveOnlineUsers", (data) => {
       setOnlineUsers(data.onlineUsers)
+    }) 
+
+    socket.current.on("callFailed", () => {
+      console.log("RAN FAILED CALL")
+      stopSearch()
     }) 
 
   }, [])
@@ -279,16 +284,20 @@ function HomePage() {
   const muteAudio = () => {
     if (myVideo.current) {
       setMute((prev) => !prev)
-      myVideo.current.muted = !myVideo.current.muted;
-      
+      const stream = myVideo.current.srcObject;
+      stream.getAudioTracks().forEach(track => {
+        track.enabled = !track.enabled;
+      });
     }
   }
+
   const mutePartnerAudio = () => {
     if (partnerVideo.current) {
       setPartnerMute((prev) => !prev)
       partnerVideo.current.volume = partnerMute ? 1 : 0;
     }
   }
+  
   const showCamera = async() => {
     setViewCamera((prev) => !prev)
     viewCamera ? myVideo.current.play() : myVideo.current.pause()
@@ -297,8 +306,8 @@ function HomePage() {
       active: viewCamera,
       roomId: roomId,
     })
-
   }
+
   const showPartnerCamera = () => {
     setPartnerViewCamera((prev) => !prev)
     viewPartnerCamera ? partnerVideo.current.play() : partnerVideo.current.pause()
@@ -320,7 +329,7 @@ const nextPhase = () => {
 
 
   let MyVideo = <video onClick={() => {setMyVideoToggled((oldValue) => !oldValue)}} className="home-video-me" ref={myVideo} autoPlay playsInline/>
-  let PartnersVideo = <video onClick={() => {setPartnerVideoToggled((oldValue) => !oldValue)}} className="home-video-partner-video" ref={partnerVideo} autoPlay playsInline muted/>
+  let PartnersVideo = <video onClick={() => {setPartnerVideoToggled((oldValue) => !oldValue)}} className="home-video-partner-video" ref={partnerVideo} autoPlay playsInline />
 
   return (
     <div className="home-main"> {/*Container for the whole page*/}
