@@ -22,8 +22,15 @@ function SignIn() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-        const res = await axios.post("/api/login", {username, password, last_login: CurrentTime})
-        //CREATE CONTEXT AND SET USER INSIDE THE CONTEXT
+      const res = await axios.post("/api/login", { 
+        username, 
+        password, 
+        last_login: CurrentTime 
+      }, 
+      { 
+        withCredentials: true 
+      }) 
+      
         setFlag(true)
         setUser({
           id: res.data.users_id,

@@ -11,7 +11,10 @@ const { Buffer } = require('buffer');
 require('dotenv').config();
 
 //middleware
-app.use(cors()) //cors ensures we send the right headers
+app.use(cors({
+    origin: ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002'],
+    credentials: true
+})) //cors ensures we send the right headers
 app.use(express.json())//gives us access to request.body and we can get JSON data
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -137,6 +140,15 @@ app.post("/api/login", async(req, res) => {
         if (profile_pic) {
             pfp = toBase64(profile_pic)
         }
+
+        const refresh_token_expiry = 24 * 60 * 60 * 1000
+
+        res.cookie('refreshToken', refreshToken, {
+            httpOnly: true,
+            secure: true,
+            maxAge: refresh_token_expiry,
+            sameSite: 'strict'
+        });
         
         res.json({
             users_id,
@@ -159,6 +171,7 @@ app.post("/api/login", async(req, res) => {
             gender,
             region,
         })
+ 
     }
     else{
         res.status(400).json("Username or Password incorrect!")

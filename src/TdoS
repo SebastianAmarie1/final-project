@@ -16,3 +16,8 @@ apply some security features
 9) make how many unread messages on the follow page.
 10) make online/offline status on follow page aswell
 11) make a arrow pointing down on the main page that scroll to the next section
+
+
+
+
+Also, note that the HttpOnly flag is set for the cookie, which means that it can only be accessed and modified by the server, and not by JavaScript code running on the client side. This is an important security feature that helps protect against certain types of attacks such as cross-site scripting (XSS).

@@ -50,7 +50,7 @@ function Navigation() {
     setUser(null)
     navigate("/signin")
   }
-
+  
   return (
     <>
     <nav className="navigation-container">
