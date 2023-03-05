@@ -50,7 +50,6 @@ function SignIn() {
             lie: res.data.lie,
           },
           accessToken: res.data.accessToken,
-          refreshToken: res.data.refreshToken,
           friendslist: res.data.friendslist,
           gender: res.data.gender,
           region: res.data.region,

@@ -1,16 +1,17 @@
 
 const express = require("express") // establish connection with express
-const app = express();
-const port = 5000
-const cors = require("cors")
-const pool = require("./db")
-const jwt = require("jsonwebtoken");
-const bodyParser = require("body-parser");
-const multer = require("multer");
-const { Buffer } = require('buffer');
-require('dotenv').config();
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
+const bodyParser = require("body-parser");
+const jwt = require("jsonwebtoken");
+const bcrypt = require('bcrypt');
+const multer = require("multer");
+const { Buffer } = require('buffer');
+const cors = require("cors")
+const app = express();
+const port = 5000
+const pool = require("./db")
+require('dotenv').config();
 
 //middleware
 app.use(cors({
@@ -22,7 +23,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cookieParser());
 app.use(session({
-    secret: 'my-secret-key',
+    secret: process.env.SESSION_KEY,
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -34,7 +35,7 @@ app.use(session({
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
-
+const salt = bcrypt.genSaltSync(10);
 //Routes
 // methods
 function toBase64(pic){
@@ -53,7 +54,8 @@ const refreshKey = process.env.REFRESH_KEY
 app.post("/api/register", async(req, res) => {
     try {
         const { username, fName, lName, email, pwd, phonenumber, region, gender, time_created } = req.body //gets the description from the body
-        const newUser = await pool.query("INSERT INTO users (username, fname, lname, email, pwd, phonenumber, region, gender, time_created) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *", [username, fName, lName, email, pwd, phonenumber, region, gender, time_created]) //create a query where you insert 
+        const password = bcrypt.hashSync(pwd, salt)
+        const newUser = await pool.query("INSERT INTO users (username, fname, lname, email, pwd, phonenumber, region, gender, time_created) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *", [username, fName, lName, email, password, phonenumber, region, gender, time_created]) //create a query where you insert 
         //something inside the description value. $1 is a placeholder and , [description] will specify that that placeholder should be
         //RETURNING * is everytime you do action you will return back the data
         res.json(newUser.rows[0])//This is where the data is located at
@@ -97,7 +99,7 @@ const generateAccessToken = (user) => {
         gender: user.gender
     }, 
     accessKey, 
-    { expiresIn: "10s"})//change my secret to a env.file
+    { expiresIn: "15m"})
 }
 const generateRefreshToken = (user) => {
     return jwt.sign({
@@ -131,15 +133,6 @@ const verify = (req, res, next) => {
     }
 }
 
-app.post("/api/login/testing", async(req, res) => {
-    try {
-        const cookies = req.session.refreshToken;
-        console.log(cookies, "cookies");
-        res.json({"Testing": "Testing"})
-    } catch(err) {
-        console.error(err.message)
-    }
-})
 
 app.post("/api/login", async(req, res) => {
 
@@ -147,16 +140,28 @@ app.post("/api/login", async(req, res) => {
     //add last_login
     last_login = new Date()
     
-    const user = await pool.query("SELECT * FROM users WHERE username = $1 AND pwd = $2", [username, password])
+    const user = await pool.query("SELECT * FROM users WHERE username = $1", [username])
 
     if(user.rows[0]) {
+
+    bcrypt.compare(password, user.pwd, (err, result) => {
+        if (err){
+            console.log("ERROR Logging In")
+        } else if (result) {
+
+        } else {
+            res.json({"Login": "Error Logging In"})
+            return 
+        }
+    })
+
         //generating a access token with the user id and wether the user is admin. sevret key is used to compare keys.
         const accessToken = generateAccessToken(user)
         const refreshToken = generateRefreshToken(user)
 
         const {users_id, username, fname, lname, email, phonenumber, profile_pic, bio, hobbie1, hobbie2, hobbie3, fact1, fact2, lie, friendslist, gender, region} = user.rows[0]
         try {
-            const updateUser = await pool.query("UPDATE users SET refreshtoken = $1, accesstoken = $2, last_login = $3, active = $4 WHERE users_id = $5", [refreshToken, accessToken, last_login, true, users_id])
+            await pool.query("UPDATE users SET refreshtoken = $1, accesstoken = $2, last_login = $3, active = $4 WHERE users_id = $5", [refreshToken, accessToken, last_login, true, users_id])
         } catch (error) {
             console.log(error)
         }
@@ -173,7 +178,7 @@ app.post("/api/login", async(req, res) => {
             sameSite: 'strict',
             path: "/"
         });
-
+  
         req.session.refreshToken = refreshToken
         
         res.json({
@@ -192,7 +197,6 @@ app.post("/api/login", async(req, res) => {
             fact2,
             lie,
             accessToken,
-            refreshToken,
             friendslist,
             gender,
             region,

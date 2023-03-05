@@ -2,8 +2,7 @@ create proper login with sessions
 use 3 performance enchEancing techniques
 apply some security features
 
-8) hash the access keys
-9) hash teh passwords
+9) hash the passwords
 7) when 2 users search and 1 user backs out, it bugs out. (Semi Fixed)
 8) fix the navigation
 
