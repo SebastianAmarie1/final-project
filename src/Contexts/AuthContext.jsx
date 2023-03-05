@@ -33,7 +33,11 @@ export function AuthProvider({ children }) {
 
     const refreshToken = async() => { //method to refresh the tokens
         try {
-            const res = await axios.post("/api/refresh", {refreshToken: user.refreshToken, id: user.id})
+            const res = await axios.post("/api/login/refresh", {
+                id: user.id
+            },{
+                withCredentials: true 
+            })
             setUser({
                 ...user,
                 accessToken: res.data.accessToken,

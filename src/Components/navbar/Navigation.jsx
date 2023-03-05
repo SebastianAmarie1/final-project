@@ -50,6 +50,14 @@ function Navigation() {
     setUser(null)
     navigate("/signin")
   }
+
+  const testing = async() => {
+    await axiosAuth.post("/api/login/testing", {},{
+      withCredentials: true 
+    }, {
+      headers: { authorization: "Bearer " + user.accessToken}
+    })
+  }
   
   return (
     <>
@@ -61,7 +69,7 @@ function Navigation() {
           ? <><Link to="/homepage/follow"><img src={friendsIcon} className="navigation-friends-icon"></img></Link>
               <h4 onClick={handleLogout} className="navigation-btn">Sign Out</h4></>
           : <Link to="/signin"> <h4 className='navigation-btn'>Sign In</h4></Link>}
-          
+          <button onClick={testing}>Test</button>
           <div onClick={eventHandler} className="navigation-burger">
             <div className={`navigation-burger-ind ${toggled ? 'burger-top-toggled' : 'burger-top'}`}></div>
             <div className={`navigation-burger-ind ${toggled ? 'burger-middle-toggled' : 'burger-middle'}`}></div>

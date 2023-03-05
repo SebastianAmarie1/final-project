@@ -9,6 +9,8 @@ const bodyParser = require("body-parser");
 const multer = require("multer");
 const { Buffer } = require('buffer');
 require('dotenv').config();
+const cookieParser = require('cookie-parser');
+const session = require('express-session');
 
 //middleware
 app.use(cors({
@@ -18,6 +20,17 @@ app.use(cors({
 app.use(express.json())//gives us access to request.body and we can get JSON data
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
+app.use(cookieParser());
+app.use(session({
+    secret: 'my-secret-key',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        secure: false,
+        httpOnly: true,
+        maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
+    }
+}));
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -32,6 +45,8 @@ function toBase64(pic){
 
 const accessKey = process.env.ACCESS_KEY
 const refreshKey = process.env.REFRESH_KEY
+
+
 
 /************** LOGIN SYSTEM ****************************/
 //registering a user
@@ -116,6 +131,16 @@ const verify = (req, res, next) => {
     }
 }
 
+app.post("/api/login/testing", async(req, res) => {
+    try {
+        const cookies = req.session.refreshToken;
+        console.log(cookies, "cookies");
+        res.json({"Testing": "Testing"})
+    } catch(err) {
+        console.error(err.message)
+    }
+})
+
 app.post("/api/login", async(req, res) => {
 
     const { username, password } = req.body; //gets username and password from body
@@ -141,14 +166,15 @@ app.post("/api/login", async(req, res) => {
             pfp = toBase64(profile_pic)
         }
 
-        const refresh_token_expiry = 24 * 60 * 60 * 1000
-
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
-            secure: true,
-            maxAge: refresh_token_expiry,
-            sameSite: 'strict'
+            secure: false,
+            maxAge: 24 * 60 * 60 * 1000,
+            sameSite: 'strict',
+            path: "/"
         });
+
+        req.session.refreshToken = refreshToken
         
         res.json({
             users_id,
@@ -171,18 +197,17 @@ app.post("/api/login", async(req, res) => {
             gender,
             region,
         })
- 
     }
     else{
         res.status(400).json("Username or Password incorrect!")
     }
 })
 
-app.post("/api/refresh", async(req, res) => {//used to generate a refresh token
+app.post("/api/login/refresh", async(req, res) => {//used to generate a refresh token
     //take the refresh token and id from the user
-    const { id, refreshToken } = req.body
+    const { id } = req.body
 
-    if (!refreshToken) return res.status(401).json("You are not authenticated")
+    if (!req.session.refreshToken) return res.status(401).json("You are not authenticated")
  
     const user = await pool.query("SELECT * FROM users WHERE users_id = $1", [id])
 
@@ -190,7 +215,7 @@ app.post("/api/refresh", async(req, res) => {//used to generate a refresh token
         return res.status(403).json("Refresh token is not valid")
     }
     //if everything is good creates a new access token, refresh token and sends to user
-    jwt.verify(refreshToken, refreshKey, async(err, user) => {
+    jwt.verify(req.session.refreshToken, refreshKey, async(err, user) => {
         err && console.log(err)
         
         const newAccessToken = generateAccessToken(user)
@@ -202,8 +227,18 @@ app.post("/api/refresh", async(req, res) => {//used to generate a refresh token
             console.log(error)
         }
 
+        res.cookie('refreshToken', newRefreshToken, {
+            httpOnly: true,
+            secure: false,
+            maxAge: 24 * 60 * 60 * 1000,
+            sameSite: 'strict',
+            path: "/"
+        });
+        
+        req.session.refreshToken = newRefreshToken
+
         res.status(200).json({
-            accessToken: newAccessToken, refreshToken: newRefreshToken
+            accessToken: newAccessToken
         })
     })
 })
