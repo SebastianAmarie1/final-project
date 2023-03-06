@@ -3,7 +3,7 @@ import axios from "../../Contexts/axiosConfig"
 import { CurrentTime } from '../../Components/CurrentTime'
 import "./credentials.css"
 import heart from "../../Assets/credentials/credentials-heart.png"
-
+import { validateLoginInputs } from "../../Components/Validators"
 
 import { useAuth } from "../../Contexts/AuthContext"
 import { useNavigate, Link } from "react-router-dom"
@@ -14,13 +14,19 @@ function SignIn() {
   const { setUser, setFlag, user } = useAuth()
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(null);
+  const [errors, setErrors] = useState(null);
   const navigate = useNavigate()
-
- 
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+
+    const validatedData = validateLoginInputs(username, password)
+
+    console.log(validatedData)
+    if (validatedData.length !== 0){
+      setErrors(validatedData)
+      return
+    }
     try {
       const res = await axios.post("/api/login", { 
         username, 
@@ -29,8 +35,9 @@ function SignIn() {
       }, 
       { 
         withCredentials: true 
-      }) 
-      
+      })
+
+      if (res.data.status === "Login Successful"){
         setFlag(true)
         setUser({
           id: res.data.users_id,
@@ -38,28 +45,35 @@ function SignIn() {
           fname: res.data.fname,
           lname: res.data.lname,
           email: res.data.email,
-          phonenumber: res.data.phonenumber,
-          profile: {
-            profile_pic: res.data.pfp,
-            bio: res.data.bio,
-            hobbie1: res.data.hobbie1,
-            hobbie2: res.data.hobbie2,
-            hobbie3: res.data.hobbie3,
-            fact1: res.data.fact1,
-            fact2: res.data.fact2,
-            lie: res.data.lie,
-          },
-          accessToken: res.data.accessToken,
-          friendslist: res.data.friendslist,
-          gender: res.data.gender,
-          region: res.data.region,
-          active: true,
-        })
-        navigate("/homepage")
+            phonenumber: res.data.phonenumber,
+            profile: {
+              profile_pic: res.data.pfp,
+              bio: res.data.bio,
+              hobbie1: res.data.hobbie1,
+              hobbie2: res.data.hobbie2,
+              hobbie3: res.data.hobbie3,
+              fact1: res.data.fact1,
+              fact2: res.data.fact2,
+              lie: res.data.lie,
+            },
+            accessToken: res.data.accessToken,
+            friendslist: res.data.friendslist,
+            gender: res.data.gender,
+            region: res.data.region,
+            active: true,
+          })
+          navigate("/homepage")
+      } else {
+        console.log(res.data.status, "RAN ")
+        setErrors([res.data.status])
+      }
+
     } catch (err) {
-        setError("Password or Email Incorrect")
+        setErrors(["Error Logging In"])
     }
   }
+  console.log(errors)
+  
 
   return (
     <div className="credentials-main fcc">
@@ -81,7 +95,7 @@ function SignIn() {
           <div className = "credentials-form-container">
             <form  onSubmit={handleSubmit} className="credentials-form">
               <h2 className="credentials-title">Sign Into Your Account</h2>
-              {error && <div className="credentials-error-container credentials-error">{error}</div>}
+              {errors && <div className="credentials-error-container credentials-error">{errors[0]}</div>}
               <div className="signin-form">
                 <input
                   className="credentials-form-input signin-input"

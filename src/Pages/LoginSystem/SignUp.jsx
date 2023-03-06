@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import axios from "../../Contexts/axiosConfig"
 import { CurrentTime } from '../../Components/CurrentTime'
-import { useNavigate, Link } from "react-router-dom"
+import { Link } from "react-router-dom"
 import heart from "../../Assets/credentials/credentials-heart.png"
+import { validateDetailsData } from "../../Components/Validators"
 
 import "./credentials.css"
 
@@ -18,46 +19,38 @@ function SignUp() {
   const [gender, setGender] = useState("Male")
   const [region, setRegion] = useState("")
 
-  const [error, setError] = useState(null)
-  const navigate = useNavigate()
-
-
-  function isValidEmail() {
-    return /\S+@\S+\.\S+/.test(email);
-  }
+  const [errors, setErrors] = useState(null)
 
   const isValidUsernameEmail = async() => {
     try {
       const res = await axios.post("/api/checkue", { username, email})
       return res.data
     } catch (err) {
-        console.error(err.message)
+        setErrors([err.message])
     }
   }
 
   const onSubmitForm = async(e) => {
     e.preventDefault()
-    
-    if (pwd !== cPassword) {
-      setError("Passwords Dont Match!")
+
+    const validatedData = validateDetailsData(username, fName, lName, email, pwd, cPassword, phonenumber, gender, region)
+
+    if (validatedData.length !== 0){
+      setErrors(validatedData)
       return
     }
-    if(!isValidEmail()){
-      setError("Email Is Not Valid")
-      return
-    }
+
     const check = await isValidUsernameEmail()
     if(!check.check){
-      setError(check.message)
+      setErrors([check.message])
       return
     }
 
-
     try {
-        const res = await axios.post("/api/register", { username, fName, lName, email, pwd, phonenumber, region, gender, time_created: CurrentTime})
+        await axios.post("/api/register", { username, fName, lName, email, pwd, phonenumber, region, gender, time_created: CurrentTime})
         window.location = "/signin"//after something is added, the window is refreshed
     } catch (err) {
-        console.error(err.message)
+        setErrors([err.message])
     }
   }
 
@@ -81,7 +74,7 @@ function SignUp() {
           <div className = "credentials-form-container">
             <form className="credentials-form" onSubmit={onSubmitForm}>
               <h2 className="credentials-title">Sign Up</h2>
-              {error && <div className="signup-error-container">{error}</div>}
+              {errors && <div className="signup-error-container">{errors[0]}</div>}
               <div className="sign-up-form-container">
                 <input
                   className = "grid-a credentials-form-input" 

@@ -1,12 +1,19 @@
-create proper login with sessions
 use 3 performance enchEancing techniques
-apply some security features
+apply some security features (access refresh, cookesi server side, hashing and salting)
+(parametized queries )
 
-9) hash the passwords
 7) when 2 users search and 1 user backs out, it bugs out. (Semi Fixed)
 8) fix the navigation
 
+add tehse: 
 
+Input Validation: Validate user input and ensure that it meets the expected format, type, and length before processing it. Use regular expressions or other validation techniques to enforce data integrity.
+
+Sanitization: Sanitize user input by removing any characters that are not allowed in the input field. For example, if the input field only accepts alphanumeric characters, remove any special characters that are not alphanumeric.
+
+Escaping: Escape all user-supplied data that is used in SQL statements by replacing special characters with their escaped equivalents. This will prevent attackers from injecting malicious SQL code into the statement.
+
+Limit Privileges: Limit the privileges of the database user that is used by the application to only those necessary for the application to function properly. This will reduce the damage that can be done by an attacker who manages to inject malicious SQL code into the statement.
 
 
 2) add tooltips 

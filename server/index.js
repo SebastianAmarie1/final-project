@@ -139,71 +139,72 @@ app.post("/api/login", async(req, res) => {
     const { username, password } = req.body; //gets username and password from body
     //add last_login
     last_login = new Date()
+
     
     const user = await pool.query("SELECT * FROM users WHERE username = $1", [username])
 
     if(user.rows[0]) {
-
-    bcrypt.compare(password, user.pwd, (err, result) => {
-        if (err){
-            console.log("ERROR Logging In")
-        } else if (result) {
-
-        } else {
-            res.json({"Login": "Error Logging In"})
-            return 
-        }
-    })
-
-        //generating a access token with the user id and wether the user is admin. sevret key is used to compare keys.
-        const accessToken = generateAccessToken(user)
-        const refreshToken = generateRefreshToken(user)
-
-        const {users_id, username, fname, lname, email, phonenumber, profile_pic, bio, hobbie1, hobbie2, hobbie3, fact1, fact2, lie, friendslist, gender, region} = user.rows[0]
-        try {
-            await pool.query("UPDATE users SET refreshtoken = $1, accesstoken = $2, last_login = $3, active = $4 WHERE users_id = $5", [refreshToken, accessToken, last_login, true, users_id])
-        } catch (error) {
-            console.log(error)
-        }
-
-        let pfp = null
-        if (profile_pic) {
-            pfp = toBase64(profile_pic)
-        }
-
-        res.cookie('refreshToken', refreshToken, {
-            httpOnly: true,
-            secure: false,
-            maxAge: 24 * 60 * 60 * 1000,
-            sameSite: 'strict',
-            path: "/"
-        });
-  
-        req.session.refreshToken = refreshToken
-        
-        res.json({
-            users_id,
-            username,
-            fname,
-            lname,
-            email,
-            phonenumber,
-            pfp: pfp,
-            bio,
-            hobbie1,
-            hobbie2,
-            hobbie3,
-            fact1,
-            fact2,
-            lie,
-            accessToken,
-            friendslist,
-            gender,
-            region,
+        bcrypt.compare(password, user.rows[0].pwd, async(err, result) => {
+            if (err){
+                res.json({"status": "Error Logging In"})
+            } 
+            else if (result) {
+                
+                //generating a access token with the user id and wether the user is admin. sevret key is used to compare keys.
+                const accessToken = generateAccessToken(user)
+                const refreshToken = generateRefreshToken(user)
+                
+                const {users_id, username, fname, lname, email, phonenumber, profile_pic, bio, hobbie1, hobbie2, hobbie3, fact1, fact2, lie, friendslist, gender, region} = user.rows[0]
+                
+                try {
+                    await pool.query("UPDATE users SET refreshtoken = $1, accesstoken = $2, last_login = $3, active = $4 WHERE users_id = $5", [refreshToken, accessToken, last_login, true, users_id])
+                } catch (error) {
+                    console.log(error)
+                }
+            
+                let pfp = null
+                if (profile_pic) {
+                    pfp = toBase64(profile_pic)
+                }
+                
+                res.cookie('refreshToken', refreshToken, {
+                    httpOnly: true,
+                    secure: false,
+                    maxAge: 24 * 60 * 60 * 1000,
+                    sameSite: 'strict',
+                    path: "/"
+                });
+                
+                req.session.refreshToken = refreshToken
+                
+                res.json({
+                    users_id,
+                    username,
+                    fname,
+                    lname,
+                    email,
+                    phonenumber,
+                    pfp: pfp,
+                    bio,
+                    hobbie1,
+                    hobbie2,
+                    hobbie3,
+                    fact1,
+                    fact2,
+                    lie,
+                    accessToken,
+                    friendslist,
+                    gender,
+                    region,
+                    "status": "Login Successful"
+                })
+            } else {
+                res.json({"status": "Passwords Dont Match"})
+                return
+            }
         })
-    }
-    else{
-        res.status(400).json("Username or Password incorrect!")
+    } else {
+        res.json({"status": "Username doesnt exist"})
     }
 })
 
