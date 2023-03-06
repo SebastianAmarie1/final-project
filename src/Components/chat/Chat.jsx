@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef, Fragment } from 'react'
 import { useLocation } from 'react-router-dom'
 import { nanoid } from 'nanoid'
 import { useNavigate } from "react-router-dom"
-
+import { validateMessageData } from "../../Components/Validators"
 
 import { useAuth } from "../../Contexts/AuthContext"
 import { useSocket } from '../../Contexts/socketContext'
@@ -12,15 +12,16 @@ import "./ChatCss.css"
 function Chat() {
 
     const { state } = useLocation()
-    const navigate = useNavigate()
     const { conversationId, recieverId, cname, profile_pic } = state // get the conversation and reciever IDs from the previous page
-    const { socket } = useSocket()
     const { user, axiosAuth } = useAuth()
+    const { socket } = useSocket()
+    const navigate = useNavigate()
 
     const [inputMessage, setInputMessage] = useState("")
     const [messages, setMessages] = useState()
     const [arrivalMessage, setArrivalMessage] = useState(null)
     const messageEndRef = useRef(null)
+    const [errors, setErrors] = useState(null)
 
     let compareDate = null
     let previousMsgOwner = null
@@ -68,6 +69,13 @@ function Chat() {
   const handleSendMessage = async(e) => { //runs when you send a message
     e.preventDefault()
 
+    const validatedData = validateMessageData(inputMessage)
+
+    if (validatedData.length !== 0){
+      setErrors(validatedData)
+      return
+    }
+
     const time_sent = new Date().toISOString()
 
     setMessages((prev) => [...prev, {senderid: JSON.stringify(user.id), recieverid: JSON.stringify(recieverId), message: inputMessage, message_id: nanoid(), time_sent: time_sent}])
@@ -95,6 +103,10 @@ function Chat() {
 
     setInputMessage("")
   }
+
+  useEffect(() => {
+    console.log(errors)
+},[errors])
 
   return (
     <div className="chat-main">

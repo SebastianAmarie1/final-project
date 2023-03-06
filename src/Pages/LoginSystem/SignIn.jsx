@@ -22,11 +22,11 @@ function SignIn() {
 
     const validatedData = validateLoginInputs(username, password)
 
-    console.log(validatedData)
     if (validatedData.length !== 0){
       setErrors(validatedData)
       return
     }
+    
     try {
       const res = await axios.post("/api/login", { 
         username, 
@@ -72,7 +72,6 @@ function SignIn() {
         setErrors(["Error Logging In"])
     }
   }
-  console.log(errors)
   
 
   return (

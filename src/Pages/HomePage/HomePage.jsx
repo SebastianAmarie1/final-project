@@ -51,7 +51,7 @@ function HomePage() {
 
   //Phases
   const [currentPhase, setCurrentPhase] = useState(1)// out of 3
-  const phaseTime = [0, 0.05, 50, 0.05]
+  const phaseTime = [0, 0.05, 0.05, 0.05]
   const [showTimer, setShowTimer] = useState(false)
   const [decisionScreen, setDecisionScreen] = useState(false)
 

@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react'
 import { useAuth } from "../../Contexts/AuthContext"
-
+import { validateProfileDetailsData, validateProfileData } from "../../Components/Validators"
+import axios from "../../Contexts/axiosConfig"
 
 import "./ProfileCss.css"
 
@@ -13,6 +14,7 @@ function Profile() {
 
   const [newProfilePic, setNewProfilePic] = useState(null)
   const [switcherToggle, setSwitcherToggle] = useState(true)
+  const [errors, setErrors] = useState(null)
 
   const [fName, setFname] = useState("")
   const [lName, setLname] = useState("")
@@ -27,6 +29,7 @@ function Profile() {
   const [fact1, setFact1] = useState("")
   const [fact2, setFact2] = useState("")
   const [lie, setLie] = useState("")
+
 
   useEffect(() => {
     if (switcherToggle) {
@@ -83,9 +86,32 @@ function Profile() {
     setNewProfilePic(null)
   }
 
+  const isValidUsernameEmail = async() => {
+    try {
+      const res = await axios.post("/api/checkue", { username: null, email})
+      return res.data
+    } catch (err) {
+        setErrors([err.message])
+    }
+  }
+
   const handleFormSubmit = async (e) => {
     e.preventDefault()
+
+    const validatedData = validateProfileDetailsData(fName, lName, email, phone, region)
+
+    if (validatedData.length !== 0){
+      setErrors(validatedData)
+      return
+    }
+
+    const check = await isValidUsernameEmail()
     
+    if(!check.check){
+      setErrors([check.message])
+      return
+    }
+
     try { 
       const res = await axiosAuth.put("/api/edit_details", { 
         id: user.id,
@@ -114,6 +140,13 @@ function Profile() {
 
   const handleFormSubmitProfile = async (e) => {
     e.preventDefault()
+
+    const validatedData = validateProfileData(bio, hobbie1, hobbie2, hobbie3, fact1, fact2, lie)
+
+    if (validatedData.length !== 0){
+      setErrors(validatedData)
+      return
+    }
     
     try { 
       const res = await axiosAuth.put("/api/edit_profile", { 
@@ -147,6 +180,10 @@ function Profile() {
         console.log(error)
     }
   }
+
+  useEffect(() => {
+    console.log(errors)
+  }, [errors])
 
   return (
     <div className="profile-main">

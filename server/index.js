@@ -7,6 +7,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require('bcrypt');
 const multer = require("multer");
 const { Buffer } = require('buffer');
+const escape = require('pg-escape');
 const cors = require("cors")
 const app = express();
 const port = 5000
@@ -55,6 +56,7 @@ app.post("/api/register", async(req, res) => {
     try {
         const { username, fName, lName, email, pwd, phonenumber, region, gender, time_created } = req.body //gets the description from the body
         const password = bcrypt.hashSync(pwd, salt)
+        
         const newUser = await pool.query("INSERT INTO users (username, fname, lname, email, pwd, phonenumber, region, gender, time_created) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *", [username, fName, lName, email, password, phonenumber, region, gender, time_created]) //create a query where you insert 
         //something inside the description value. $1 is a placeholder and , [description] will specify that that placeholder should be
         //RETURNING * is everytime you do action you will return back the data
@@ -67,13 +69,17 @@ app.post("/api/register", async(req, res) => {
 app.post("/api/checkue", async(req, res) => {
     try {
         const { username, email } = req.body
-        const checkUsername = await pool.query("SELECT * FROM users WHERE username = $1 ", [username])
+
+        let checkUsername = null
+        if (username !== null) {
+            checkUsername = await pool.query("SELECT * FROM users WHERE username = $1 ", [username])
+        }
         const checkEmail = await pool.query("SELECT * FROM users WHERE email = $1 ", [email])
 
-        if (checkUsername.rows[0] && checkEmail.rows[0]){
+        if ( checkUsername && checkUsername.rows[0] && checkEmail.rows[0]){
             res.json({ check: false, message: "Username And Email Are Taken By Another User." })
         }
-        else if (checkUsername.rows[0]){
+        else if (checkUsername && checkUsername.rows[0]){
             res.json({ check: false, message: "Username Is Taken By Another User." })
         }
         else if (checkEmail.rows[0]){
