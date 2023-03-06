@@ -64,7 +64,6 @@ function SignIn() {
           })
           navigate("/homepage")
       } else {
-        console.log(res.data.status, "RAN ")
         setErrors([res.data.status])
       }
 

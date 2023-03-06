@@ -7,7 +7,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require('bcrypt');
 const multer = require("multer");
 const { Buffer } = require('buffer');
-const escape = require('pg-escape');
+const format = require('pg-format');
 const cors = require("cors")
 const app = express();
 const port = 5000
@@ -54,14 +54,13 @@ const refreshKey = process.env.REFRESH_KEY
 //registering a user
 app.post("/api/register", async(req, res) => {
     try {
-        const { username, fName, lName, email, pwd, phonenumber, region, gender, time_created } = req.body //gets the description from the body
+        const { username, fName, lName, email, pwd, phonenumber, region, gender, time_created } = req.body
         const password = bcrypt.hashSync(pwd, salt)
-        
-        const newUser = await pool.query("INSERT INTO users (username, fname, lname, email, pwd, phonenumber, region, gender, time_created) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *", [username, fName, lName, email, password, phonenumber, region, gender, time_created]) //create a query where you insert 
-        //something inside the description value. $1 is a placeholder and , [description] will specify that that placeholder should be
-        //RETURNING * is everytime you do action you will return back the data
-        res.json(newUser.rows[0])//This is where the data is located at
-    } catch(err) {
+        const query = "INSERT INTO users (username, fname, lname, email, pwd, phonenumber, region, gender, time_created) VALUES (%L, %L, %L, %L, %L, %L, %L, %L, %L) RETURNING *"
+        const escapedQuery = format(query, username, fName, lName, email, password, phonenumber, region, gender, time_created)
+        const newUser = await pool.query(escapedQuery)
+        res.json(newUser.rows[0])
+    } catch (err) {
         console.error(err.message)
     }
 })
@@ -72,9 +71,14 @@ app.post("/api/checkue", async(req, res) => {
 
         let checkUsername = null
         if (username !== null) {
-            checkUsername = await pool.query("SELECT * FROM users WHERE username = $1 ", [username])
+            const Uquery = "SELECT * FROM users WHERE username = %L"
+            const escapedUQuery = format(Uquery, username)
+            checkUsername = await pool.query(escapedUQuery)
         }
-        const checkEmail = await pool.query("SELECT * FROM users WHERE email = $1 ", [email])
+
+        const Equery = "SELECT * FROM users WHERE email = %L"
+        const escapedEQuery = format(Equery, email) 
+        const checkEmail = await pool.query(escapedEQuery)
 
         if ( checkUsername && checkUsername.rows[0] && checkEmail.rows[0]){
             res.json({ check: false, message: "Username And Email Are Taken By Another User." })
@@ -146,8 +150,9 @@ app.post("/api/login", async(req, res) => {
     //add last_login
     last_login = new Date()
 
-    
-    const user = await pool.query("SELECT * FROM users WHERE username = $1", [username])
+    const query = "SELECT * FROM users WHERE username = %L"
+    const escapedQuery = format(query, username)
+    const user = await pool.query(escapedQuery)
 
     if(user.rows[0]) {
         bcrypt.compare(password, user.rows[0].pwd, async(err, result) => {
@@ -163,7 +168,9 @@ app.post("/api/login", async(req, res) => {
                 const {users_id, username, fname, lname, email, phonenumber, profile_pic, bio, hobbie1, hobbie2, hobbie3, fact1, fact2, lie, friendslist, gender, region} = user.rows[0]
                 
                 try {
-                    await pool.query("UPDATE users SET refreshtoken = $1, accesstoken = $2, last_login = $3, active = $4 WHERE users_id = $5", [refreshToken, accessToken, last_login, true, users_id])
+                    const Uquery = "UPDATE users SET refreshtoken = %L, accesstoken = %L, last_login = %L, active = %L WHERE users_id = %L"
+                    const escapedUQuery = format(Uquery, refreshToken, accessToken, last_login, true, users_id)
+                    await pool.query(escapedUQuery)
                 } catch (error) {
                     console.log(error)
                 }
@@ -219,8 +226,10 @@ app.post("/api/login/refresh", async(req, res) => {//used to generate a refresh 
     const { id } = req.body
 
     if (!req.session.refreshToken) return res.status(401).json("You are not authenticated")
- 
-    const user = await pool.query("SELECT * FROM users WHERE users_id = $1", [id])
+    
+    const query = "SELECT * FROM users WHERE users_id = %L"
+    const escapedQuery = format(query, id) 
+    const user = await pool.query(escapedQuery)
 
     if (!user.rows[0]){
         return res.status(403).json("Refresh token is not valid")
@@ -233,7 +242,9 @@ app.post("/api/login/refresh", async(req, res) => {//used to generate a refresh 
         const newRefreshToken = generateRefreshToken(user)
 
         try {
-            const updateUser = await pool.query("UPDATE users SET refreshtoken = $1 WHERE users_id = $2 RETURNING *", [newRefreshToken, id])
+            const Uquery = "UPDATE users SET refreshtoken = %L WHERE users_id = %L RETURNING *"
+            const escapedUQuery = format(Uquery, newRefreshToken, id)
+            await pool.query(escapedUQuery)
         } catch (error) {
             console.log(error)
         }
@@ -259,7 +270,9 @@ app.post("/api/logout",verify,  async (req, res) => { // needs a verify function
     const { id } = req.body;
 
     try {
-        const updateUser = await pool.query("UPDATE users SET refreshtoken = $1, accesstoken = $2, active = $3 WHERE users_id = $4 RETURNING *", ["", "", false, id])
+        const query = "UPDATE users SET refreshtoken = %L, accesstoken = %L, active = %L WHERE users_id = %L RETURNING *"
+        const escapedQuery = format(query, "", "", false, id)
+        await pool.query(escapedQuery)
     } catch (error) {
         console.log(error)
     }
@@ -271,9 +284,14 @@ app.post("/api/logout",verify,  async (req, res) => { // needs a verify function
 app.put("/api/edit_details", verify, async (req, res) => {
     try {
         const { id, fname, lname, email, phone, region } = req.body;
-
-        await pool.query("UPDATE users SET fname = $1, lname = $2, email = $3, phonenumber = $4, region = $5 WHERE users_id = $6 RETURNING *", [fname, lname, email, phone, region, id])
-        const newUser = await pool.query("SELECT * FROM users WHERE users_id = $1", [id])
+        
+        const query = "UPDATE users SET fname = %L, lname = %L, email = %L, phonenumber = %L, region = %L WHERE users_id = %L RETURNING *"
+        const escapedQuery = format(query, fname, lname, email, phone, region, id)
+        await pool.query(escapedQuery)
+        
+        const Uquery = "SELECT * FROM users WHERE users_id = %L"
+        const escapedUQuery = format(Uquery, id)
+        const newUser = await pool.query(escapedUQuery)
         
         res.status(200).json({
             user: newUser.rows[0]
@@ -287,8 +305,13 @@ app.put("/api/edit_profile", verify, async (req, res) => {
     try {
         const { id, bio, hobbie1, hobbie2, hobbie3, fact1, fact2, lie } = req.body;
 
-        await pool.query("UPDATE users SET bio = $1, hobbie1 = $2, hobbie2 = $3, hobbie3 = $4, fact1 = $5, fact2 = $6, lie = $7 WHERE users_id = $8 RETURNING *", [bio, hobbie1, hobbie2, hobbie3, fact1, fact2, lie, id])
-        const newUser = await pool.query("SELECT * FROM users WHERE users_id = $1", [id])
+        const query = "UPDATE users SET bio = %L, hobbie1 = %L, hobbie2 = %L, hobbie3 = %L, fact1 = %L, fact2 = %L, lie = %L WHERE users_id = %L RETURNING *"
+        const escapedQuery = format(query, bio, hobbie1, hobbie2, hobbie3, fact1, fact2, lie, id)
+        await pool.query(escapedQuery)
+
+        const Uquery = "SELECT * FROM users WHERE users_id = %L"
+        const escapedUQuery = format(Uquery, id)
+        const newUser = await pool.query(escapedUQuery)
         
         res.status(200).json({
             user: newUser.rows[0]
@@ -309,9 +332,14 @@ app.put("/api/profile_pic", verify, upload.single("file"), async (req, res) => {
         }
 
         const fileBuffer = file.buffer
-        await pool.query("UPDATE users SET profile_pic = $1 WHERE users_id = $2", [fileBuffer, req.body.id])
-        
-        const newUser = await pool.query("SELECT * FROM users WHERE users_id = $1", [req.body.id])
+
+        const query = "UPDATE users SET profile_pic = %L WHERE users_id = %L"
+        const escapedQuery = format(query, fileBuffer, req.body.id)
+        await pool.query(escapedQuery)
+
+        const Uquery = "SELECT * FROM users WHERE users_id = %L"
+        const escapedUQuery = format(Uquery, req.body.id)
+        const newUser = await pool.query(escapedUQuery)
     
         const pfp = toBase64(newUser.rows[0].profile_pic)
 
@@ -330,7 +358,9 @@ app.post("/api/follow", verify, async (req, res) => {
     try {
         const { id, followedUser } = req.body
 
-        const friends = await pool.query("SELECT friendslist FROM users WHERE users_id = $1", [id])
+        const query = "SELECT friendslist FROM users WHERE users_id = %L"
+        const escapedQuery = format(query, id)
+        const friends = await pool.query(escapedQuery)
         
         flag = true
         if (friends.rows[0].friendslist){
@@ -341,8 +371,14 @@ app.post("/api/follow", verify, async (req, res) => {
             })
         }
         if (flag) {
-            await pool.query("update users set friendslist = array_append(friendslist, $1) where users_id = $2", [followedUser, id])
-            const user = await pool.query("SELECT * FROM users WHERE users_id = $1", [id])
+            const Uquery = "update users set friendslist = array_append(friendslist, %L) where users_id = %L"
+            const escapedUQuery = format(Uquery, followedUser, id)
+            await pool.query(escapedUQuery)
+            
+            const Squery = "SELECT * FROM users WHERE users_id = %L"
+            const escapedSQuery = format(Squery, id)
+            const user = await pool.query(escapedSQuery)
+            
             res.status(200).json({msg:"You Added This User Successfully", flag: true, user: user.rows[0]})
             if (id < followedUser){
                 createConversation(id, followedUser)
@@ -359,7 +395,11 @@ app.post("/api/follow", verify, async (req, res) => {
 app.post("/api/unfollow", verify, async (req, res) => {
     try {
         const { id, newList } = req.body
-        const newUser = await pool.query("update users set friendslist = $1 where users_id = $2", [newList, id])
+
+        const query = "update users set friendslist = %L where users_id = %L"
+        const escapedQuery = format(query, newList, id)
+        const newUser = await pool.query(escapedQuery)
+
         res.json(newUser)
     } catch (error) {
         console.log(error)
@@ -370,14 +410,20 @@ app.post("/api/unfollow", verify, async (req, res) => {
 //make Conversations
     
 const createConversation = async(id, pid) => {
-    const conversations = await pool.query("SELECT * FROM conversations where $1 = ANY(members) AND $2 = ANY(members)", [id, pid])
+
+    const query = "SELECT * FROM conversations where %L = ANY(members) AND %L = ANY(members)"
+    const escapedQuery = format(query, id, pid)
+    const conversations = await pool.query(escapedQuery)
+
     if(conversations.rows[0]){
         console.log("Conversation already started")
     } else if (id === pid){
         console.log("Cannot start conversation with self")
     } else {
         try {
-            await pool.query("INSERT INTO conversations (members, time_created) VALUES (ARRAY [$1, $2], $3) RETURNING *", [id, pid, new Date()])
+            const Uquery = "INSERT INTO conversations (members, time_created) VALUES (ARRAY [%L, %L], %L) RETURNING *"
+            const escapedUQuery = format(Uquery, id, pid, new Date())
+            await pool.query(escapedUQuery)
         } catch (err) {
             console.error(err.message)
         }
@@ -389,7 +435,10 @@ app.post("/api/retrieve_conversations", verify, async(req, res) => {
     try {
         const { id } = req.body
         //sort the conversations from most active to least and return it.
-        let conversations = await pool.query("SELECT * FROM conversations WHERE $1 = ANY(members)", [id])
+
+        const query = "SELECT * FROM conversations WHERE %L = ANY(members)"
+        const escapedQuery = format(query, id)
+        let conversations = await pool.query(escapedQuery)
         
         const sortedConversations = conversations.rows.sort((a, b) => {
             if (a.last_message_date === null) {
@@ -400,9 +449,16 @@ app.post("/api/retrieve_conversations", verify, async(req, res) => {
         
         // get the convos and turn the members ids to objects.
         conversations = await Promise.all(sortedConversations.map(async (current) => {
+            
+            const Uquery = "SELECT * FROM users WHERE users_id = %L"
+            const escapedUQuery = format(Uquery, current.members[0])
+
+            const Squery = "SELECT * FROM users WHERE users_id = %L"
+            const escapedSQuery = format(Squery, current.members[1])
+
             let [User1, User2] = await Promise.all([
-                pool.query("SELECT * FROM users WHERE users_id = $1", [current.members[0]]),
-                pool.query("SELECT * FROM users WHERE users_id = $1", [current.members[1]])
+                await pool.query(escapedUQuery),
+                await pool.query(escapedSQuery)
             ])
 
             let User1pic
@@ -435,9 +491,19 @@ app.post("/api/retrieve_conversations", verify, async(req, res) => {
 app.post("/api/create_message", verify, async(req, res) => { 
     try {
         const { conversation_id, senderId, recieverId, message, time_sent } = req.body
-        await pool.query("INSERT INTO messages (conversation_id, senderId, recieverId, message, time_sent ) VALUES ($1, $2, $3, $4, $5) RETURNING *", [conversation_id, senderId, recieverId, message, time_sent])
-        await pool.query("UPDATE conversations SET last_message = $1, last_message_date = $2 WHERE conversation_id = $3", [message, time_sent, conversation_id])
-        const activity = await pool.query("SELECT active FROM users WHERE users_id = $1", [recieverId])
+
+        const query = "INSERT INTO messages (conversation_id, senderId, recieverId, message, time_sent ) VALUES (%L, %L, %L, %L, %L) RETURNING *"
+        const escapedQuery = format(query, conversation_id, senderId, recieverId, message, time_sent)
+        await pool.query(escapedQuery)
+        
+        const Uquery = "UPDATE conversations SET last_message = %L, last_message_date = %L WHERE conversation_id = %L"
+        const escapedUQuery = format(Uquery, message, time_sent, conversation_id)
+        await pool.query(escapedUQuery)
+
+        const Squery = "SELECT active FROM users WHERE users_id = %L"
+        const escapedSQuery = format(Squery, recieverId)
+        const activity = await pool.query(escapedSQuery)
+  
         res.json(activity.rows[0])
     } catch (err) {
         console.error(err.message)
@@ -448,17 +514,24 @@ app.post("/api/create_message", verify, async(req, res) => {
 app.post("/api/retrieve_messages", verify, async(req, res) => {
     try {
         const { conversation_id, senderId } = req.body
-        let messages = await pool.query("SELECT * FROM messages WHERE conversation_id = $1 AND senderid = $2 AND seen = false", [conversation_id, senderId])
+
+        const query = "SELECT * FROM messages WHERE conversation_id = %L AND senderid = %L AND seen = false"
+        const escapedQuery = format(query, conversation_id, senderId)
+        let messages = await pool.query(escapedQuery)
         
         //turn all messages to seen
         await Promise.all(
             messages.rows.map(async (message) => {
-                await pool.query("UPDATE messages SET seen = true WHERE message_id = $1", [message.message_id])
+                const Uquery = "UPDATE messages SET seen = true WHERE message_id = %L"
+                const escapedUQuery = format(Uquery, message.message_id)
+                await pool.query(escapedUQuery)
             })
           )
 
         //return the messages in order by date.
-        messages = await pool.query("SELECT * FROM messages WHERE conversation_id = $1",[conversation_id]);
+        const Squery = "SELECT * FROM messages WHERE conversation_id = %L"
+        const escapedSQuery = format(Squery, conversation_id)
+        messages = await pool.query(escapedSQuery)
         
         let sortedMessages
 
@@ -481,7 +554,9 @@ app.post("/api/retrieve_user", verify, async(req, res) => {
     try {
         const { usersId } = req.body
 
-        const newUser = await pool.query("SELECT * FROM users WHERE users_id = $1", [usersId])
+        const query = "SELECT * FROM users WHERE users_id = %L"
+        const escapedQuery = format(query, usersId)
+        const newUser = await pool.query(escapedQuery)
 
         if (newUser.rows[0].profile_pic){
             newUser.rows[0].profile_pic = toBase64(newUser.rows[0].profile_pic)
@@ -498,14 +573,21 @@ app.post("/api/retrieve_friends", verify, async(req, res) => {
     try {
         const { id } = req.body
         //sort the conversations from most active to least and return it.
-        let friends = await pool.query("SELECT friendslist FROM users WHERE users_id = $1", [id])
+
+        const query = "SELECT friendslist FROM users WHERE users_id = %L"
+        const escapedQuery = format(query, id)
+        let friends = await pool.query(escapedQuery)
         
         friends = friends.rows[0].friendslist
         let friendslist = []
         
         if (friends){
             friends = await Promise.all(friends.map(async (current) => {
-                let User1 = await pool.query("SELECT * FROM users WHERE users_id = $1", [current])
+
+                const query = "SELECT * FROM users WHERE users_id = %L"
+                const escapedQuery = format(query, current)
+                let User1 = await pool.query(escapedQuery)
+
                 let User1pic
     
                 if(User1.rows[0].profile_pic){
