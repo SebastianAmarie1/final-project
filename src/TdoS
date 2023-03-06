@@ -1,13 +1,30 @@
-use 3 performance enchEancing techniques
-apply some security features (access refresh, cookesi server side, hashing and salting)
-( parametized queries, input validation ( profanity, dodgey URLs ), sanitization, Escaping )
+use 3 performance enchEancing techniques:
+1) lazy loading
+2) React memo (memorization)
+3) loading page by page
+4) code splitting
+
+
+SECURITY TECHNIQUES USED:
+1) access/refresh tokens,
+2) server side cookies,
+3) hashing salting,
+4) parametized queries,
+5) input validation,
+6) profanity filter,
+7) URL filter,
+8) Sanitazation,
+9) escaping
+
+
+
+
+
+
+
 
 7) when 2 users search and 1 user backs out, it bugs out. (Semi Fixed)
 8) fix the navigation
-
-add tehse: 
-
-Limit Privileges: Limit the privileges of the database user that is used by the application to only those necessary for the application to function properly. This will reduce the damage that can be done by an attacker who manages to inject malicious SQL code into the statement.
 
 
 ****) TESTING
