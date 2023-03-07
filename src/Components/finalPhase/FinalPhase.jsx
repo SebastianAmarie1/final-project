@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, memo } from 'react'
 import { useAuth } from "../../Contexts/AuthContext"
 import { useSocket } from "../../Contexts/socketContext"
 
@@ -122,4 +122,4 @@ function FinalPhase({ roomId, endCall, partnerId, skipCall }) {
   )
 }
 
-export default FinalPhase
+export default memo(FinalPhase)

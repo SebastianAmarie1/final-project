@@ -1,9 +1,9 @@
 
-import React, { useState } from "react"
+import React, { useState, memo } from "react"
 import { useEffect } from "react"
 import "./OnlineCss.css"
 import { useAuth } from "../../Contexts/AuthContext"
-
+import Loader from "../Loader"
 
 function Online({onlineUsers}) {
 
@@ -60,7 +60,7 @@ function Online({onlineUsers}) {
                         return(
                             <div key={value.users_id} className="online-indv">
                                 <div className="online-indv-pfp">
-                                    <img className="online-indv-pic" src={value.profile_pic} />
+                                    <img loading="lazy" className="online-indv-pic" src={value.profile_pic} />
                                     <div className="online-indv-status" />
                                 </div>
                                 <h2>{value.username}</h2>
@@ -68,18 +68,11 @@ function Online({onlineUsers}) {
                         )
                     })
                     :
-                    <div className="loader">
-                        <div className="face">
-                            <div className="circle"></div>
-                        </div>
-                        <div className="face">
-                            <div className="circle"></div>
-                        </div>
-                    </div>
+                    <Loader />
                 }
             </div>
         </div>
     )
 }
 
-export default Online
+export default memo(Online)

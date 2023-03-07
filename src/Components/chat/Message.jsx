@@ -26,7 +26,7 @@ function Message({msg, self, dpic, profile_pic}) {
             <div className="chat-container-reciever">
                 {dpic 
                     ?
-                    <img src={profile_pic} className="chat-message-image-reciever"></img>
+                    <img src={profile_pic} className="chat-message-image-reciever" loading="lazy"></img>
                     :
                     <div className="chat-message-image-placeholder"></div>
                 }

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, memo, } from 'react'
 import { useSocket } from "../../Contexts/socketContext"
-
+import Loader from "../Loader"
 
 function Decision({roomId, nextPhase, currentPhase, endCall, skipCall}) {
 
@@ -37,14 +37,7 @@ function Decision({roomId, nextPhase, currentPhase, endCall, skipCall}) {
         {accepted 
             ?
             <div className="home-video-search">
-                <div className="loader home-video-loader">
-                    <div className="face">
-                        <div className="circle"></div>
-                    </div>
-                    <div className="face">
-                        <div className="circle"></div>
-                    </div>
-                </div>
+                <Loader />
                 <h3 className="home-video-search-text">Waiting For Partner Response</h3>
 
                 <div className="home-video-search-footer fcc">
@@ -74,4 +67,4 @@ function Decision({roomId, nextPhase, currentPhase, endCall, skipCall}) {
     )
 }
 
-export default Decision
+export default memo(Decision)

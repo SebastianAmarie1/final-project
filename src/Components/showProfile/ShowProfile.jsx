@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {memo} from 'react'
 import "./showProfileCss.css"
 
 import defaultPic from "../../Assets/default-user-image.jpg"
@@ -40,4 +40,4 @@ function ShowProfile({partnerProfile, endCall, skipCall}) {
   )
 }
 
-export default ShowProfile
+export default memo(ShowProfile)

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, memo } from 'react'
 import { useAuth } from "../../Contexts/AuthContext"
 import { useNavigate } from "react-router-dom"
 
@@ -89,4 +89,4 @@ function Follow() {
   )
 }
 
-export default Follow
+export default memo(Follow)

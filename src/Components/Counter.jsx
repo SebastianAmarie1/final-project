@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 
 function CountdownTimer({ time, onCountdownEnd }) {
   const [seconds, setSeconds] = useState(time * 60);
@@ -29,4 +29,4 @@ function CountdownTimer({ time, onCountdownEnd }) {
   );
 }
 
-export default CountdownTimer;
+export default memo(CountdownTimer);

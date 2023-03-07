@@ -1,8 +1,8 @@
 use 3 performance enchEancing techniques:
-1) lazy loading
+1) lazy loading (images page code splitting)
 2) React memo (memorization)
 3) loading page by page
-4) code splitting
+
 
 
 SECURITY TECHNIQUES USED:

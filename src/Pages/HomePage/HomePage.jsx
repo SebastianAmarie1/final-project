@@ -1,14 +1,10 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef, lazy, Suspense } from 'react'
 import Peer from "simple-peer"
 
 import "./homepage.css"
 import { useAuth } from "../../Contexts/AuthContext"
 import { useSocket } from "../../Contexts/socketContext"
-import Counter from "../../Components/Counter"
-import ShowProfile from "../../Components/showProfile/ShowProfile"
-import Decision from "../../Components/decision/Decision"
-import FinalPhase from '../../Components/finalPhase/FinalPhase'
-import Online from "../../Components/Online-Hints/Online"
+
 
 import endCallIcon from "../../Assets/homepage/homepage-end-call.webp"
 import cameraOff from "../../Assets/homepage/homepage-camera-toggle-off.png"
@@ -18,7 +14,12 @@ import audioOff from "../../Assets/homepage/home-page-audio-off.png"
 import speakerOff from "../../Assets/homepage/home-speaker-off.png"
 import speakerOn from "../../Assets/homepage/home-speaker-on.png"
 
-
+const Counter = lazy(() => import("../../Components/Counter"))
+const ShowProfile = lazy(() => import("../../Components/showProfile/ShowProfile"))
+const Decision = lazy(() => import("../../Components/decision/Decision"))
+const FinalPhase = lazy(() => import("../../Components/finalPhase/FinalPhase"))
+const Online = lazy(() => import("../../Components/Online-Hints/Online"))
+const Loader = lazy(() => import("../../Components/Loader"))
 
 function HomePage() {
 
@@ -346,14 +347,7 @@ const nextPhase = () => {
           {!callAccepted ?
               searching ?
                   <div className="home-video-search" onClick={stopSearch}>
-                    <div className="loader home-video-loader">
-                        <div className="face">
-                            <div className="circle"></div>
-                        </div>
-                        <div className="face">
-                            <div className="circle"></div>
-                        </div>
-                    </div>
+                    <Loader />
                     <h3 className="home-video-search-text">Searching</h3>
                   </div>
                   :
@@ -395,13 +389,13 @@ const nextPhase = () => {
                             <div className="home-partner-toggled-footer fcc">
                               <div className="home-partner-toggled-footer-inner">
                                 {partnerMute
-                                ?<img src={speakerOff} className="home-footer-button" onClick={mutePartnerAudio}/>  
-                                :<img src={speakerOn} className="home-footer-button home-speaker-on" onClick={mutePartnerAudio}/>
+                                ?<img loading="lazy" src={speakerOff} className="home-footer-button" onClick={mutePartnerAudio}/>  
+                                :<img loading="lazy" src={speakerOn} className="home-footer-button home-speaker-on" onClick={mutePartnerAudio}/>
                                 }
-                                <img src={endCallIcon} className="home-endbutton home-footer-button" onClick={() => endCall()} />
+                                <img loading="lazy" src={endCallIcon} className="home-endbutton home-footer-button" onClick={() => endCall()} />
                                 {viewPartnerCamera
-                                ?<img src={cameraOff} className="home-footer-button" onClick={showPartnerCamera}/>  
-                                :<img src={cameraOn} className="home-footer-button" onClick={showPartnerCamera}/>  
+                                ?<img loading="lazy" src={cameraOff} className="home-footer-button" onClick={showPartnerCamera}/>  
+                                :<img loading="lazy" src={cameraOn} className="home-footer-button" onClick={showPartnerCamera}/>  
                                 }
                               </div> 
                             </div>
@@ -419,12 +413,12 @@ const nextPhase = () => {
                 <div className="home-partner-toggled-footer fcc">
                   <div className="home-partner-toggled-footer-inner">
                     {mute
-                      ?<img src={audioOff} className="home-footer-button" onClick={muteAudio}/>  
-                      :<img src={audioOn} className="home-footer-button" onClick={muteAudio}/>
+                      ?<img loading="lazy" src={audioOff} className="home-footer-button" onClick={muteAudio}/>  
+                      :<img loading="lazy" src={audioOn} className="home-footer-button" onClick={muteAudio}/>
                     }
                     {viewCamera
-                      ?<img src={cameraOff} className="home-footer-button" onClick={showCamera}/>  
-                      :<img src={cameraOn} className="home-footer-button" onClick={showCamera}/>  
+                      ?<img loading="lazy" src={cameraOff} className="home-footer-button" onClick={showCamera}/>  
+                      :<img loading="lazy" src={cameraOn} className="home-footer-button" onClick={showCamera}/>  
                     } 
                   </div> 
                 </div>

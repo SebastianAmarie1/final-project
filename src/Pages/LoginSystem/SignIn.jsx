@@ -76,7 +76,7 @@ function SignIn() {
   return (
     <div className="credentials-main fcc">
       <div className="credentials-heart-container">
-        <img className="credentials-heart" src={heart} />
+        <img loading="lazy" className="credentials-heart" src={heart} />
 
       </div>
         <div className="credentials-strip" />

@@ -66,7 +66,7 @@ function Navigation() {
 
         <div className="navigation-right-container">
           { user 
-          ? <><Link to="/homepage/follow"><img src={friendsIcon} className="navigation-friends-icon"></img></Link>
+          ? <><Link to="/homepage/follow"><img loading="lazy" src={friendsIcon} className="navigation-friends-icon"></img></Link>
               <h4 onClick={handleLogout} className="navigation-btn">Sign Out</h4></>
           : <Link to="/signin"> <h4 className='navigation-btn'>Sign In</h4></Link>}
           <button onClick={testing}>Test</button>
