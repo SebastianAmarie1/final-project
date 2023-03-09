@@ -19,11 +19,6 @@ SECURITY TECHNIQUES USED:
 
 8) fix the navigation
 
-
-THINGS TO ADD:
-REVIEWS
-
-
 ****) TESTING
 
 
@@ -31,8 +26,7 @@ REVIEWS
 
 
 FRONT END:
-4) make home page and profile page responsive
-
+4) make home page
 1) Style the Hints Page
 2) Stlyle the questions popping up in video chat
 
@@ -40,7 +34,4 @@ FRONT END:
 1) error messages for profile and messages
 
 2) add tooltips 
-3) fix the card shuffle component.
 9) make how many unread messages on the follow page.
-10) make online/offline status on follow page aswell
-11) make a arrow pointing down on the main page that scroll to the next section

@@ -8,6 +8,8 @@ import { useAuth } from "../../Contexts/AuthContext"
 import { useSocket } from '../../Contexts/socketContext'
 import Message from './Message'
 import "./ChatCss.css"
+import noProfileIcon from "../../Assets/noProfileIcon.png"
+
 
 function Chat() {
 
@@ -144,7 +146,7 @@ function Chat() {
                                     <div className="message-date-seperator-line"></div>
                                 </div>
                             }  
-                            <Message msg={current} dpic={dpic} profile_pic={profile_pic} self={current.senderid === JSON.stringify(user.id)}/>
+                            <Message msg={current} dpic={dpic} profile_pic={profile_pic ? profile_pic : noProfileIcon} self={current.senderid === JSON.stringify(user.id)}/>
                             <div ref={messageEndRef}/>
                         </Fragment>
                     )

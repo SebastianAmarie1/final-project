@@ -13,7 +13,7 @@ const SignIn = lazy(() => import('./Pages/LoginSystem/SignIn.jsx'));
 const HomePage = lazy(() => import('./Pages/HomePage/HomePage.jsx'));
 const Profile = lazy(() => import('./Pages/Profile/Profile.jsx'));
 const Follow = lazy(() => import('./Pages/Profile/Follow.jsx'));
-const Chat = lazy(() => import('./Components/chat/Chat.jsx'));
+const Chat = lazy(() => import('./Pages/Profile/Chat.jsx'));
 
  
 function App() {

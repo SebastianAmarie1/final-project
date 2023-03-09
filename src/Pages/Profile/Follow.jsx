@@ -49,7 +49,7 @@ function Follow() {
       
       return (
         <div onClick={() => {navigate(`/homepage/follow/chat/${current.conversation_id}`, { state: { conversationId: current.conversation_id, recieverId: partner.users_id, cname: partner.username, profile_pic: partner.profile_pic } })}} className="friends-individual-user-box" key={partner.users_id}>
-          <img src={partner.profile_pic} className="following-individual-pp"></img>
+          <img src={partner.profile_pic ? partner.profile_pic : noProfileIcon} className="following-individual-pp"></img>
           <div className="friends-individual-name">
             <h2 className="friends-individual-user-name">{partner.username}</h2>
             {current.last_message 

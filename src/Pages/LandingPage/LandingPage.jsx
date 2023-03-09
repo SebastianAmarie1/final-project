@@ -2,16 +2,12 @@ import React, {useEffect, useState, useRef} from 'react'
 import { Link } from 'react-router-dom';
 import "./landingpage.css"
 import "./landingPageAnimations.css"
-import { reviews } from "./reviews.jsx"
 
 import InformationImage from "../../Assets/LandingPage/landing-page-gif.gif"
 import SignIn from "../../Assets/LandingPage/signin-img.png"
 import Profile from "../../Assets/LandingPage/profile-img.png"
 import Video from "../../Assets/LandingPage/videocall-img.png"
 import Chat from "../../Assets/LandingPage/chat-img.png"
-import SpeachMarks from "../../Assets/LandingPage/speachmarks.png"
-
-import Noprofile from "../../Assets/noProfileIcon.png"
 
 function LandingPage() {
 
@@ -20,37 +16,6 @@ function LandingPage() {
   const [scrollPosition, setScrollPosition] = useState(0)
   const [totalHeight, setTotalHeight] = useState()
 
-
-  const [shuffle, setShuffle] = useState(false)
-  const [indexes, setIndexes] = useState([])
-
-
-  // Card Shuffling
-  useEffect(() => {
-    getRandomIndexes()
-  },[])
-  
-  const getRandomIndexes = () => {
-    //gets 4 random indexes which are not the same for each card.
-    const indexes = []
-    
-    while (indexes.length <= 3) {
-      const num = Math.floor(Math.random() * (7 - 0 + 1) + 0)//change this to match API length
-      if (!(indexes.includes(num))){
-        indexes.push(num)
-      }
-    } 
-    setIndexes(indexes)
-  }
-  
-  const handleShuffle = () => {
-    //allows animations to happen and sets timeouts
-    setShuffle(true)
-    setTimeout(() => {
-      getRandomIndexes()
-      setShuffle(false)
-    }, 1500)
-  }
 
   // y pos 
   const handleScroll = () => {
