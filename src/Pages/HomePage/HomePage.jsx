@@ -4,6 +4,8 @@ import Peer from "simple-peer"
 import "./homepage.css"
 import { useAuth } from "../../Contexts/AuthContext"
 import { useSocket } from "../../Contexts/socketContext"
+import axios from "../../Contexts/axiosConfig"
+
 
 
 import endCallIcon from "../../Assets/homepage/homepage-end-call.webp"
@@ -19,6 +21,7 @@ const ShowProfile = lazy(() => import("../../Components/showProfile/ShowProfile"
 const Decision = lazy(() => import("../../Components/decision/Decision"))
 const FinalPhase = lazy(() => import("../../Components/finalPhase/FinalPhase"))
 const Online = lazy(() => import("../../Components/Online-Hints/Online"))
+const Hints = lazy(() => import("../../Components/Online-Hints/Hints"))
 const Loader = lazy(() => import("../../Components/Loader"))
 
 function HomePage() {
@@ -52,9 +55,12 @@ function HomePage() {
 
   //Phases
   const [currentPhase, setCurrentPhase] = useState(1)// out of 3
-  const phaseTime = [0, 0.05, 0.05, 0.05]
+  const phaseTime = [0, 0.05, 0.05, 500]
   const [showTimer, setShowTimer] = useState(false)
   const [decisionScreen, setDecisionScreen] = useState(false)
+
+  //Phase 3
+  const [question, setQuestion] = useState(null)
 
   useEffect(() => {
     
@@ -315,18 +321,56 @@ function HomePage() {
   }
 
 /// PHASES /// 
-const handleCountdownEnd = () => {
-  setShowTimer(false)
-  setDecisionScreen(true)
-}
-
-const nextPhase = () => {
-  if (currentPhase <= 3){
-    setCurrentPhase((old) => old + 1)
-    setShowTimer(true)
-    setDecisionScreen(false)
+  const handleCountdownEnd = () => {
+    setShowTimer(false)
+    setDecisionScreen(true)
   }
-}
+
+  const nextPhase = () => {
+    if (currentPhase <= 3){
+      setCurrentPhase((old) => old + 1)
+      setShowTimer(true)
+      setDecisionScreen(false)
+    }
+  }
+
+  const getQuestion = async() => {
+    const options = {
+        method: 'GET',
+        url: 'https://would-you-rather.p.rapidapi.com/wyr/random',
+        headers: {
+          'X-RapidAPI-Key': 'd28369a221mshce7373ca2e84dcep1d306cjsncafae953c3ba',
+          'X-RapidAPI-Host': 'would-you-rather.p.rapidapi.com'
+        }
+      };
+      
+      const res = await axios.request(options)
+      setQuestion(res.data[0].question)
+  }  
+
+  useEffect(() => { // UseEffect for Phase 3 Questions
+    if (currentPhase === 3){
+      setQuestion("Question 1")
+
+      setTimeout(() => {
+        console.log("Question 2")
+      },30000)
+
+      setTimeout(() => {
+        console.log("Question 3")
+      },60000)
+      
+      setTimeout(() => {
+        console.log("Question 4")
+      },90000)
+    } 
+  },[currentPhase]) 
+
+  useEffect(() => {
+    if (currentPhase === 3){
+      console.log(question)
+    }
+  },[question])
 
 
   let MyVideo = <video onClick={() => {setMyVideoToggled((oldValue) => !oldValue)}} className="home-video-me" ref={myVideo} autoPlay playsInline/>
@@ -402,7 +446,12 @@ const nextPhase = () => {
                         }
                   </div> 
           }
-          <Online onlineUsers={onlineUsers} />
+          {callerSignal 
+            ? 
+              <Hints />
+            :
+              <Online onlineUsers={onlineUsers} />
+          }
           <div className="home-video-user">
             <div onClick={() => {setMyVideoToggled((oldValue) => !oldValue)}} className={`hideCamera fcc ${!viewCamera && 'hide'}`}>
               <h2 className="hideCamera-title">Camera Turned Off</h2>
