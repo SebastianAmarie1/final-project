@@ -226,3 +226,24 @@
 .profile-form-title{
     color: var(--clr-primary)
 }
+
+@media (max-width: 1000px) {
+    .profile-main{
+        height: calc(190vh + 100px);
+    }
+  .profile-contianer{
+    flex-direction: column;
+    height: 190vh;
+  }
+
+  .profile-change-image-container{
+    width: 100%;
+    
+  }
+
+  .profile-change-details-container{
+    width: 100%;
+    padding-bottom: 2em;
+    margin-bottom: 70px;
+  }
+}
