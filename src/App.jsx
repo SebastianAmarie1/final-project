@@ -4,8 +4,8 @@ import Loader from "./Components/Loader"
 
 import PrivateRoute from "./Contexts/PrivateRoute.jsx";
 
-const Navigation = lazy(() => import('./Components/navbar/Navigation.jsx'));
-const Footer = lazy(() => import('./Components/Footer.jsx'));
+import Navigation from "./Components/navbar/Navigation.jsx";
+import Footer from "./Components/Footer.jsx";
 
 const LandingPage = lazy(() => import('./Pages/LandingPage/LandingPage.jsx'));
 const SignUp = lazy(() => import('./Pages/LoginSystem/SignUp.jsx'));
@@ -19,16 +19,17 @@ const Chat = lazy(() => import('./Components/chat/Chat.jsx'));
 function App() {
   return(
     <Router>
-      <Suspense fallback={<div className="loader-center"><Loader /></div>}>
+      <Navigation />
+      <Suspense fallback={<div className=""><Loader /></div>}>
         <Routes>
-          <Route exact path="/" element={<><Navigation /><LandingPage /><Footer /></>} />
-          <Route path="/signup" element={<><Navigation /><SignUp /><Footer /></>} />
-          <Route path="/signin" element={<><Navigation /><SignIn /><Footer /></>} />
+          <Route exact path="/" element={<><LandingPage /><Footer /></>} />
+          <Route path="/signup" element={<><SignUp /><Footer /></>} />
+          <Route path="/signin" element={<><SignIn /><Footer /></>} />
           <Route element={<PrivateRoute/>} >
-            <Route exact path="/homepage" element={<><Navigation /><HomePage /></>} />
-            <Route exact path="/homepage/profile" element={<><Navigation /><Profile /></>} />
-            <Route exact path="/homepage/follow" element={<><Navigation /><Follow /></>} />
-            <Route exact path="/homepage/follow/chat/:id" element={<><Navigation /><Chat /></>} />
+            <Route exact path="/homepage" element={<HomePage />} />
+            <Route exact path="/homepage/profile" element={<Profile />} />
+            <Route exact path="/homepage/follow" element={<Follow />} />
+            <Route exact path="/homepage/follow/chat/:id" element={<Chat />} />
           </Route>
         </Routes>
       </Suspense>

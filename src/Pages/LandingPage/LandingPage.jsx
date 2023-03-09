@@ -5,8 +5,6 @@ import "./landingPageAnimations.css"
 import { reviews } from "./reviews.jsx"
 
 import InformationImage from "../../Assets/LandingPage/landing-page-gif.gif"
-import GooglePlay from "../../Assets/LandingPage/googlePlayIcon.png"
-import AppleStore from "../../Assets/LandingPage/appleDownloadIcon.png"
 import SignIn from "../../Assets/LandingPage/signin-img.png"
 import Profile from "../../Assets/LandingPage/profile-img.png"
 import Video from "../../Assets/LandingPage/videocall-img.png"
@@ -115,8 +113,11 @@ function LandingPage() {
             <Link to="/signup"><button className="lButton"><span>Sign Up</span></button></Link>
             <Link to="/signin"><button className="lButton"><span>Sign In</span></button></Link>
             <div className="landing-top-download-icons">
-              <img className="landing-top-download-pics" src={GooglePlay}></img>
-              <img className="landing-top-download-pics" src={AppleStore}></img>
+              <a href="#about" className="landing-top-arrow-container">
+                <div className="landing-top-arrow-center"></div>
+                <div className="landing-top-arrow-left"></div>
+                <div className="landing-top-arrow-right"></div>
+              </a>
             </div>
           </div>
         </div>
@@ -124,7 +125,7 @@ function LandingPage() {
 
       { /*Information*/ }
 
-      <div className="landing-info">
+      <div className="landing-info" id="about">
         <div className="landing-info-ww">
           <div className="landing-info-ww-container">
             <div className="landgng-info-ww-info">

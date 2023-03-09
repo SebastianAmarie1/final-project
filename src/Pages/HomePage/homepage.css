@@ -1,13 +1,14 @@
 .home-main{ 
 
     padding: 2%;
-    height: calc(100vh - 70px);
+    height: calc(100vh);
     width: 100%;
 
     background-image: url("../../Assets/background.jpg");
 }
 /*  Header  */
 .home-container-headbar{
+    margin-top: 70px;
     width: 100%;
     height: 70px;
     display: flex;

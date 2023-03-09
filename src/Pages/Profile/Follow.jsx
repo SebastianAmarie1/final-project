@@ -1,7 +1,7 @@
 import React, { useEffect, useState, memo } from 'react'
 import { useAuth } from "../../Contexts/AuthContext"
 import { useNavigate } from "react-router-dom"
-
+import Loader from "../../Components/Loader"
 import noProfileIcon from "../../Assets/noProfileIcon.png"
 import "./FollowCss.css"
 
@@ -68,7 +68,7 @@ function Follow() {
         </div>
       )
     })
-  : <h1>Loading ...</h1>
+  : <div className="loader-container fcc"><Loader /></div>
 
   return (
     <div className="freinds-main-box">

@@ -1,6 +1,6 @@
 /*   MAIN   */
 .chat-main{
-    height: calc(100vh - 70px);
+    height: calc(100vh);
     width: 100%;
     padding-top: 2em;
     
@@ -12,7 +12,7 @@
     position: relative;
     max-width: 1000px;
     height: calc(100vh - 70px - 4em);
-    margin: 0 auto;
+    margin: 70px auto;
 
     border-radius: 5px;
     border: 2px solid var(--clr-black);
@@ -199,6 +199,7 @@
 
 @media (max-width: 1000px){
     .chat-main{
+        height: calc(100vh - 70px);
         padding-top: 0;
     }
     .chat-container{
@@ -212,12 +213,6 @@
 
     }
 }
-
-
-
-
-
-
 
 
 
