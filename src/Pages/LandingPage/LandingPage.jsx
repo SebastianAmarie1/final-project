@@ -79,6 +79,7 @@ function LandingPage() {
             <Link to="/signin"><button className="lButton"><span>Sign In</span></button></Link>
             <div className="landing-top-download-icons">
               <a href="#about" className="landing-top-arrow-container">
+                <div className="landing-top-arrow-blur"></div>
                 <div className="landing-top-arrow-center"></div>
                 <div className="landing-top-arrow-left"></div>
                 <div className="landing-top-arrow-right"></div>

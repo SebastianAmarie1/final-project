@@ -28,7 +28,7 @@ function HomePage() {
 
   const { user, axiosAuth, connectionRef, setRoomId, roomId } = useAuth()
   const { socket } = useSocket()
-
+  const [width, setWidth] = useState(window.innerWidth);
   //Connections
   const [stream, setStream] = useState() 
   const [pStream, setPStream] = useState(null)
@@ -52,10 +52,11 @@ function HomePage() {
   const [myVideoToggled, setMyVideoToggled] = useState(false)
   const partnerVideo = useRef()
   const [partnerVideoToggled, setPartnerVideoToggled] = useState(false)
+  const [showHO, setShowHO] = useState(false)
 
   //Phases
   const [currentPhase, setCurrentPhase] = useState(1)// out of 3
-  const phaseTime = [0, 0.05, 0.05, 500]
+  const phaseTime = [0, 0.05, 0.05, 0.05]
   const [showTimer, setShowTimer] = useState(false)
   const [decisionScreen, setDecisionScreen] = useState(false)
 
@@ -113,6 +114,16 @@ function HomePage() {
       console.log("RAN FAILED CALL")
       stopSearch()
     }) 
+
+    const handleResize = () => {
+      setWidth(window.innerWidth);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
 
   }, [])
 
@@ -372,6 +383,28 @@ function HomePage() {
     }
   },[question])
 
+  const handleShow = () => {
+    setShowHO((prev) => !prev)
+  }
+
+  const showHOHml = <div onClick={(e) => {
+    e.stopPropagation() 
+    handleShow()
+    }} className="home-partner-show-ho">
+    {showHO
+      ? callerSignal
+        ? <>
+          X
+          <Hints />
+          </>
+        :
+          <>
+          X
+          <Online onlineUsers={onlineUsers} />
+          </>
+      : <p>Show</p>
+    }
+  </div>
 
   let MyVideo = <video onClick={() => {setMyVideoToggled((oldValue) => !oldValue)}} className="home-video-me" ref={myVideo} autoPlay playsInline/>
   let PartnersVideo = <video onClick={() => {setPartnerVideoToggled((oldValue) => !oldValue)}} className="home-video-partner-video" ref={partnerVideo} autoPlay playsInline />
@@ -393,12 +426,14 @@ function HomePage() {
                   <div className="home-video-search" onClick={stopSearch}>
                     <Loader />
                     <h3 className="home-video-search-text">Searching</h3>
+                    {showHOHml}
                   </div>
                   :
                   <div className="home-video-search" onClick={searchForCall}>
                     <div className="home-video-search-static"/>
                     <h3 className="home-video-search-text">Click To Find Partner</h3>
                     <div className="home-video-search-static home-video-search-static-secondary"/>
+                    {showHOHml}
                   </div>
                 :
                 (currentPhase === 3 && decisionScreen)
@@ -427,7 +462,10 @@ function HomePage() {
                               <button className="home-partner-button report-button" >Report</button>
                             </div>
                         }
+
                         {PartnersVideo}
+                        {showHOHml}
+                        
                         {partnerVideoToggled 
                           && 
                             <div className="home-partner-toggled-footer fcc">
@@ -446,13 +484,15 @@ function HomePage() {
                         }
                   </div> 
           }
-          {callerSignal 
-            ? 
-              <Hints />
-            :
-              <Online onlineUsers={onlineUsers} />
+          {(width < 1200)
+            ?<></>
+            : callerSignal
+              ? 
+                <Hints />
+              :
+                <Online onlineUsers={onlineUsers} />
           }
-          <div className="home-video-user">
+          <div className="home-video-user fcc">
             <div onClick={() => {setMyVideoToggled((oldValue) => !oldValue)}} className={`hideCamera fcc ${!viewCamera && 'hide'}`}>
               <h2 className="hideCamera-title">Camera Turned Off</h2>
             </div>

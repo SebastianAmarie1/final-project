@@ -1,6 +1,6 @@
 .online-container{
     grid-area: q;
-    background-color: var(--clr-);
+    background-color: var(--clr-white);
     border: 1px solid var(--clr-primary);
     border-radius: 5px;
 }
@@ -28,6 +28,10 @@
 
     height: 60px;
     width: 100%;
+}
+
+.online-indv h2{
+    color:var(--clr-primary);
 }
 
 .online-indv:hover,
@@ -61,4 +65,11 @@
 .online-noonline{
     margin-top: 1em;;
     text-align: center;
+}
+
+@media screen and (max-width: 1200px) {
+    .online-container{
+        height: 450px;
+        max-width: 400px;
+    }
 }

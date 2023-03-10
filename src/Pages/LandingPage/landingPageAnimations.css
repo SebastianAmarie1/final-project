@@ -1,5 +1,6 @@
 .landing-loading-animation{
     animation: animateIn 4s ;
+
 }
 @keyframes animateIn {
     0%{

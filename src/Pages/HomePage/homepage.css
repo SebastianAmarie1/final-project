@@ -1,9 +1,9 @@
 .home-main{ 
-
     padding: 2%;
     height: calc(100vh);
     width: 100%;
 
+    overflow: hidden;
     background-image: url("../../Assets/background.jpg");
 }
 /*  Header  */
@@ -52,7 +52,6 @@
         "v v v v q"
         "v v v v q"
         "v v v v u";
-    padding-right: 3em;
 }
 
 .home-video-search{
@@ -94,11 +93,11 @@
 .home-video-search-footer{
     position: absolute;
     height: 150px;
-    width: 400px;
+    width: (10% + 200px);
     right: 0;
     bottom: 0;
-    gap: 1.5em;
-
+    gap: 5%;
+    background-color: green;
 }
 
 .home-video-search-buttons{
@@ -152,12 +151,10 @@
     position: relative;
     z-index: 1;
     color: var(--clr-white);
+    text-align: center;
 }
 .home-video-user{
     position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     margin-left: auto;
     grid-area: u;
     background-color: black;
@@ -191,7 +188,9 @@
     z-index: 11;
     background-color: #ffffff33;
 }
-
+.home-partner-show-ho{
+    display: none;
+}
 .home-partner-button{
     height: 40px;
     width: 60px;
@@ -220,14 +219,10 @@
     mix-blend-mode:lighten;
 }
 
-
-
 .home-endbutton{
     height: 60px;
     width: 60px;
 }
-
-
 
 .home-video-me{
     width: 100%;
@@ -246,4 +241,47 @@
 }
 .hideCamera-title{
     color: white;
+}
+
+@media screen and (max-width: 1200px) {
+    .home-video-questions{
+        width: 100%;
+        padding-right: 0;
+        grid-template-areas: 
+        "v v v v v"
+        "v v v v v"
+        "v v v v v";
+    }
+
+    .home-video-user{
+        width: 200px;
+        height: 200px;
+        position: absolute;
+        top: calc(100% - 175px - 10vh); 
+        left: calc(100% - 225px - 5vw);
+        background-color: transparent;
+    }
+
+    .home-partner-show-ho{
+        position: absolute;
+        z-index: 100;
+        right: 0;
+        top:0;
+        max-height: 500px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        display: block;
+        color: var(--clr-white);
+        background-color: var(--clr-primary);
+        padding: 1em;
+        cursor: pointer;
+        text-align: end;
+    }
+
+    .home-partner-show-ho:hover,
+    .home-partner-show-ho:focus{
+        background-color: var(--clr-secondary);
+    }
+
 }
