@@ -92,12 +92,14 @@
 
 .home-video-search-footer{
     position: absolute;
-    height: 150px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: (10% + 200px);
+    padding: 1em;
     right: 0;
     bottom: 0;
-    gap: 5%;
-    background-color: green;
 }
 
 .home-video-search-buttons{
@@ -117,6 +119,7 @@
 }
 
 .end-call{
+    margin-left: 2%;
     background-color: #c21717;
 }
 
@@ -254,6 +257,8 @@
     }
 
     .home-video-user{
+        position: relative;
+        z-index: 100;
         width: 200px;
         height: 200px;
         position: absolute;
@@ -283,5 +288,13 @@
     .home-partner-show-ho:focus{
         background-color: var(--clr-secondary);
     }
-
+    .home-video-search-footer{
+        position: absolute;
+        height: 70px;
+        width: auto;
+        left: 0;
+        top: 0;
+        padding: 1em;
+        display:block;
+    }
 }

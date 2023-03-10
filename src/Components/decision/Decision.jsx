@@ -55,7 +55,7 @@ function Decision({roomId, nextPhase, currentPhase, endCall, skipCall}) {
                         <div className="home-video-search-static home-video-search-static-secondary"/>
                     </div>
 
-                    <div className="home-video-search-footer fcc">
+                    <div className="home-video-search-footer">
                         <button onClick={skipCall} className="home-video-search-buttons"> Skip</button>
                         <button onClick={endCall} className="home-video-search-buttons end-call"> End Call</button>
                     </div>
