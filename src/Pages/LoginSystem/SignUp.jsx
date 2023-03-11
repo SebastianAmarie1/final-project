@@ -71,82 +71,143 @@ function SignUp() {
             <div className="credentials-indv-img f-grid"></div>
             <div className="credentials-indv-img g-grid"></div>
           </div>
-          <div className = "credentials-form-container">
-            <form className="credentials-form" onSubmit={onSubmitForm}>
+          <div className = "credentials-form-container ">
+            <form className="credentials-form credentials-form-signup" onSubmit={onSubmitForm}>
               <h2 className="credentials-title">Sign Up</h2>
               {errors && <div className="signup-error-container">{errors[0]}</div>}
-              <div className="sign-up-form-container">
-                <input
-                  className = "grid-a credentials-form-input" 
-                  type="text"
-                  id="username" 
-                  value={username}
-                  onChange={e => setUsername(e.target.value)} 
-                  placeholder="Username" 
-                  required/>
+              <div className="sign-up-form-container ">
 
-                <input
-                  className = "grid-b credentials-form-input"  
-                  type="text"
-                  id="fName" 
-                  value={fName}
-                  onChange={e => setFName(e.target.value)} 
-                  placeholder="First Name" 
-                  required/>
+                <div className={`signin-input grid-a wave-group ${username ?'wave-group-active' : 'wave-group-deactive'} big-input`} >
+                  <input id="Username" name="username" required value={username} type="text" className="input credentials-form-input" onChange={(e) => {setUsername(e.target.value)}}/>
+                  <span className="bar big-input"></span>
+                  <label className="label">
+                    <span className="label-char" style={{'--index': 0}}>U</span>
+                    <span className="label-char" style={{'--index': 1}}>s</span>
+                    <span className="label-char" style={{'--index': 2}}>e</span>
+                    <span className="label-char" style={{'--index': 3}}>r</span>
+                    <span className="label-char" style={{'--index': 4}}>n</span>
+                    <span className="label-char" style={{'--index': 5}}>a</span>
+                    <span className="label-char" style={{'--index': 6}}>m</span>
+                    <span className="label-char" style={{'--index': 7}}>e</span>
+                  </label>
+                </div>
 
-                <input
-                  className = "grid-c credentials-form-input"  
-                  type="text"
-                  id="lName" 
-                  value={lName}
-                  onChange={e => setLName(e.target.value)} 
-                  placeholder="Last Name" 
-                  required/>
+                <div className={`signin-input grid-b wave-group ${fName ?'wave-group-active' : 'wave-group-deactive'} big-input`} >
+                  <input id="FName" name="fname" required value={fName} type="text" className="input credentials-form-input" onChange={(e) => {setFName(e.target.value)}}/>
+                  <span className="bar big-input"></span>
+                  <label className="label">
+                    <span className="label-char" style={{'--index': 0}}>F</span>
+                    <span className="label-char" style={{'--index': 1}}>i</span>
+                    <span className="label-char" style={{'--index': 2}}>r</span>
+                    <span className="label-char" style={{'--index': 3}}>s</span>
+                    <span className="label-char" style={{'--index': 4}}>t</span>
+                    <span className="label-char" style={{'--index': 4}}> &nbsp;</span>
+                    <span className="label-char" style={{'--index': 5}}>N</span>
+                    <span className="label-char" style={{'--index': 6}}>a</span>
+                    <span className="label-char" style={{'--index': 7}}>m</span>
+                    <span className="label-char" style={{'--index': 8}}>e</span>
+                  </label>
+                </div>
 
-                <input
-                  className = "grid-d credentials-form-input"  
-                  type="text"
-                  id="email" 
-                  value={email}
-                  onChange={e => setEmail(e.target.value)} 
-                  placeholder="Email" 
-                  required/>
+                <div className={`signin-input grid-c wave-group ${lName ?'wave-group-active' : 'wave-group-deactive'} big-input`} >
+                  <input id="lName" name="lname" required value={lName} type="text" className="input credentials-form-input" onChange={(e) => {setLName(e.target.value)}}/>
+                  <span className="bar big-input"></span>
+                  <label className="label">
+                    <span className="label-char" style={{'--index': 0}}>L</span>
+                    <span className="label-char" style={{'--index': 1}}>a</span>
+                    <span className="label-char" style={{'--index': 2}}>s</span>
+                    <span className="label-char" style={{'--index': 3}}>t</span>
+                    <span className="label-char" style={{'--index': 3}}> &nbsp;</span>
+                    <span className="label-char" style={{'--index': 4}}>N</span>
+                    <span className="label-char" style={{'--index': 5}}>a</span>
+                    <span className="label-char" style={{'--index': 6}}>m</span>
+                    <span className="label-char" style={{'--index': 7}}>e</span>
+                  </label>
+                </div>
+
+                <div className={`signin-input grid-d wave-group ${email ?'wave-group-active' : 'wave-group-deactive'} big-input`} >
+                  <input id="Email" name="email" required value={email} type="text" className="input credentials-form-input" onChange={(e) => {setEmail(e.target.value)}}/>
+                  <span className="bar big-input"></span>
+                  <label className="label">
+                    <span className="label-char" style={{'--index': 0}}>E</span>
+                    <span className="label-char" style={{'--index': 1}}>m</span>
+                    <span className="label-char" style={{'--index': 2}}>a</span>
+                    <span className="label-char" style={{'--index': 3}}>i</span>
+                    <span className="label-char" style={{'--index': 4}}>l</span>
+                  </label>
+                </div>
+
+                <div className={`signin-input grid-e wave-group ${pwd ?'wave-group-active' : 'wave-group-deactive'} big-input`} >
+                  <input id="Pwd" name="pwd" required value={pwd} type="password" className="input credentials-form-input" onChange={(e) => {setPassword(e.target.value)}}/>
+                  <span className="bar big-input"></span>
+                  <label className="label">
+                    <span className="label-char" style={{'--index': 0}}>P</span>
+                    <span className="label-char" style={{'--index': 1}}>a</span>
+                    <span className="label-char" style={{'--index': 2}}>s</span>
+                    <span className="label-char" style={{'--index': 3}}>s</span>
+                    <span className="label-char" style={{'--index': 4}}>w</span>
+                    <span className="label-char" style={{'--index': 5}}>o</span>
+                    <span className="label-char" style={{'--index': 6}}>r</span>
+                    <span className="label-char" style={{'--index': 7}}>d</span>
+                  </label>
+                </div>
+
+                <div className={`signin-input grid-f wave-group ${cPassword ?'wave-group-active' : 'wave-group-deactive'} big-input`} >
+                  <input id="CPassword" name="cpassword" required value={cPassword} type="text" className="input credentials-form-input" onChange={(e) => {setCPassword(e.target.value)}}/>
+                  <span className="bar big-input"></span>
+                  <label className="label">
+                    <span className="label-char" style={{'--index': 0}}>C</span>
+                    <span className="label-char" style={{'--index': 1}}>o</span>
+                    <span className="label-char" style={{'--index': 2}}>n</span>
+                    <span className="label-char" style={{'--index': 3}}>f</span>
+                    <span className="label-char" style={{'--index': 4}}>i</span>
+                    <span className="label-char" style={{'--index': 5}}>r</span>
+                    <span className="label-char" style={{'--index': 6}}>m</span>
+                    <span className="label-char" style={{'--index': 6}}>&nbsp;</span>
+                    <span className="label-char" style={{'--index': 7}}>p</span>
+                    <span className="label-char" style={{'--index': 8}}>a</span>
+                    <span className="label-char" style={{'--index': 9}}>s</span>
+                    <span className="label-char" style={{'--index': 10}}>s</span>
+                    <span className="label-char" style={{'--index': 11}}>w</span>
+                    <span className="label-char" style={{'--index': 12}}>o</span>
+                    <span className="label-char" style={{'--index': 13}}>r</span>
+                    <span className="label-char" style={{'--index': 14}}>d</span>
+                  </label>
+                </div>
+
+                <div className={`signin-input grid-g wave-group ${region ?'wave-group-active' : 'wave-group-deactive'} big-input`} >
+                  <input id="Region" name="region" required value={region} type="text" className="input credentials-form-input" onChange={(e) => {setRegion(e.target.value)}}/>
+                  <span className="bar big-input"></span>
+                  <label className="label">
+                    <span className="label-char" style={{'--index': 0}}>R</span>
+                    <span className="label-char" style={{'--index': 1}}>e</span>
+                    <span className="label-char" style={{'--index': 2}}>g</span>
+                    <span className="label-char" style={{'--index': 3}}>i</span>
+                    <span className="label-char" style={{'--index': 4}}>o</span>
+                    <span className="label-char" style={{'--index': 5}}>n</span>
+                  </label>
+                </div>
                 
-                <input
-                  className = "grid-e credentials-form-input"  
-                  type="text"
-                  id="password" 
-                  value={pwd}
-                  onChange={e => setPassword(e.target.value)} 
-                  placeholder="Password"
-                  required/>
+                <div className={`signin-input grid-h wave-group ${phonenumber ?'wave-group-active' : 'wave-group-deactive'} big-input`} >
+                  <input id="Phonenumber" name="phonenumber" required value={phonenumber} type="text" className="input credentials-form-input" onChange={(e) => {setPhonenumber(e.target.value)}}/>
+                  <span className="bar big-input"></span>
+                  <label className="label">
+                    <span className="label-char" style={{'--index': 0}}>P</span>
+                    <span className="label-char" style={{'--index': 1}}>h</span>
+                    <span className="label-char" style={{'--index': 2}}>o</span>
+                    <span className="label-char" style={{'--index': 3}}>n</span>
+                    <span className="label-char" style={{'--index': 4}}>e</span>
+                    <span className="label-char" style={{'--index': 4}}>&nbsp;</span>
+                    <span className="label-char" style={{'--index': 5}}>N</span>
+                    <span className="label-char" style={{'--index': 6}}>u</span>
+                    <span className="label-char" style={{'--index': 7}}>m</span>
+                    <span className="label-char" style={{'--index': 8}}>b</span>
+                    <span className="label-char" style={{'--index': 9}}>e</span>
+                    <span className="label-char" style={{'--index': 10}}>r</span>
+                  </label>
+                </div>
 
-                <input
-                  className = "grid-f credentials-form-input"  
-                  type="text"
-                  id="cPassword" 
-                  value={cPassword}
-                  onChange={e => setCPassword(e.target.value)} 
-                  placeholder="Confirm Password" 
-                  required/>
-                
-                <input
-                  className = "grid-g credentials-form-input"  
-                  type="text"
-                  id="region" 
-                  value={region}
-                  onChange={e => setRegion(e.target.value)} 
-                  placeholder="Region" 
-                  required/>
-
-                <input
-                  className = "grid-h credentials-form-input"  
-                  type="text"
-                  id="phonenumber" 
-                  value={phonenumber}
-                  onChange={e => setPhonenumber(e.target.value)} 
-                  placeholder="Phone Number" 
-                  required/>
+                  
 
                 <select onChange={(e) => {setGender(e.target.value)}} className="grid-i credentials-form-input" id="gender">
                   <option value="Male">Male</option>
@@ -154,7 +215,7 @@ function SignUp() {
                 </select>
 
                 <button className="grid-j credentials-form-btn" type="submit">Sign Up</button>
-                <h2 className="grid-k signup-signin-link"> No Account? <Link to="/signin">Click Here</Link></h2>
+                <h2 className="grid-k signup-signin-link"> No Account? <Link className='link' to="/signin">Click Here</Link></h2>
               </div>
             </form>
           </div>

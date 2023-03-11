@@ -95,30 +95,39 @@ function SignIn() {
               <h2 className="credentials-title">Sign Into Your Account</h2>
               {errors && <div className="credentials-error-container credentials-error">{errors[0]}</div>}
               <div className="signin-form">
-                <input
-                  className="credentials-form-input signin-input"
-                  id="Username" 
-                  type="text"
-                  name="username" 
-                  placeholder="Username"
-                  value={username}
-                  onChange ={(e) => setUsername(e.target.value)} 
-                  required>
-                </input>
+                
+                <div className={`signin-input wave-group ${username ?'wave-group-active' : 'wave-group-deactive'} big-input`} >
+                  <input id="Username" name="username" required value={username} type="text" className="input credentials-form-input" onChange={(e) => {setUsername(e.target.value)}}/>
+                  <span className="bar big-input"></span>
+                  <label className="label">
+                    <span className="label-char" style={{'--index': 0}}>U</span>
+                    <span className="label-char" style={{'--index': 1}}>s</span>
+                    <span className="label-char" style={{'--index': 2}}>e</span>
+                    <span className="label-char" style={{'--index': 3}}>r</span>
+                    <span className="label-char" style={{'--index': 4}}>n</span>
+                    <span className="label-char" style={{'--index': 5}}>a</span>
+                    <span className="label-char" style={{'--index': 6}}>m</span>
+                    <span className="label-char" style={{'--index': 7}}>e</span>
+                  </label>
+                </div>
 
-                <input 
-                  className="credentials-form-input signin-input"
-                  id="Password"
-                  name="password"
-                  type="password" 
-                  placeholder="Password"
-                  value={password}
-                  onChange ={(e) => setPassword(e.target.value)} 
-                  required>
-                </input>
+                <div className={`signin-input wave-group ${password ?'wave-group-active' : 'wave-group-deactive'} big-input`} >
+                  <input id="Password" name="password" required value={password} type="password" className="input credentials-form-input" onChange={(e) => {setPassword(e.target.value)}}/>
+                  <span className="bar big-input"></span>
+                  <label className="label">
+                    <span className="label-char" style={{'--index': 0}}>P</span>
+                    <span className="label-char" style={{'--index': 1}}>a</span>
+                    <span className="label-char" style={{'--index': 2}}>s</span>
+                    <span className="label-char" style={{'--index': 3}}>s</span>
+                    <span className="label-char" style={{'--index': 4}}>w</span>
+                    <span className="label-char" style={{'--index': 5}}>o</span>
+                    <span className="label-char" style={{'--index': 6}}>r</span>
+                    <span className="label-char" style={{'--index': 7}}>d</span>
+                  </label>
+                </div>
               
                 <button className="credentials-form-btn signin-button">Sign In</button>
-                <h2 className="grid-k signup-signin-link"> No Account? <Link to="/signup">Click Here</Link></h2>
+                <h2 className="grid-k signup-signin-link"> No Account? <Link className="link"to="/signup">Click Here</Link></h2>
               </div>
             </form>
           </div>
