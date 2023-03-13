@@ -48,6 +48,13 @@ function toBase64(pic){
 const accessKey = process.env.ACCESS_KEY
 const refreshKey = process.env.REFRESH_KEY
 
+app.get("/api/testing", async(req, res) => { // listens to get request from frontend 
+    try {
+        res.json({"Testing": "This API is Working"})//sends a JSON response with value Testing
+    } catch (err) {
+        console.error(err.message) //logs error
+    }
+})
 
 
 /************** LOGIN SYSTEM ****************************/

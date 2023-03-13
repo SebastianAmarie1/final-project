@@ -14,10 +14,10 @@ function Hints({onlineUsers}) {
     const handleQuestion = async() => {
         const options = {
             method: 'GET',
-            url: 'https://would-you-rather.p.rapidapi.com/wyr/random',
+            url: process.env.REACT_APP_RAPIDAPIURL,
             headers: {
-              'X-RapidAPI-Key': 'd28369a221mshce7373ca2e84dcep1d306cjsncafae953c3ba',
-              'X-RapidAPI-Host': 'would-you-rather.p.rapidapi.com'
+              'X-RapidAPI-Key': process.env.REACT_APP_RAPIDAPIKEY,
+              'X-RapidAPI-Host': process.env.REACT_APP_RAPIDAPIHOST
             }
           };
           
