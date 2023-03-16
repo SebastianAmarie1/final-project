@@ -70,6 +70,7 @@ function Chat() {
 
   const handleSendMessage = async(e) => { //runs when you send a message
     e.preventDefault()
+    setErrors(null)
 
     const validatedData = validateMessageData(inputMessage)
 
@@ -156,6 +157,8 @@ function Chat() {
             }
             </div>
             <div className="chat-footer">
+                {errors && <p>{errors}</p>}
+                <div className="chat-footer-input-button">
                 <textarea className="chat-footer-textarea"
                     type="text"
                     id="message"
@@ -164,6 +167,7 @@ function Chat() {
                     onChange={e => setInputMessage(e.target.value)} 
                     placeholder="Message... " />
                 <button className="chat-footer-button" onClick={(e) => handleSendMessage(e)}>&gt;</button>
+                </div>
             </div>
         </div>
     </div>

@@ -14,20 +14,22 @@ function Online({onlineUsers, showHO}) {
     const [onlineFriends, setOnlineFriends] = useState(null)
 
     useEffect(() => {
-        const getFriends = async() => {
-            try {
-                const res = await axiosAuth.post("/api/retrieve_friends", { 
-                    id: user.id,
-                },
-                { headers: 
-                    { authorization: "Bearer " + user.accessToken}
-                })
-                setFriends(res.data)
-            } catch (error) {
+        if (!friends){
+            const getFriends = async() => {
+                try {
+                    const res = await axiosAuth.post("/api/retrieve_friends", { 
+                        id: user.id,
+                    },
+                    { headers: 
+                        { authorization: "Bearer " + user.accessToken}
+                    })
+                    setFriends(res.data)
+                } catch (error) {
+                }
             }
+    
+            getFriends()
         }
-
-        getFriends()
         
     },[user.friendslist])
 

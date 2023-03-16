@@ -7,12 +7,12 @@ import PrivateRoute from "./Contexts/PrivateRoute.jsx";
 import Navigation from "./Components/navbar/Navigation.jsx";
 import Footer from "./Components/Footer.jsx";
 
+import Follow from "./Pages/Profile/Follow.jsx"
 const LandingPage = lazy(() => import('./Pages/LandingPage/LandingPage.jsx'));
 const SignUp = lazy(() => import('./Pages/LoginSystem/SignUp.jsx'));
 const SignIn = lazy(() => import('./Pages/LoginSystem/SignIn.jsx'));
 const HomePage = lazy(() => import('./Pages/HomePage/HomePage.jsx'));
 const Profile = lazy(() => import('./Pages/Profile/Profile.jsx'));
-const Follow = lazy(() => import('./Pages/Profile/Follow.jsx'));
 const Chat = lazy(() => import('./Pages/Profile/Chat.jsx'));
 
  

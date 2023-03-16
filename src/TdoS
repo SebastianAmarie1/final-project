@@ -1,25 +1,14 @@
-use 3 performance enchEancing techniques:
-1) lazy loading (images page code splitting)
-2) React memo (memorization)
-3) loading page by page
 
-
-
-SECURITY TECHNIQUES USED:
-1) access/refresh tokens,
-2) server side cookies,
-3) hashing salting,
-4) parametized queries,
-5) input validation,
-6) profanity filter,
-7) URL filter,
-8) Sanitazation,
-9) escaping
 
 
 8) fix the navigation
 
+
 ****) TESTING
+
+
+
+
 
 
 

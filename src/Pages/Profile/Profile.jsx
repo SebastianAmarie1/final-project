@@ -224,6 +224,8 @@ function Profile() {
               <img className="profile-details-image-current" src={user.profile?.profile_pic ? user.profile?.profile_pic : noProfileIcon} />
               <h2>{user.username}</h2>
 
+              {errors && <div className="credentials-error-container credentials-error">{errors[0]}</div>}
+
               {switcherToggle 
                 ?
                   <form onSubmit={handleFormSubmit} className="profile-details-form">
