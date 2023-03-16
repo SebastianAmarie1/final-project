@@ -156,55 +156,54 @@ function HomePage() {
   }
 
   useEffect(() => {
-    
-  if(initiator) {
-    
-    if (connectionRef.current){
-      connectionRef.current = undefined
-    }
-    const peer = new Peer({
-      initiator: true,
-      trickle: false,
-      stream: stream
-    });
-
-    if (peer){
-      peer.on("signal", (data) => {
-        socket.current.emit("callUser", {
-          signal: data,
-          roomId: roomId,
-          id: user.id,
-        });
+    if(initiator) {
+      
+      if (connectionRef.current){
+        connectionRef.current = undefined
+      }
+      const peer = new Peer({
+        initiator: true,
+        trickle: false,
+        stream: stream
       });
+
+      if (peer){
+        peer.on("signal", (data) => {
+          socket.current.emit("callUser", {
+            signal: data,
+            roomId: roomId,
+            id: user.id,
+          });
+        });
+      }
+      
+      peer.on("stream", (stream) => {
+        setPStream(stream);
+        if (partnerVideo.current) {
+          partnerVideo.current.srcObject = stream;
+          partnerVideo.current.pause();
+        }
+      });
+
+      let flag = false
+      socket.current.on("callAccepted", (data) => {
+        if (!flag){
+          setCallerSignal(data.signal);
+          setCallAccepted(true);
+          setShowTimer(true);
+          setPartnerId(data.partnerId);
+          flag = true
+          connectionRef.current.signal(data.signal);
+        }
+      });
+
+      peer.on('error', (error) => {
+        console.log(error)
+        endCall()
+      });
+      
+      connectionRef.current = peer;
     }
-    
-    peer.on("stream", (stream) => {
-      setPStream(stream);
-      if (partnerVideo.current) {
-        partnerVideo.current.srcObject = stream;
-        partnerVideo.current.pause();
-      }
-    });
-
-    let flag = false
-    socket.current.on("callAccepted", (data) => {
-      if (!flag){
-        setCallerSignal(data.signal);
-        setCallAccepted(true);
-        setShowTimer(true);
-        setPartnerId(data.partnerId);
-        flag = true
-        connectionRef.current.signal(data.signal);
-      }
-    });
-
-    peer.on('error', (error) => {
-      console.log(error)
-      endCall()
-    });
-    
-    connectionRef.current = peer;
-  }
   }, [initiator]);
 
   useEffect(() => {

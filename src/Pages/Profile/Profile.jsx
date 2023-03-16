@@ -16,42 +16,19 @@ function Profile() {
   const [switcherToggle, setSwitcherToggle] = useState(true)
   const [errors, setErrors] = useState(null)
 
-  const [fName, setFname] = useState("")
-  const [lName, setLname] = useState("")
-  const [email, setEmail] = useState("")
-  const [phone, setPhone] = useState("")
-  const [region, setRegion] = useState("")
+  const [fName, setFname] = useState(user.fname)
+  const [lName, setLname] = useState(user.lname)
+  const [email, setEmail] = useState(user.email)
+  const [phone, setPhone] = useState(user.phonenumber)
+  const [region, setRegion] = useState(user.region)
 
-  const [bio, setBio] = useState("")
-  const [hobbie1, setHobbie1] = useState("")
-  const [hobbie2, setHobbie2] = useState("")
-  const [hobbie3, setHobbie3] = useState("")
-  const [fact1, setFact1] = useState("")
-  const [fact2, setFact2] = useState("")
-  const [lie, setLie] = useState("")
-
-
-  useEffect(() => {
-    if (switcherToggle) {
-      if(user.id){
-        setFname(user.fname)
-        setLname(user.lname)
-        setEmail(user.email)
-        setPhone(user.phonenumber)
-        setRegion(user.region)
-      }
-    } else {
-      if (user.id){
-        setBio(user.profile.bio)
-        setHobbie1(user.profile.hobbie1)
-        setHobbie2(user.profile.hobbie2)
-        setHobbie3(user.profile.hobbie3)
-        setFact1(user.profile.fact1)
-        setFact2(user.profile.fact2)
-        setLie(user.profile.lie)
-      }
-    }
-  },[user, switcherToggle])
+  const [bio, setBio] = useState(user.profile.bio)
+  const [hobbie1, setHobbie1] = useState(user.profile.hobbie1)
+  const [hobbie2, setHobbie2] = useState(user.profile.hobbie2)
+  const [hobbie3, setHobbie3] = useState(user.profile.hobbie3)
+  const [fact1, setFact1] = useState(user.profile.fact1)
+  const [fact2, setFact2] = useState(user.profile.fact2)
+  const [lie, setLie] = useState(user.profile.lie)
 
   const handleImageChange = (e) => {
     setNewProfilePic(e.target.files[0])

@@ -12,6 +12,9 @@ function ShowProfile({partnerProfile, endCall, skipCall}) {
           <img className="showp-user-picture" src={partnerProfile?.profile_pic ? partnerProfile?.profile_pic : defaultPic}></img>
         </div>
         <div className="showp-user-details">
+          <div className="showp-image-container-small fcc">
+            <img className="showp-user-picture" src={partnerProfile?.profile_pic ? partnerProfile?.profile_pic : defaultPic}></img>
+          </div>
           <h2>Full Name:</h2>
           <p>{partnerProfile?.fname} {partnerProfile?.lname}</p>
           <h2>Bio:</h2>

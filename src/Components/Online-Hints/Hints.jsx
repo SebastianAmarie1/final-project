@@ -29,7 +29,7 @@ function Hints({onlineUsers}) {
     return(
         <div className="hints-container" >
             <div className="hints-header fcc">
-                <h1>Hints</h1>
+                <h2>Hints</h2>
             </div>
 
 

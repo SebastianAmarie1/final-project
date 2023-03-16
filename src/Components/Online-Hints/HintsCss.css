@@ -13,6 +13,10 @@
     background-color: var(--clr-primary);
 }
 
+.hints-header h2{
+    font-size: clamp(16px, 2.5vw, 25px);
+}
+
 .hints-main{
     height: calc(100% - 120px);
     

@@ -9,6 +9,7 @@
     border-radius: 5px;
     color: white;
     background-color: var(--clr-black);
+    
 }
 
 .showp-main{
@@ -22,6 +23,7 @@
     overflow: hidden;
     padding-inline: 3em;
 }
+
 .showp-image-container{
     position: relative;
     width: 75%;
@@ -58,7 +60,7 @@
     flex-direction: column;
     border-left: 2px solid var(--clr-white);
     border-right: 2px solid var(--clr-white);
-    background-color: var(--clr-highlighted);
+    background-color: var(--clr-highlighted); 
 }
 
 .showp-user-details h2{
@@ -86,6 +88,9 @@
 li span{
     color: var(--clr-secondary)
 }
+.showp-image-container-small{
+    display: none;
+}
 
 
 @media screen and (max-width: 900px) {
@@ -101,6 +106,7 @@ li span{
         max-height: 150px;
         max-width: 150px;
     }
+
     .showp-user-details{
         width: 100%;
     }
@@ -115,5 +121,41 @@ li span{
     
     .showp-user-details li{
         font-size: 13px;
+    }
+}
+
+@media screen and (max-width: 650px) {
+    .showp-user-picture{
+        min-height: 100px;
+        min-width: 100px;
+        max-height: 50px;
+        max-width: 50px;
+    }
+    .showp-main{
+        flex-direction: row;
+    }
+    .showp-image-container{
+        display: none;
+    }
+    .showp-main{
+        display: block;
+    }
+    .showp-user-details h2{
+        font-size: 13px;
+    }
+    
+    .showp-user-details p{
+        font-size: 11px;
+    }
+    
+    .showp-user-details li{
+        font-size: 11px;
+    }
+    .showp-image-container-small{
+        display: block;
+        margin: 0 auto;
+    }
+    .showp-user-details{
+        height: 70%;
     }
 }
