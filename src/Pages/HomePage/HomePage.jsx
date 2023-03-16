@@ -56,7 +56,7 @@ function HomePage() {
 
   //Phases
   const [currentPhase, setCurrentPhase] = useState(1)// out of 3
-  const phaseTime = [0, 500, 500, 500]
+  const phaseTime = [0, 0.05, 500, 500]
   const [showTimer, setShowTimer] = useState(false)
   const [decisionScreen, setDecisionScreen] = useState(false)
 
@@ -458,7 +458,6 @@ function HomePage() {
                           &&
                             <div className="home-partner-toggled"> 
                               <button className="home-partner-button" >Skip</button>
-                              <button className="home-partner-button report-button" >Report</button>
                             </div>
                         }
 

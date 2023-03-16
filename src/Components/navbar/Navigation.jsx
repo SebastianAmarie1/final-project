@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from "../../Contexts/AuthContext"
-import friendsIcon from "../../Assets/friendsIcon.png"
 import { useSocket } from "../../Contexts/socketContext"
 
 import "./NavigationStyle.css"
@@ -58,8 +57,7 @@ function Navigation() {
 
         <div className="navigation-right-container">
           { user 
-          ? <><Link to="/homepage/follow"><img loading="lazy" src={friendsIcon} className="navigation-friends-icon"></img></Link>
-              <h4 onClick={handleLogout} className="navigation-btn">Sign Out</h4></>
+          ? <h4 onClick={handleLogout} className="navigation-btn">Sign Out</h4>
           : <Link to="/signin"> <h4 className='navigation-btn'>Sign In</h4></Link>}
           <div onClick={eventHandler} className="navigation-burger">
             <div className={`navigation-burger-ind ${toggled ? 'burger-top-toggled' : 'burger-top'}`}></div>

@@ -6,12 +6,15 @@ import { useAuth } from "../../Contexts/AuthContext"
 import Loader from "../Loader"
 import axios from "../../Contexts/axiosConfig"
 
+
 function Hints({onlineUsers}) {
 
     const { user } = useAuth()
     const [question, setQuestion] = useState(null)
 
-    const handleQuestion = async() => {
+    console.log(process.env.REACT_APP_RAPIDAPIURL)
+    const handleQuestion = async(e) => {
+        e.stopPropagation() 
         const options = {
             method: 'GET',
             url: process.env.REACT_APP_RAPIDAPIURL,
@@ -45,7 +48,7 @@ function Hints({onlineUsers}) {
                 }
             </div>
             <div className="hints-footer fcc">
-                <button onClick={handleQuestion} className="pButton profile-details-form-button">Question <span></span></button>
+                <button onClick={(e) => {handleQuestion(e)}} className="pButton profile-details-form-button">Question <span></span></button>
             </div>
         </div>
     )

@@ -72,6 +72,7 @@
     background-repeat: no-repeat;
     background-size: cover;
     border-radius: 5px;
+    overflow: hidden;
 }
 
 .home-video-search-phase{
@@ -86,7 +87,10 @@
     height: 100%;
     display: flex;
     flex-direction: column;
-    gap: 5em;
+    gap: 3vw;
+}
+.home-video-search-container h1{
+    font-size: clamp(20px, 2.5vw, 30px);
 }
 
 .home-video-search h1{
@@ -191,7 +195,7 @@
 }
 .home-partner-toggled-footer{
     position: absolute;
-    z-index: 3;
+    z-index: 10;
     bottom: 0;
     height: 80px;
     width: 100%;
@@ -209,10 +213,6 @@
     background-color: var(--clr-secondary);
     color: white;
     cursor: pointer;
-}
-.report-button{
-    color: white;
-    background-color: #c21717;
 }
 
 .home-footer-button{
@@ -266,7 +266,7 @@
 
     .home-video-user{
         position: relative;
-        z-index: 100;
+        z-index: 3;
         width: 200px;
         height: 200px;
         position: absolute;
@@ -310,6 +310,9 @@
         top: 0;
         padding: 1em;
         display:block;
+    }
+    .home-video-search-container h1{
+        margin-top: calc(150px - 10vw);
     }
 }
 

@@ -158,4 +158,8 @@ li span{
     .showp-user-details{
         height: 70%;
     }
+    .button-small{
+        width: 70px;
+        height: 30px;
+    }
 }
