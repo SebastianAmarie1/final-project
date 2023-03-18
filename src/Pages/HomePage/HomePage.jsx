@@ -56,9 +56,10 @@ function HomePage() {
 
   //Phases
   const [currentPhase, setCurrentPhase] = useState(1)// out of 3
-  const phaseTime = [0, 0.05, 500, 500]
+  const phaseTime = [0, 1, 1.5, 2]
   const [showTimer, setShowTimer] = useState(false)
   const [decisionScreen, setDecisionScreen] = useState(false)
+  const [transitionFlag, setTransitionFlag] = useState(false)
 
   //Phase 3
   const [question, setQuestion] = useState(null)
@@ -344,6 +345,8 @@ function HomePage() {
     }
   }
 
+/// Phase 3 ///
+
   const getQuestion = async() => {
     const options = {
         method: 'GET',
@@ -358,29 +361,48 @@ function HomePage() {
       setQuestion(res.data[0].question)
   }  
 
+  const settingFlag = () => {
+    setTransitionFlag(true)
+    setTimeout(() => {
+      setTransitionFlag(false)
+    },3000)
+  }
+
   useEffect(() => { // UseEffect for Phase 3 Questions
     if (currentPhase === 3){
-      setQuestion("Question 1")
+      settingFlag()
+      if (connectionRef.current){
+        getQuestion()
+      }
 
       setTimeout(() => {
-        console.log("Question 2")
+        if (connectionRef.current){
+          settingFlag()
+          setTimeout(() => {
+            getQuestion()
+          },3000)
+        }
       },30000)
 
       setTimeout(() => {
-        console.log("Question 3")
+        if (connectionRef.current){
+          settingFlag()
+          setTimeout(() => {
+            getQuestion()
+          },3000)
+        }
       },60000)
       
       setTimeout(() => {
-        console.log("Question 4")
+        if (connectionRef.current){
+          settingFlag()
+          setTimeout(() => {
+            getQuestion()
+          },3000)
+        }
       },90000)
     } 
   },[currentPhase]) 
-
-  useEffect(() => {
-    if (currentPhase === 3){
-      console.log(question)
-    }
-  },[question])
 
   const handleShow = () => {
     setShowHO((prev) => !prev)
@@ -462,6 +484,13 @@ function HomePage() {
                         }
 
                         {PartnersVideo}
+
+                        {question && <div className={`question-container ${transitionFlag ? "question-animation" : "question-return"}`}>
+                          <p>
+                            {question}
+                          </p>
+                          </div>}
+
                         {showHOHml}
                         
                         {partnerVideoToggled 

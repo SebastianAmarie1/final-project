@@ -74,7 +74,7 @@ function SignUp() {
           <div className = "credentials-form-container ">
             <form className="credentials-form credentials-form-signup" onSubmit={onSubmitForm}>
               <h2 className="credentials-title">Sign Up</h2>
-              {errors && <div className="signup-error-container">{errors[0]}</div>}
+              {errors && <div className="credentials-error-container credentials-error">{errors[0]}</div>}
               <div className="sign-up-form-container ">
 
                 <div className={`signin-input grid-a wave-group ${username ?'wave-group-active' : 'wave-group-deactive'} big-input`} >

@@ -9,10 +9,10 @@ const validateLoginInputs = (username, password) => {
 
   if(!username){
     errors.push('Username is required')
-  }else if (username.length < 2) {
+  } else if (username.length < 2) {
     errors.push('Username must be at least 2 characters long');
-  } else if (!/^[a-zA-Z0-9]+$/.test(username)) {
-    errors.push('Username can only contain alphanumeric characters');
+  } else if (!/^[a-zA-Z0-9\s.,!?:]+$/.test(username)) {
+    errors.push('Username can only contain alphanumeric characters and the following: .,!?:');
   }
 
   if (!password) {
@@ -31,7 +31,7 @@ const validateDetailsData = (username, fName, lName, email, pwd, cPassword, phon
     }else if (username.length < 2) {
       errors.push('Username must be at least 2 characters long');
     } if (!/^[a-zA-Z0-9\s.,!?:]+$/.test(username)) {
-      errors.push('Username can only contain alphanumeric characters');
+      errors.push('Username can only contain alphanumeric characters and the following: .,!?:');
     } else if (username.length > 30){
       errors.push('Username must be smaller than 30 characters');
     } else if (filter.isProfane(username)) {

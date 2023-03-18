@@ -381,7 +381,7 @@ app.post("/api/follow", verify, async (req, res) => {
             const Uquery = "update users set friendslist = array_append(friendslist, %L) where users_id = %L"
             const escapedUQuery = format(Uquery, followedUser, id)
             await pool.query(escapedUQuery)
-            
+            console.log("RAN FOLLOW", id)
             const Squery = "SELECT * FROM users WHERE users_id = %L"
             const escapedSQuery = format(Squery, id)
             const user = await pool.query(escapedSQuery)
@@ -565,12 +565,13 @@ app.post("/api/retrieve_user", verify, async(req, res) => {
         const escapedQuery = format(query, usersId)
         const newUser = await pool.query(escapedQuery)
 
+        console.log(newUser.rows[0], "new user")
         if (newUser.rows[0].profile_pic){
             newUser.rows[0].profile_pic = toBase64(newUser.rows[0].profile_pic)
         }
 
         res.json(newUser.rows[0])
-    } catch (err) {
+    } catch (err) { 
         console.error(err.message)
     }
 })

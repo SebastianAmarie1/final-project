@@ -115,8 +115,8 @@ function FinalPhase({ roomId, endCall, partnerId, skipCall }) {
         </div>
       </div>
       <div className="home-video-search-footer fcc">
-          <button onClick={skipCall} className="home-video-search-buttons">Skip</button>
-          <button onClick={endCall} className="home-video-search-buttons end-call"> End Call</button>
+          <button onClick={skipCall} className="home-video-search-buttons button-small">Skip</button>
+          <button onClick={endCall} className="home-video-search-buttons end-call button-small"> End Call</button>
       </div>
     </div>
   )
