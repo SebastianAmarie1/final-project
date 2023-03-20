@@ -5,6 +5,8 @@
 1) Axios errors
 2) WHY dooes axios mess up after some time ?
 3) searching and trying to connect after 1 min? works or no?
+4) add a remove friend option
+5) Change it so that instead of teh API, you store the would you rather questions in its own file and then get a random one, to avoid the 100 requests limit.
 
 ****) TESTING
 

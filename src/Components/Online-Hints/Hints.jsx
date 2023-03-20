@@ -12,7 +12,6 @@ function Hints({onlineUsers}) {
     const { user } = useAuth()
     const [question, setQuestion] = useState(null)
 
-    console.log(process.env.REACT_APP_RAPIDAPIURL)
     const handleQuestion = async(e) => {
         e.stopPropagation() 
         const options = {
@@ -26,7 +25,6 @@ function Hints({onlineUsers}) {
           
           const res = await axios.request(options)
           setQuestion(res.data[0].question)
-          console.log(res.data)
     }  
 
     return(

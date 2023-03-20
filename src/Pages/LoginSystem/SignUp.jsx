@@ -153,7 +153,7 @@ function SignUp() {
                 </div>
 
                 <div className={`signin-input grid-f wave-group ${cPassword ?'wave-group-active' : 'wave-group-deactive'} big-input`} >
-                  <input id="CPassword" name="cpassword" required value={cPassword} type="text" className="input credentials-form-input" onChange={(e) => {setCPassword(e.target.value)}}/>
+                  <input id="CPassword" name="cpassword" required value={cPassword} type="password" className="input credentials-form-input" onChange={(e) => {setCPassword(e.target.value)}}/>
                   <span className="bar big-input"></span>
                   <label className="label">
                     <span className="label-char" style={{'--index': 0}}>C</span>

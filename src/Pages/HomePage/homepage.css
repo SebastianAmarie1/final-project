@@ -307,7 +307,7 @@
 
     .home-partner-show-ho{
         position: absolute;
-        z-index: 100;
+        z-index: 99;
         right: 0;
         top:0;
         max-height: 500px;
