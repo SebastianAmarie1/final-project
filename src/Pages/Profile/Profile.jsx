@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState } from 'react'
 import { useAuth } from "../../Contexts/AuthContext"
 import { validateProfileDetailsData, validateProfileData } from "../../Components/Validators"
 import axios from "../../Contexts/axiosConfig"
@@ -6,22 +6,25 @@ import axios from "../../Contexts/axiosConfig"
 import "./ProfileCss.css"
 
 import noProfileIcon from "../../Assets/default-user-image.jpg"
-import { useEffect } from 'react'
 
 function Profile() {
 
+  /* Use Context Variables */
   const { user, axiosAuth, setUser, setFlag } = useAuth()
 
+  const [errors, setErrors] = useState(null)
+  /*For the Image Section*/
   const [newProfilePic, setNewProfilePic] = useState(null)
   const [switcherToggle, setSwitcherToggle] = useState(true)
-  const [errors, setErrors] = useState(null)
 
+  /* For the Details section*/
   const [fName, setFname] = useState(user.fname)
   const [lName, setLname] = useState(user.lname)
   const [email, setEmail] = useState(user.email)
   const [phone, setPhone] = useState(user.phonenumber)
   const [region, setRegion] = useState(user.region)
-
+  
+  /*For the Profile section*/
   const [bio, setBio] = useState(user.profile.bio)
   const [hobbie1, setHobbie1] = useState(user.profile.hobbie1)
   const [hobbie2, setHobbie2] = useState(user.profile.hobbie2)
@@ -30,12 +33,16 @@ function Profile() {
   const [fact2, setFact2] = useState(user.profile.fact2)
   const [lie, setLie] = useState(user.profile.lie)
 
+  /*Used to set a new image from target files*/
   const handleImageChange = (e) => {
     setNewProfilePic(e.target.files[0])
   }
 
+
+  /*Handles the upload of an image to the back end*/
   const handleUploadImage = async(e) => {
     e.preventDefault()
+
     if(!newProfilePic){
       return console.log("Please select a file")
     }
@@ -44,7 +51,6 @@ function Profile() {
     formData.append("id", user.id)
     formData.append("file", newProfilePic)
 
-
     const res = await axiosAuth.put("/api/profile_pic",formData,
     { headers: 
         { 
@@ -52,6 +58,7 @@ function Profile() {
           'authorization': "Bearer " + user.accessToken
         }
     })
+    
     setFlag(true)
     setUser({
       ...user,
@@ -63,6 +70,8 @@ function Profile() {
     setNewProfilePic(null)
   }
 
+
+  /* Verifies to see if the username and email are available or not*/
   const isValidUsernameEmail = async() => {
     try {
       const res = await axios.post("/api/checkue", { username: null, email})
@@ -72,6 +81,8 @@ function Profile() {
     }
   }
 
+
+  /*Handles the form submit for details*/
   const handleFormSubmit = async (e) => {
     e.preventDefault()
 
@@ -83,7 +94,7 @@ function Profile() {
     }
 
     const check = await isValidUsernameEmail()
-    
+
     if(!check.check){
       setErrors([check.message])
       return
@@ -101,6 +112,7 @@ function Profile() {
       { headers: 
           { authorization: "Bearer " + user.accessToken}
       })
+
       setFlag(true)
       setUser({
         ...user,
@@ -110,11 +122,14 @@ function Profile() {
         phonenumber: res.data.user.phonenumber,
         region: res.data.user.region,
       })
+
     } catch (error) {
         console.log(error)
     }
   }
 
+
+  /*Submits the Profile information to the back end*/
   const handleFormSubmitProfile = async (e) => {
     e.preventDefault()
 
@@ -135,10 +150,10 @@ function Profile() {
         fact1: fact1,
         fact2: fact2,
         lie: lie,
-      },
-      { headers: 
+      }, { headers: 
           { authorization: "Bearer " + user.accessToken}
       })
+
       setFlag(true)
       setUser({
         ...user,
@@ -153,14 +168,11 @@ function Profile() {
           lie: res.data.user.lie,
         },
       })
+
     } catch (error) {
         console.log(error)
     }
   }
-
-  useEffect(() => {
-    console.log(errors)
-  }, [errors])
 
   return (
     <div className="profile-main">
@@ -174,7 +186,6 @@ function Profile() {
               <img className="profile-image-current" src={user.profile?.profile_pic ? user.profile?.profile_pic : noProfileIcon} />
             </div>
             
-            
             {newProfilePic &&
               <img className="profile-image-current" src={URL.createObjectURL(newProfilePic)} />
             }
@@ -186,7 +197,6 @@ function Profile() {
               <label htmlFor="file">Select file</label>
             </div>
 
-           
             <button className="pButton" onClick={handleUploadImage}>Change Profile Image <span></span></button>
           </div>
 

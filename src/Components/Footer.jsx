@@ -1,5 +1,6 @@
 import React from 'react'
 
+/*This exports the footer used in some of the pages*/
 function Footer() {
   return (
     <div className="footer-container">

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, lazy, Suspense } from 'react'
+import React, { useEffect, useState, useRef, lazy } from 'react'
 import Peer from "simple-peer"
 
 import "./homepage.css"
@@ -26,10 +26,12 @@ const Loader = lazy(() => import("../../Components/Loader"))
 
 function HomePage() {
 
+  /* Variables from useContexts*/
   const { user, axiosAuth, connectionRef, setRoomId, roomId } = useAuth()
   const { socket } = useSocket()
   const [width, setWidth] = useState(window.innerWidth);
-  //Connections
+
+  /*Connections use States*/
   const [stream, setStream] = useState() 
   const [pStream, setPStream] = useState(null)
   const [searching, setSearching] = useState(false)
@@ -40,35 +42,37 @@ function HomePage() {
   const [onlineUsers, setOnlineUsers] = useState(null)
   const [callerSignal, setCallerSignal] = useState(null)
 
-  //Camera Settings
+  /*Camera Settings usestates*/
   const [mute, setMute] = useState(false)
   const [partnerMute, setPartnerMute] = useState(false)
   const [viewCamera, setViewCamera] = useState(false)
   const [viewPartnerCamera, setPartnerViewCamera] = useState(false)//you switch off partners camera
   const [partnerCamera, setPartnerCamera] = useState(true)//partner switches off their camera
 
-  //Streams and Videos
+  /*Streams and Videos usestates*/
   const myVideo = useRef(null)
   const [myVideoToggled, setMyVideoToggled] = useState(false)
   const partnerVideo = useRef()
   const [partnerVideoToggled, setPartnerVideoToggled] = useState(false)
   const [showHO, setShowHO] = useState(false)
 
-  //Phases
+  /*Phases usestates*/
   const [currentPhase, setCurrentPhase] = useState(1)// out of 3
-  const phaseTime = [0, 1, 1.5, 2]
+  const phaseTime = [0, 0.5, 0.5, 0.5]
   const [showTimer, setShowTimer] = useState(false)
   const [decisionScreen, setDecisionScreen] = useState(false)
   const [transitionFlag, setTransitionFlag] = useState(false)
 
-  //Phase 3
+  /*Phase 3 usestates*/
   const [question, setQuestion] = useState(null)
 
+
+  /*Use Effect sets up the homepage and has socket listeners*/
   useEffect(() => {
-    
     const settingMyStream = async() => { //sets up my stream.
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+
         setStream(stream)
         if (myVideo.current) {
           myVideo.current.srcObject = stream
@@ -89,7 +93,6 @@ function HomePage() {
       setCallerSignal(data.signal)
       setShowTimer(true)
       setPartnerId(data.partnerId)
-      
     })
 
     socket.current.on("callEnded", () => {
@@ -125,14 +128,14 @@ function HomePage() {
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-
   }, [])
 
+
+  /*Get a users details if there is a person on call*/
   useEffect(() => {
     if(partnerId) {
       const getPartnerProfile = async() => {
         try {
-          
           const res = await axiosAuth.post("/api/retrieve_user", { usersId: partnerId },
           { headers: 
               { authorization: "Bearer " + user.accessToken}
@@ -146,7 +149,8 @@ function HomePage() {
     }
   },[partnerId])
 
-//// initiating the call ////
+
+/*Search for a room function*/
   const searchForCall = () => {
     setSearching(true)
 
@@ -156,12 +160,15 @@ function HomePage() {
     })
   }
 
+
+  /*Use Effect that initiates a call to another user*/
   useEffect(() => {
     if(initiator) {
       
       if (connectionRef.current){
         connectionRef.current = undefined
       }
+
       const peer = new Peer({
         initiator: true,
         trickle: false,
@@ -180,6 +187,7 @@ function HomePage() {
       
       peer.on("stream", (stream) => {
         setPStream(stream);
+
         if (partnerVideo.current) {
           partnerVideo.current.srcObject = stream;
           partnerVideo.current.pause();
@@ -187,6 +195,7 @@ function HomePage() {
       });
 
       let flag = false
+
       socket.current.on("callAccepted", (data) => {
         if (!flag){
           setCallerSignal(data.signal);
@@ -207,14 +216,8 @@ function HomePage() {
     }
   }, [initiator]);
 
-  useEffect(() => {
-    if(partnerVideo.current){
-      partnerVideo.current.srcObject = pStream
-      partnerVideo.current.play()
-    }
-  },[decisionScreen])
 
-//// recieving the call ////
+/*Use State that recies the call*/
   useEffect(() => { 
     if(callerSignal != null & initiator === false) {
       setCallAccepted(true)
@@ -235,6 +238,7 @@ function HomePage() {
       
       peer.on("stream", (stream) => {
         setPStream(stream)
+
         if (partnerVideo.current) {
           partnerVideo.current.srcObject = stream
           partnerVideo.current.pause()
@@ -252,25 +256,34 @@ function HomePage() {
 
   }, [callerSignal])
 
+  
+  /*UseEffect that decides when to display decision screen*/
+  useEffect(() => {
+    if(partnerVideo.current){
+      partnerVideo.current.srcObject = pStream
+      partnerVideo.current.play()
+    }
+  },[decisionScreen])
+
+
+  /*Function that stops the search for another user*/
   const stopSearch = () => {
     setSearching(false)
     setRoomId(null)
+
     socket.current.emit("leaveRoom", {  
       roomId: roomId,
     })
   }
 
-//// End Call ////
+  /*End Call function*/
   const endCall = async() => {
     if (connectionRef.current) {
-
       socket.current.emit("endCall", {
         roomId: roomId,
       });
 
-      connectionRef.current.on('close', () => {
-        // clean up resources when the connection is closed
-      });
+      connectionRef.current.on('close', () => {});
       connectionRef.current.destroy();
 
       if (partnerVideo.current) {
@@ -293,12 +306,16 @@ function HomePage() {
     }
   }
 
+
+  /*Function to skil a call*/
   const skipCall = async () => {
     endCall()
     searchForCall()
   }
 
-///// Camera settings /////
+
+/* Camera Settings functions*/
+  /*Function to mute Audio*/
   const muteAudio = () => {
     if (myVideo.current) {
       setMute((prev) => !prev)
@@ -309,6 +326,8 @@ function HomePage() {
     }
   }
 
+
+  /*Function to mute the partner audio*/
   const mutePartnerAudio = () => {
     if (partnerVideo.current) {
       setPartnerMute((prev) => !prev)
@@ -316,6 +335,8 @@ function HomePage() {
     }
   }
   
+
+  /*Function to show your camera after hiding it*/
   const showCamera = async() => {
     setViewCamera((prev) => !prev)
     viewCamera ? myVideo.current.play() : myVideo.current.pause()
@@ -326,17 +347,23 @@ function HomePage() {
     })
   }
 
+
+  /*Function to show partner camera after hiding it*/
   const showPartnerCamera = () => {
     setPartnerViewCamera((prev) => !prev)
     viewPartnerCamera ? partnerVideo.current.play() : partnerVideo.current.pause()
   }
 
-/// PHASES /// 
+
+/* Phases Functions*/
+  /*Functions that handles the counter when it finishes*/
   const handleCountdownEnd = () => {
     setShowTimer(false)
     setDecisionScreen(true)
   }
 
+
+  /*Function that handles switching to the next phase*/
   const nextPhase = () => {
     if (currentPhase <= 3){
       setCurrentPhase((old) => old + 1)
@@ -345,8 +372,9 @@ function HomePage() {
     }
   }
 
-/// Phase 3 ///
 
+/*Phase 3 Code*/
+  /*Function to get questions from RAPID API*/
   const getQuestion = async() => {
     const options = {
         method: 'GET',
@@ -361,6 +389,8 @@ function HomePage() {
       setQuestion(res.data[0].question)
   }  
 
+
+  /*That makes a delay for the animation of the questions*/
   const settingFlag = () => {
     setTransitionFlag(true)
     setTimeout(() => {
@@ -368,7 +398,9 @@ function HomePage() {
     },3000)
   }
 
-  useEffect(() => { // UseEffect for Phase 3 Questions
+
+  /*UseEffect that gets the 4 different questions for phase 3*/
+  useEffect(() => { 
     if (currentPhase === 3){
       settingFlag()
       if (connectionRef.current){
@@ -404,10 +436,14 @@ function HomePage() {
     } 
   },[currentPhase]) 
 
+
+  /*Function to handle wether hints and online should show or not*/
   const handleShow = () => {
     setShowHO((prev) => !prev)
   }
 
+
+  /* Code that decides wether it should show the hints/online component*/
   const showHOHml = <div onClick={(e) => {
     e.stopPropagation() 
     handleShow()
@@ -427,6 +463,8 @@ function HomePage() {
     }
   </div>
 
+
+  /*HTML for Videos are stored in a variable*/
   let MyVideo = <video onClick={() => {setMyVideoToggled((oldValue) => !oldValue)}} className="home-video-me" ref={myVideo} autoPlay playsInline/>
   let PartnersVideo = <video onClick={() => {setPartnerVideoToggled((oldValue) => !oldValue)}} className="home-video-partner-video" ref={partnerVideo} autoPlay playsInline />
 

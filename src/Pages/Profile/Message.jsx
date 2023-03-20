@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
-import noProfileIcon from "../../Assets/noProfileIcon.png"
 
 function Message({msg, self, dpic, profile_pic}) {
 
     const [toggled, setToggled] = useState(false)
 
+    /*Splits the message so that it is in the correct format*/
     const time = msg.time_sent.split("T")[1].split(".")[0]
     const status = msg.seen ? "seen" : "sent"
 

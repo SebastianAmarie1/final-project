@@ -1,6 +1,6 @@
 import React from 'react'
 
-
+/*This exports the laoder used throughout the application*/
 function Loader() {
 
   return (

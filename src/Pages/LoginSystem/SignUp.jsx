@@ -9,6 +9,7 @@ import "./credentials.css"
 
 function SignUp() {
 
+  /* UseStates for the form*/
   const [username, setUsername] = useState("")
   const [fName, setFName] = useState("")
   const [lName, setLName] = useState("")
@@ -21,6 +22,8 @@ function SignUp() {
 
   const [errors, setErrors] = useState(null)
 
+
+  /* Function to check if username and email is not in use already*/
   const isValidUsernameEmail = async() => {
     try {
       const res = await axios.post("/api/checkue", { username, email})
@@ -30,6 +33,8 @@ function SignUp() {
     }
   }
 
+
+  /*Function Used to submit the form once it is filled out*/
   const onSubmitForm = async(e) => {
     e.preventDefault()
 
@@ -54,6 +59,7 @@ function SignUp() {
     }
   }
 
+  
   return (
     <div className="credentials-main fcc">
       <div className="credentials-heart-container">
@@ -206,8 +212,6 @@ function SignUp() {
                     <span className="label-char" style={{'--index': 10}}>r</span>
                   </label>
                 </div>
-
-                  
 
                 <select onChange={(e) => {setGender(e.target.value)}} className="grid-i credentials-form-input" id="gender">
                   <option value="Male">Male</option>

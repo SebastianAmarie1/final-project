@@ -4,6 +4,7 @@ const urlValidation = require('url-validation');
 const Filter = require('bad-words');
 const filter = new Filter();
 
+/*Validates the inputs from the login page*/
 const validateLoginInputs = (username, password) => {
   const errors = []
 
@@ -23,6 +24,7 @@ const validateLoginInputs = (username, password) => {
 }
 
 
+/*Valudatres inputs from the sign up page*/
 const validateDetailsData = (username, fName, lName, email, pwd, cPassword, phonenumber, gender, region) => {
     const errors = []
 
@@ -110,6 +112,8 @@ const validateDetailsData = (username, fName, lName, email, pwd, cPassword, phon
     return errors
   }
 
+
+  /*Validates the inputs from the details section from the profile page*/
   const validateProfileDetailsData = (fName, lName, email, phonenumber, region) => {
 
     const errors = []
@@ -165,6 +169,8 @@ const validateDetailsData = (username, fName, lName, email, pwd, cPassword, phon
     return errors
   }
 
+
+  /*Validates inputs from the profile section in teh profile page*/
   const validateProfileData = (bio, hobbie1, hobbie2, hobbie3, fact1, fact2, lie) => {
 
     const errors = []
@@ -252,6 +258,8 @@ const validateDetailsData = (username, fName, lName, email, pwd, cPassword, phon
     return errors
   }
 
+  
+  /*Validates messages from the chat page*/
   const validateMessageData = (inputMessage) => {
 
     const errors = []

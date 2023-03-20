@@ -13,12 +13,15 @@ import noProfileIcon from "../../Assets/noProfileIcon.png"
 
 function Chat() {
 
+    
+    /*Get the conversation and reciever IDs from the previous page and variables from context*/
     const { state } = useLocation()
-    const { conversationId, recieverId, cname, profile_pic } = state // get the conversation and reciever IDs from the previous page
+    const { conversationId, recieverId, cname, profile_pic } = state
     const { user, axiosAuth } = useAuth()
     const { socket } = useSocket()
     const navigate = useNavigate()
 
+    /* Variables for messages*/
     const [inputMessage, setInputMessage] = useState("")
     const [messages, setMessages] = useState()
     const [arrivalMessage, setArrivalMessage] = useState(null)
@@ -28,6 +31,7 @@ function Chat() {
     let compareDate = null
     let previousMsgOwner = null
 
+    /*Use Effect that keeps track of the messages recieved*/
     useEffect(() => { 
         socket.current.on("messageRecieved", (data) => {
             console.log("message recieved")
@@ -41,16 +45,22 @@ function Chat() {
         })
     }, [])
 
+
+    /*UseEffect to scroll down to the newest message when a message has come in*/
     useEffect(() => {
         messageEndRef.current?.scrollIntoView({ behavior: "smooth" })
     },[messages])
 
-    useEffect(() => { //adds the arrived message to the messages
+
+    /*Adds the arrived message to the messages*/
+    useEffect(() => { 
         arrivalMessage && arrivalMessage.senderid === recieverId &&
         setMessages((prev) => [...prev, arrivalMessage])
     }, [arrivalMessage])
 
-    useEffect(() => { //retrieve the messages from the DB
+
+    /*Retrieve the messages from the DB*/
+    useEffect(() => { 
         const getMessages = async() => {
             try {
                 const res = await axiosAuth.post("/api/retrieve_messages", { 
@@ -59,7 +69,7 @@ function Chat() {
                 },
                 { headers: 
                     { authorization: "Bearer " + user.accessToken}
-                })//sends a request to the server
+                })
                 setMessages(res.data)
             } catch (error) {
                 console.log(error)
@@ -68,7 +78,9 @@ function Chat() {
         getMessages()
     },[user.id])
 
-  const handleSendMessage = async(e) => { //runs when you send a message
+
+  /*Function that handles the sending of a message */
+  const handleSendMessage = async(e) => { 
     e.preventDefault()
     setErrors(null)
 
@@ -103,13 +115,9 @@ function Chat() {
             time_sent: time_sent,
         })
     }
-
     setInputMessage("")
   }
 
-  useEffect(() => {
-    console.log(errors)
-},[errors])
 
   return (
     <div className="chat-main">
@@ -126,7 +134,6 @@ function Chat() {
                     let flag = false
                     let dpic = false
                     
-                   
                     let date = current.time_sent.split("T")[0]
 
                     if (date != compareDate){

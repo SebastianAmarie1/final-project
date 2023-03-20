@@ -7,6 +7,7 @@ import "./FollowCss.css"
 
 function Follow() {
 
+  /*Variables from context*/
   const { user, axiosAuth } = useAuth()
   const navigate = useNavigate()
 
@@ -14,6 +15,7 @@ function Follow() {
   const [searchUser, setSearchUser] = useState("")
   
   useEffect(() => {
+    /*Function to get all the conversations for a specific user*/ 
     const getConvos = async() => {
       try {
           const res = await axiosAuth.post("/api/retrieve_conversations", { id: user.id },
@@ -28,7 +30,9 @@ function Follow() {
     getConvos()
   },[user])
 
-  const followerUsers = conversations //filter for most recent
+
+  /*Variable that displays all teh conversations depending on what is in the search bar*/
+  const followerUsers = conversations 
   ? conversations.filter((convo) => {
         const partner = convo.members.filter((value) => value.users_id != user.id)[0]
         

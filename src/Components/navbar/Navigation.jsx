@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from "../../Contexts/AuthContext"
 import { useSocket } from "../../Contexts/socketContext"
@@ -13,6 +13,8 @@ function Navigation() {
   const navigate = useNavigate()
   const location = useLocation()
 
+
+  /*Function which ensures that the call is eneded if the path is changed mid call*/
   useEffect(() => {
     if (location.pathname !== "/homepage/" || location.pathname !=="/homepage"){
       if (connectionRef.current && roomId) {
@@ -23,6 +25,8 @@ function Navigation() {
     }
   },[location.pathname])
 
+
+  /*UseEffect that connects a user to the socket upon login*/
   useEffect(()=> {
     if (user !== "a" && user !== null) {
         socket.current.on('connect', () => {})
@@ -33,10 +37,14 @@ function Navigation() {
     }
   },[user])
 
+
+  /*Function used to switch the toggle*/
   function eventHandler() {
     setToggled((oldValue) => !oldValue)
   }
 
+
+  /*Function that allows a user to log out*/
   const handleLogout = async() => { //removes the user from local storage and state
 
     await axiosAuth.post("/api/logout", {id: user.id}, {

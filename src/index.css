@@ -6,7 +6,7 @@
     margin: 0px;
 }
 
-/*   Variables   */
+/*   Root Variables   */
 :root {
     --ff-primary : 'Helvetica', 'Arial';
   
@@ -31,7 +31,7 @@
     --fs-a: 1.25rem;
     --fs-p: 0.8rem;
     --fs-body: 1rem;
-  }
+}
 
 /*   General Styles   */
 html {
@@ -51,15 +51,9 @@ h1{font-size: var(--fs-h1)}
 h2{font-size: var(--fs-h2)}
 h3{font-size: var(--fs-h3)}
 h4{font-size: var(--fs-h4)}
-
-p{ 
-    font-size: var(--fs-p);
-}
-
+p{font-size: var(--fs-p);}
 a{font-size: var(--fs-a); text-decoration: none;}
-
 img {width: 100%;}
-
 strong {font-weight: var(--fw-bold)}
 
 .fcc{
@@ -78,8 +72,8 @@ body::-webkit-scrollbar-track {
 }
 
 body::-webkit-scrollbar-thumb {
-    background-color: var(--clr-primary);   
     border-radius: 20px;       
+    background-color: var(--clr-primary);
 }
 
 /* Loader */
@@ -95,13 +89,13 @@ body::-webkit-scrollbar-thumb {
 }
 
 .loader {
+    position: relative;
     width: 6em;
     height: 6em;
-    font-size: 10px;
-    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 10px;
   }
   
   .loader .face {
@@ -114,21 +108,23 @@ body::-webkit-scrollbar-thumb {
   .loader .face:nth-child(1) {
     width: 100%;
     height: 100%;
-    color: var(--clr-secondary);
-    border-color: currentColor transparent transparent currentColor;
     border-width: 0.2em 0.2em 0em 0em;
     --deg: -45deg;
     animation-direction: normal;
+
+    color: var(--clr-secondary);
+    border-color: currentColor transparent transparent currentColor;
   }
   
   .loader .face:nth-child(2) {
     width: 70%;
     height: 70%;
-    color: var(--clr-highlighted);
-    border-color: currentColor currentColor transparent transparent;
     border-width: 0.2em 0em 0em 0.2em;
     --deg: -135deg;
     animation-direction: reverse;
+
+    color: var(--clr-highlighted);
+    border-color: currentColor currentColor transparent transparent;
   }
   
   .loader .face .circle {
@@ -137,19 +133,20 @@ body::-webkit-scrollbar-thumb {
     height: 0.1em;
     top: 50%;
     left: 50%;
-    background-color: transparent;
     transform: rotate(var(--deg));
     transform-origin: left;
+
+    background-color: transparent;
   }
   
   .loader .face .circle::before {
     position: absolute;
+    width: 1em;
+    height: 1em;
     top: -0.5em;
     right: -0.5em;
     content: '';
-    width: 1em;
-    height: 1em;
-    background-color: currentColor;
+    
     border-radius: 50%;
     box-shadow: 0 0 2em,
                   0 0 4em,
@@ -157,6 +154,7 @@ body::-webkit-scrollbar-thumb {
                   0 0 8em,
                   0 0 10em,
                   0 0 0 0.5em rgba(255, 255, 0, 0.1);
+    background-color: currentColor;
   }
   
   @keyframes animate023845 {
@@ -169,49 +167,53 @@ body::-webkit-scrollbar-thumb {
 /************ Buttons *************/
 /* Primary Button */
 .pButton {
-    border: none;
-    display: block;
     position: relative;
-    padding: 0.7em 2.4em;
-    font-size: 18px;
-    background: transparent;
-    cursor: pointer;
-    user-select: none;
-    overflow: hidden;
-    color: var(--clr-primary);
     z-index: 1;
+    display: block;
+    font-size: 18px;
+    overflow: hidden;
+    user-select: none;
     font-family: inherit;
     font-weight: 500;
+    padding: 0.7em 2.4em;
+    
+    cursor: pointer;
+    border: none;
+    color: var(--clr-primary);
+    background: transparent;
 }
 
 .pButton span {
     position: absolute;
-    left: 0;
-    top: 0;
     width: 100%;
     height: 100%;
-    background: transparent;
+    left: 0;
+    top: 0;
     z-index: -1;
+    
     border: 4px solid var(--clr-primary);
+    background: transparent;
 }
 
 .pButton span::before {
-    content: "";
-    display: block;
     position: absolute;
     width: 8%;
     height: 500%;
-    background: var(--clr-white);
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%) rotate(-60deg);
+    display: block;
+    content: "";
     transition: all 0.3s;
+    transform: translate(-50%, -50%) rotate(-60deg);
+
+    background: var(--clr-white);
 }
 
 .pButton:hover span::before {
-    transform: translate(-50%, -50%) rotate(-90deg);
     width: 100%;
     height: 700%;
+    transform: translate(-50%, -50%) rotate(-90deg);
+    
     background: var(--clr-primary);
 }
 
@@ -226,34 +228,37 @@ body::-webkit-scrollbar-thumb {
 /* Landing Page Buttons */
 
 .lButton {
+    width: 160px;
     display: inline-block;
-    border-radius: 4px;
-    background-color: var(--clr-secondary);
-    border: none;
-    color: #FFFFFF;
+    margin: 5px;
     text-align: center;
     font-size: 17px;
     padding: 16px;
-    width: 160px;
     transition: all 0.5s;
+    
     cursor: pointer;
-    margin: 5px;
+    border: none;
+    border-radius: 4px;
+    color: #FFFFFF;
+    background-color: var(--clr-secondary);
 }
 
 .lButton span {
-    cursor: pointer;
-    display: inline-block;
     position: relative;
+    display: inline-block;
     transition: 0.5s;
+
+    cursor: pointer;
 }
 
 .lButton span:after {
-    content: '»';
     position: absolute;
-    opacity: 0;
     top: 0;
     right: -15px;
+    content: '»';
     transition: 0.5s;
+    
+    opacity: 0;
     color: white;
 }
 
@@ -274,9 +279,10 @@ body::-webkit-scrollbar-thumb {
 }
   
 .wave-group .input { /*BottomLine Before*/
+    display: block;
     font-size: 14px;
     padding: 10px 10px 3px 5px;
-    display: block;
+    
     border: none;
     border-bottom: 1px solid var(--clr-secondary);
     background: transparent;
@@ -287,14 +293,15 @@ body::-webkit-scrollbar-thumb {
 }
 
 .wave-group .label { /*Label After*/
-    color: var(--clr-primary);
-    font-size: 14px;
-    font-weight: normal;
     position: absolute;
-    pointer-events: none;
     left: 5px;
     top: 13px;
     display: flex;
+    font-size: 14px;
+    font-weight: normal;
+    
+    pointer-events: none;
+    color: var(--clr-primary);
 }
 
 .wave-group .label-char {
@@ -310,8 +317,9 @@ body::-webkit-scrollbar-thumb {
 }
 
 .wave-group-deactive .input:focus ~ label .label-char {
-    transform: translateY(-20px);
     font-size: 14px;
+    transform: translateY(-20px);
+    
     color: var(--clr-primary);
 }
 
@@ -321,15 +329,16 @@ body::-webkit-scrollbar-thumb {
 }
 
 .wave-group .bar:before,.wave-group .bar:after {
-    content: '';
+    position: absolute;
     height: 2px;
     width: 0;
     bottom: 1px;
-    position: absolute;
-    background: var(--clr-primary);
+    content: '';
     transition: 0.2s ease all;
     -moz-transition: 0.2s ease all;
     -webkit-transition: 0.2s ease all;
+    
+    background: var(--clr-primary);
 }
 
 .wave-group .bar:before {
@@ -348,10 +357,10 @@ body::-webkit-scrollbar-thumb {
 /*  File Inputs */
 
 .file {
-    opacity: 0;
-    width: 0.1px;
-    height: 0.1px;
     position: absolute;
+    height: 0.1px;
+    width: 0.1px;
+    opacity: 0;
 }
 
 .file-input label {
@@ -373,7 +382,7 @@ body::-webkit-scrollbar-thumb {
 
 input:hover + label,
 input:focus + label {
-  transform: scale(1.02);
+    transform: scale(1.02);
 }
 
 input:focus + label {
@@ -384,11 +393,12 @@ input:focus + label {
 /* arrow */
 
 .arrow {
+    display: inline-block;
+    margin-right: 10px;
+    padding: 6px;
+    
     border: solid black;
     border-width: 0 3px 3px 0;
-    display: inline-block;
-    padding: 6px;
-    margin-right: 10px;
 }
 
 .right {
@@ -404,9 +414,10 @@ input:focus + label {
 
 /*   Footer   */
 .footer-container{
-    margin-top: -5px;
     width: 100%;
+    margin-top: -5px;
     padding: 1em;
+    
     color: var(--clr-white);
     background-color: var(--clr-primary);
 }
@@ -435,11 +446,13 @@ input:focus + label {
 }
 .navigation-spacer{
     height:70px;
+    
     background-color: var(--clr-primary);
 }
 .nav-placeholder {
     width: 100%;
     height:63px;
+    
     background-color: var(--clr-primary);
 }
 

@@ -9,12 +9,15 @@ function Decision({roomId, nextPhase, currentPhase, endCall, skipCall}) {
     const [accepted, setAccepted] = useState(false)
     const [response, setReponse] = useState(false)
 
+    /*UseEffect that listens to a socket call called repsonsenextStage*/
     useEffect(() => {
         socket.current.on('responseNextStage', (data) => {
             setReponse(data.response)
         });
     },[])
 
+
+    /*UseEffect that ensures that both users have agreed before moving on*/
     useEffect(() => {
         if (accepted !== false && response !== false) {
             nextPhase()
@@ -23,6 +26,8 @@ function Decision({roomId, nextPhase, currentPhase, endCall, skipCall}) {
         }
     },[accepted, response])
 
+
+    /*useEffecr that sends a message to the other user to tell them that they want to progress to the next stage*/
     const acceptNextPhase = () => {
         setAccepted((old) => !old)
 

@@ -1,19 +1,17 @@
 
 import React, { useState, memo } from "react"
-import { useEffect } from "react"
 import "./HintsCss.css"
-import { useAuth } from "../../Contexts/AuthContext"
-import Loader from "../Loader"
 import axios from "../../Contexts/axiosConfig"
 
 
-function Hints({onlineUsers}) {
+function Hints() {
 
-    const { user } = useAuth()
     const [question, setQuestion] = useState(null)
 
+    /*Function that makes an RAPID API call to get a question*/
     const handleQuestion = async(e) => {
         e.stopPropagation() 
+
         const options = {
             method: 'GET',
             url: process.env.REACT_APP_RAPIDAPIURL,
@@ -26,6 +24,7 @@ function Hints({onlineUsers}) {
           const res = await axios.request(options)
           setQuestion(res.data[0].question)
     }  
+
 
     return(
         <div className="hints-container" >

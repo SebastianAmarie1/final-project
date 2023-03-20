@@ -13,6 +13,7 @@ function Online({onlineUsers, showHO}) {
     const [friends, setFriends] = useState(null)
     const [onlineFriends, setOnlineFriends] = useState(null)
 
+    /*UseEffect that retrieves a users friends*/
     useEffect(() => {
         if (!friends){
             const getFriends = async() => {
@@ -27,13 +28,12 @@ function Online({onlineUsers, showHO}) {
                 } catch (error) {
                 }
             }
-    
             getFriends()
         }
-        
     },[user.friendslist])
 
 
+    /*UseEffect that finds the online friends from socket*/
     useEffect(() => {
         try {
             if(friends){
@@ -46,6 +46,7 @@ function Online({onlineUsers, showHO}) {
         } catch (error) {
         }
     },[onlineUsers, friends])
+    
 
     return(
         <div className={`online-container ${!showHO && "show"}`} >

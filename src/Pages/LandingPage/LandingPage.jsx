@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef} from 'react'
+import React, {useEffect, useState} from 'react'
 import { Link } from 'react-router-dom';
 import "./landingpage.css"
 import "./landingPageAnimations.css"
@@ -12,28 +12,24 @@ import Chat from "../../Assets/LandingPage/chat-img.png"
 function LandingPage() {
 
   const [div, setDiv] = useState(false)
-
   const [scrollPosition, setScrollPosition] = useState(0)
   const [totalHeight, setTotalHeight] = useState()
 
 
-  // y pos 
+  /* y pos tracker*/ 
   const handleScroll = () => {
     const position = window.pageYOffset;
     setScrollPosition(position);
   };
 
+
+  /*Function to update the total height variable*/
   function updateSize() {
     setTotalHeight(window.document.body.offsetHeight - window.innerHeight);
   }
   
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => {
-        window.removeEventListener('scroll', handleScroll);
-    };
-  }, [totalHeight]);
-
+  
+  /*UseEffect that activates the animation*/
   useEffect(() => {
     setTimeout(() => {
       setDiv(true)
@@ -43,6 +39,16 @@ function LandingPage() {
     updateSize();
     return () => window.removeEventListener('resize', updateSize);
   }, [])
+
+
+  /*UseEffect that listens for scrolling or screen size changes*/
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [totalHeight]);
+
 
   return (
     <>

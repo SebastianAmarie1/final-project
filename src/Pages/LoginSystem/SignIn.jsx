@@ -11,12 +11,17 @@ import { useNavigate, Link } from "react-router-dom"
 
 function SignIn() {
   
+  /*Variables from context*/
   const { setUser, setFlag, user } = useAuth()
+  const navigate = useNavigate()
+
+  /*Use States for the login form*/
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState(null);
-  const navigate = useNavigate()
 
+
+  /*Function that submits the form*/
   const handleSubmit = async (e) => {
     e.preventDefault()
 
@@ -26,7 +31,7 @@ function SignIn() {
       setErrors(validatedData)
       return
     }
-    
+
     try {
       const res = await axios.post("/api/login", { 
         username, 
@@ -71,7 +76,7 @@ function SignIn() {
         setErrors(["Error Logging In"])
     }
   }
-  
+
 
   return (
     <div className="credentials-main fcc">

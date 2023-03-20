@@ -3,6 +3,7 @@ import "./showProfileCss.css"
 
 import defaultPic from "../../Assets/default-user-image.jpg"
 
+/*Exports the phase 1 of the video calling system*/
 function ShowProfile({partnerProfile, endCall, skipCall}) {
   return (
     <div className="showp-container">

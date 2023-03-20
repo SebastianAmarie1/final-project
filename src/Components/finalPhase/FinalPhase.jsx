@@ -9,12 +9,12 @@ function FinalPhase({ roomId, endCall, partnerId, skipCall }) {
   const { user, setUser, setFlag, axiosAuth } = useAuth()
   const { socket } = useSocket()
 
-
   const [answer, setAnswer] = useState(false)
   const [response, setResponse] = useState(false)
   const [partnerDetails, setPartnerDetails] = useState(null)
   const [following, setFollowing] = useState(false)
 
+  /*UseEffect that listens to a socket call from other user for a follow request*/
   useEffect(() => {
     socket.current.on("responseFollow", (data) => {
       setResponse(true)
@@ -22,12 +22,16 @@ function FinalPhase({ roomId, endCall, partnerId, skipCall }) {
     })
   },[])
 
+
+  /*UseEffect that ensures that both users have agreed*/
   useEffect(() => {
     if (answer && response){
       handleFollow()
     }
   },[answer, response])
 
+
+  /*UseEffect that checks if the users are already following eachother*/
   useEffect(() => {
     const checkFollowing = () => {
       if (user.friendslist){
@@ -41,7 +45,9 @@ function FinalPhase({ roomId, endCall, partnerId, skipCall }) {
 
     checkFollowing()
   },[user.friendslist])
-  
+
+
+  /*Function that sends a socket call to the other user informing them that they would like to be friends*/
   const handleAdd = () => {
     setAnswer(true)
 
@@ -51,6 +57,8 @@ function FinalPhase({ roomId, endCall, partnerId, skipCall }) {
     })
   }
 
+
+  /* Function that Handles the actual adding of friends*/
   const handleFollow = async () => {
     try {
       const res = await axiosAuth.post("/api/follow", {id: user.id, followedUser: partnerDetails.id}, 

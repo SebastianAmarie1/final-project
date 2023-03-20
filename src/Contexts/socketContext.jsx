@@ -1,13 +1,15 @@
 import { io } from "socket.io-client"
 
-import React, { useContext, useEffect, useRef } from "react"
+import React, { useContext, useRef } from "react"
 
+/*Creates a useContext to be used throughout the application*/
 const AuthContext = React.createContext()
 
 export function useSocket() {
     return useContext(AuthContext)
 }
 
+/*Used to create 1 instance of socket*/
 export function SocketProvider({ children }) {
 
     const socket = useRef()

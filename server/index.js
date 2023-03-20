@@ -565,14 +565,13 @@ app.post("/api/retrieve_user", verify, async(req, res) => {
         const escapedQuery = format(query, usersId)
         const newUser = await pool.query(escapedQuery)
 
-        console.log(newUser.rows[0], "new user")
         if (newUser.rows[0].profile_pic){
             newUser.rows[0].profile_pic = toBase64(newUser.rows[0].profile_pic)
         }
 
         res.json(newUser.rows[0])
     } catch (err) { 
-        console.error(err.message)
+        console.error(err)
     }
 })
 
@@ -596,12 +595,13 @@ app.post("/api/retrieve_friends", verify, async(req, res) => {
                 const escapedQuery = format(query, current)
                 let User1 = await pool.query(escapedQuery)
 
-                let User1pic
+                let User1pic = null
     
-                if(User1.rows[0].profile_pic){
+                if(User1.rows[0]?.profile_pic){
                     User1pic = toBase64(User1.rows[0].profile_pic)
                 }
-    
+                
+                
                 User1 = {...User1.rows[0], profile_pic: User1pic}
                 let tempList = []
                 tempList.push(User1)
@@ -613,7 +613,7 @@ app.post("/api/retrieve_friends", verify, async(req, res) => {
 
         res.json(friendslist)
     } catch (err) {
-        console.error(err.message)
+        console.error(err)
     }
 })
 
