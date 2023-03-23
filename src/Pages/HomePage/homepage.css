@@ -72,6 +72,7 @@
     background-repeat: no-repeat;
     background-size: cover;
     border-radius: 5px;
+    cursor: pointer;
     overflow: hidden;
 }
 
@@ -283,26 +284,30 @@
 @media screen and (max-width: 1200px) {
     .home-video-questions{
         width: 100%;
-        padding-right: 0;
+        padding: 0;
+        gap: 0;
         grid-template-areas: 
         "v v v v v"
         "v v v v v"
         "v v v v v";
     }
+    .home-main{
+        padding: 0;
+    }
+    .home-main-container{
+        height: 100%;
+        padding: 0;
+    }
 
     .home-video-user{
-        position: relative;
         z-index: 3;
         width: 200px;
         height: 200px;
         position: absolute;
-        top: calc(100% - 175px - 10vh); 
-        left: calc(100% - 225px - 5vw);
+        bottom: 0;
+        right: 0;
+        margin-right: 20px;
         background-color: transparent;
-    }
-
-    .home-video-me{
-        margin-bottom: calc(-4vw + 20px);
     }
 
     .home-partner-show-ho{
@@ -327,6 +332,15 @@
     .home-partner-show-ho:focus{
         background-color: var(--clr-secondary);
     }
+
+    .home-video-search{
+        height: 100%;
+    }
+
+    .home-video-questions{
+        height: 100%;
+    }
+    
     .home-video-search-footer{
         position: absolute;
         height: 70px;

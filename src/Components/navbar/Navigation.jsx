@@ -103,7 +103,6 @@ function Navigation() {
             }
         </div>
     </nav>
-    <div className="navbar-spacer"></div>
     </>
   )
 }

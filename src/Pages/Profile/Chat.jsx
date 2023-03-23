@@ -51,8 +51,7 @@ function Chat() {
         messageEndRef.current?.scrollIntoView({ behavior: "smooth" })
     },[messages])
 
-    console.log(user)
-    console.log(recieverId)
+
     /*Adds the arrived message to the messages*/
     useEffect(() => { 
         arrivalMessage && arrivalMessage.senderid === recieverId &&
