@@ -5,6 +5,7 @@ import "./homepage.css"
 import { useAuth } from "../../Contexts/AuthContext"
 import { useSocket } from "../../Contexts/socketContext"
 import axios from "../../Contexts/axiosConfig"
+import { questions } from "../../Assets/Questions"
 
 
 
@@ -65,7 +66,6 @@ function HomePage() {
 
   /*Phase 3 usestates*/
   const [question, setQuestion] = useState(null)
-
 
   /*Use Effect sets up the homepage and has socket listeners*/
   useEffect(() => {
@@ -375,6 +375,8 @@ function HomePage() {
 
 /*Phase 3 Code*/
   /*Function to get questions from RAPID API*/
+  /*This is not used as the API has a limit of 100 calls. To fix this i have created my own questions*/
+  /*
   const getQuestion = async() => {
     const options = {
         method: 'GET',
@@ -387,7 +389,11 @@ function HomePage() {
       
       const res = await axios.request(options)
       setQuestion(res.data[0].question)
-  }  
+  }
+  */ 
+  const getQuestion = () => {
+    setQuestion(questions[Math.floor(Math.random()*101)])
+  }
 
 
   /*That makes a delay for the animation of the questions*/

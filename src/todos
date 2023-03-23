@@ -2,7 +2,6 @@
 
 8) fix the navigation (useNavigate doesnt work i think)
 
-4) add a remove friend option
 5) Change it so that instead of teh API, you store the would you rather questions in its own file and then get a random one, to avoid the 100 requests limit.
 
 ****) TESTING

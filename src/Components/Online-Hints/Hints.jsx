@@ -2,13 +2,15 @@
 import React, { useState, memo } from "react"
 import "./HintsCss.css"
 import axios from "../../Contexts/axiosConfig"
-
+import { questions } from "../../Assets/Questions"
 
 function Hints() {
 
     const [question, setQuestion] = useState(null)
 
     /*Function that makes an RAPID API call to get a question*/
+    /*This is not used due to the fact that the free API only has 100 calls, therefore i have created my own 100 questions
+    /*  
     const handleQuestion = async(e) => {
         e.stopPropagation() 
 
@@ -24,7 +26,11 @@ function Hints() {
           const res = await axios.request(options)
           setQuestion(res.data[0].question)
     }  
+    */
 
+    const handleQuestion = () => {
+        setQuestion(questions[Math.floor(Math.random()*100)])
+    }
 
     return(
         <div className="hints-container" >
