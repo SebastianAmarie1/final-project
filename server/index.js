@@ -575,6 +575,29 @@ app.post("/api/retrieve_user", verify, async(req, res) => {
     }
 })
 
+//Unadd 2 users
+app.post("/api/delete_user", verify, async(req, res) => {
+    try {
+        const { userId, partnerId, conversationId } = req.body
+
+        const query = "UPDATE users SET friendslist = array_remove(friendslist, %L) WHERE users_id = %L"
+        const escapedQuery = format(query, partnerId, userId)
+        await pool.query(escapedQuery)
+
+        const sQuery = "UPDATE users SET friendslist = array_remove(friendslist, %L) WHERE users_id = %L"
+        const escapedsQuery = format(sQuery, userId, partnerId)
+        await pool.query(escapedsQuery)
+
+        const tQuery = "DELETE FROM conversations WHERE conversation_id = %L"
+        const escapedtQuery = format(tQuery, conversationId)
+        await pool.query(escapedtQuery)
+
+        res.json({"status": "Successful Deletion"})
+    } catch (err) { 
+        res.json({"status": "Error"})
+    }
+})
+
 //get userfriends
 app.post("/api/retrieve_friends", verify, async(req, res) => {
     try {

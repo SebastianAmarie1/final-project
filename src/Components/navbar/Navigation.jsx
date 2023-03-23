@@ -87,9 +87,6 @@ function Navigation() {
                 <div className="navigation-bottom-individual fcc">
                   <Link onClick={eventHandler} to="/homepage/profile"> <h4 className='navigation-bottom-active-option'>Profile</h4></Link> 
                 </div>
-                <div className="navigation-bottom-individual fcc">
-                  <Link onClick={eventHandler} to="/homepage"> <h4 className='navigation-bottom-active-option'>Contact Us</h4></Link>
-                </div>
               </>
             :
               <>
@@ -97,10 +94,10 @@ function Navigation() {
                   <Link onClick={eventHandler} to="/"> <h4 className='navigation-bottom-active-option'>Home</h4></Link>
                 </div>
                 <div className="navigation-bottom-individual fcc">
-                  <Link onClick={eventHandler} to="/homepage"> <h4 className='navigation-bottom-active-option'>Contact Us</h4></Link>
+                  <a onClick={eventHandler} href="#about"> <h4 className='navigation-bottom-active-option'>About Us</h4></a>
                 </div>
                 <div className="navigation-bottom-individual fcc">
-                  <Link onClick={eventHandler} to="/homepage"> <h4 className='navigation-bottom-active-option'>About Us</h4></Link>
+                  <a onClick={eventHandler} href="#steps"> <h4 className='navigation-bottom-active-option'>Steps</h4></a>
                 </div>
               </>
             }

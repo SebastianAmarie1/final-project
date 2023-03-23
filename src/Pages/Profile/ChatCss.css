@@ -20,6 +20,7 @@
 }
 
 .chat-header{
+    position: relative;
     height: 60px;
     width: 100%;
     
@@ -51,13 +52,35 @@
 .chat-header-back{
     position: absolute;
     left:0;
-    top: 2.5%;
+    top: 0;
     margin-left: 1em;
+    margin-top: calc(60px - 40px);
     rotate: 180deg;
 
     cursor: pointer;
     color:white;
     border-color: white;
+}
+
+
+.chat-header-unadd{
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: red;
+    color: white;
+    padding: 0.5em;
+    margin-top: calc(60px - 45px);
+    margin-right: 1em;
+    border: 1px solid var(--clr-white);
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.chat-header-unadd:hover{
+    background-color: var(--clr-highlighted);
+    color: var(--clr-primary);
+    border-color: var(--clr-secondary);
 }
 
 /* Date Seperator */

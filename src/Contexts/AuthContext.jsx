@@ -21,14 +21,14 @@ export function AuthProvider({ children }) {
     /*UseEffect to store details in local storage*/
     useEffect(()=> {
         if(flag) {
-            localStorage.setItem("userDetails", JSON.stringify(user));
+            sessionStorage.setItem("userDetails", JSON.stringify(user));
         }
     },[user])
     
 
     /*UseEffect to retrieve items from the local storage*/
     useEffect(() => {
-        const saved = localStorage.getItem("userDetails");
+        const saved = sessionStorage.getItem("userDetails");
         setUser(JSON.parse(saved))
     }, [])
 

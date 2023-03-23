@@ -17,7 +17,7 @@ function Chat() {
     /*Get the conversation and reciever IDs from the previous page and variables from context*/
     const { state } = useLocation()
     const { conversationId, recieverId, cname, profile_pic } = state
-    const { user, axiosAuth } = useAuth()
+    const { user, axiosAuth, setUser } = useAuth()
     const { socket } = useSocket()
     const navigate = useNavigate()
 
@@ -51,7 +51,8 @@ function Chat() {
         messageEndRef.current?.scrollIntoView({ behavior: "smooth" })
     },[messages])
 
-
+    console.log(user)
+    console.log(recieverId)
     /*Adds the arrived message to the messages*/
     useEffect(() => { 
         arrivalMessage && arrivalMessage.senderid === recieverId &&
@@ -77,6 +78,34 @@ function Chat() {
         }
         getMessages()
     },[user.id])
+
+    const handleDeleteUser = async() => {
+        const result = window.confirm('Do You Want To Delete This User?');
+
+        if (result){
+            try {
+                const res = await axiosAuth.post("/api/delete_user", { 
+                    conversationId: conversationId,
+                    partnerId: recieverId,
+                    userId: user.id
+                },
+                { headers: 
+                    { authorization: "Bearer " + user.accessToken}
+                })
+                
+                if (res.data.status = "Successful Deletion"){
+                    const newFriendslist = user.friendslist.filter((value) => value !== JSON.stringify(recieverId))
+                    
+                    setUser({...user, friendslist: newFriendslist})
+                    console.log(res.data.status)
+                }
+                
+                navigate("/homepage/follow/")
+            } catch (error) {
+                console.log(error)
+            }
+        } 
+    }
 
 
   /*Function that handles the sending of a message */
@@ -125,6 +154,7 @@ function Chat() {
             <div className="chat-header fcc">
                 <h3 className="chat-header-title">{cname}</h3>
                 <p onClick={() => {navigate(`/homepage/follow/`)}}><i className="arrow right chat-header-back"></i></p>
+                <button onClick={handleDeleteUser} className="chat-header-unadd">Delete</button>
             </div>
             <div className="chat-container-messages">
                 {

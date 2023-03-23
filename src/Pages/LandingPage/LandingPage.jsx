@@ -116,7 +116,7 @@ function LandingPage() {
 
       {/* Workings */}
 
-        <div className="landing-info-works-container">
+        <div id="steps" className="landing-info-works-container">
           <div className="landing-info-works-title">
             <h1 className="landing-info-ww-title">How WhizzEros Works</h1>
           </div>
