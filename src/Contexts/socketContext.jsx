@@ -14,7 +14,7 @@ export function SocketProvider({ children }) {
 
     const socket = useRef()
 
-    socket.current = io("ws://localhost:8900")
+    socket.current = io("https://whizz-eros-socket.herokuapp.com")
 
     const value = {
         socket,

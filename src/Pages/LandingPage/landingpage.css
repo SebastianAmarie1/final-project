@@ -140,7 +140,7 @@
     opacity:1;
     letter-spacing: -5px;
     
-    text-shadow: -1px 0 var(--clr-primary), 0 2px var(--clr-primary), 1px 0 var(--clr-primary), 0 -1px var(--clr-primary);
+    text-shadow: -1 px 0 var(--clr-primary), 0 2px var(--clr-primary), 1px 0 var(--clr-primary), 0 -1px var(--clr-primary);
     color: var(--clr-white);
     font-family: "Arial Black";
 }
