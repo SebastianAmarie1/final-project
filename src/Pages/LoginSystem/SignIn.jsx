@@ -1,5 +1,6 @@
 import React, { useState} from 'react'
 import { useNavigate, Link } from "react-router-dom"
+import '@testing-library/jest-dom';
 
 import "./credentials.css"
 import axios from "../../Contexts/axiosConfig"
@@ -12,7 +13,7 @@ import heart from "../../Assets/credentials/credentials-heart.png"
 function SignIn() {
   
   /*Variables from context*/
-  const { setUser, setFlag, user } = useAuth()
+  const { setUser, setFlag } = useAuth()
   const navigate = useNavigate()
 
   /*Use States for the login form*/
@@ -44,7 +45,7 @@ function SignIn() {
 
       if (res.data.status === "Login Successful"){
         setFlag(true)
-        setUser({
+        const updatedUser = {
           id: res.data.users_id,
           username: res.data.username,
           fname: res.data.fname,
@@ -66,7 +67,8 @@ function SignIn() {
             gender: res.data.gender,
             region: res.data.region,
             active: true,
-          })
+        }
+        setUser(updatedUser)
           navigate("/homepage")
       } else {
         setErrors([res.data.status])
@@ -104,7 +106,7 @@ function SignIn() {
                 <div className={`signin-input wave-group ${username ?'wave-group-active' : 'wave-group-deactive'} big-input`} >
                   <input id="Username" name="username" required value={username} type="text" className="input credentials-form-input" onChange={(e) => {setUsername(e.target.value)}}/>
                   <span className="bar big-input"></span>
-                  <label className="label">
+                  <label className="label" htmlFor="Username">
                     <span className="label-char" style={{'--index': 0}}>U</span>
                     <span className="label-char" style={{'--index': 1}}>s</span>
                     <span className="label-char" style={{'--index': 2}}>e</span>
@@ -119,7 +121,7 @@ function SignIn() {
                 <div className={`signin-input wave-group ${password ?'wave-group-active' : 'wave-group-deactive'} big-input`} >
                   <input id="Password" name="password" required value={password} type="password" className="input credentials-form-input" onChange={(e) => {setPassword(e.target.value)}}/>
                   <span className="bar big-input"></span>
-                  <label className="label">
+                  <label className="label" htmlFor="Password">
                     <span className="label-char" style={{'--index': 0}}>P</span>
                     <span className="label-char" style={{'--index': 1}}>a</span>
                     <span className="label-char" style={{'--index': 2}}>s</span>
