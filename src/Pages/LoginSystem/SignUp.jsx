@@ -86,7 +86,7 @@ function SignUp() {
                 <div className={`signin-input grid-a wave-group ${username ?'wave-group-active' : 'wave-group-deactive'} big-input`} >
                   <input id="Username" name="username" required value={username} type="text" className="input credentials-form-input" onChange={(e) => {setUsername(e.target.value)}}/>
                   <span className="bar big-input"></span>
-                  <label className="label">
+                  <label className="label" htmlFor="Username">
                     <span className="label-char" style={{'--index': 0}}>U</span>
                     <span className="label-char" style={{'--index': 1}}>s</span>
                     <span className="label-char" style={{'--index': 2}}>e</span>
@@ -101,7 +101,7 @@ function SignUp() {
                 <div className={`signin-input grid-b wave-group ${fName ?'wave-group-active' : 'wave-group-deactive'} big-input`} >
                   <input id="FName" name="fname" required value={fName} type="text" className="input credentials-form-input" onChange={(e) => {setFName(e.target.value)}}/>
                   <span className="bar big-input"></span>
-                  <label className="label">
+                  <label className="label" htmlFor="FName">
                     <span className="label-char" style={{'--index': 0}}>F</span>
                     <span className="label-char" style={{'--index': 1}}>i</span>
                     <span className="label-char" style={{'--index': 2}}>r</span>
@@ -118,7 +118,7 @@ function SignUp() {
                 <div className={`signin-input grid-c wave-group ${lName ?'wave-group-active' : 'wave-group-deactive'} big-input`} >
                   <input id="lName" name="lname" required value={lName} type="text" className="input credentials-form-input" onChange={(e) => {setLName(e.target.value)}}/>
                   <span className="bar big-input"></span>
-                  <label className="label">
+                  <label className="label" htmlFor="lName">
                     <span className="label-char" style={{'--index': 0}}>L</span>
                     <span className="label-char" style={{'--index': 1}}>a</span>
                     <span className="label-char" style={{'--index': 2}}>s</span>
@@ -134,7 +134,7 @@ function SignUp() {
                 <div className={`signin-input grid-d wave-group ${email ?'wave-group-active' : 'wave-group-deactive'} big-input`} >
                   <input id="Email" name="email" required value={email} type="text" className="input credentials-form-input" onChange={(e) => {setEmail(e.target.value)}}/>
                   <span className="bar big-input"></span>
-                  <label className="label">
+                  <label className="label" htmlFor="Email">
                     <span className="label-char" style={{'--index': 0}}>E</span>
                     <span className="label-char" style={{'--index': 1}}>m</span>
                     <span className="label-char" style={{'--index': 2}}>a</span>
@@ -146,7 +146,7 @@ function SignUp() {
                 <div className={`signin-input grid-e wave-group ${pwd ?'wave-group-active' : 'wave-group-deactive'} big-input`} >
                   <input id="Pwd" name="pwd" required value={pwd} type="password" className="input credentials-form-input" onChange={(e) => {setPassword(e.target.value)}}/>
                   <span className="bar big-input"></span>
-                  <label className="label">
+                  <label className="label" htmlFor="Pwd">
                     <span className="label-char" style={{'--index': 0}}>P</span>
                     <span className="label-char" style={{'--index': 1}}>a</span>
                     <span className="label-char" style={{'--index': 2}}>s</span>
@@ -161,7 +161,7 @@ function SignUp() {
                 <div className={`signin-input grid-f wave-group ${cPassword ?'wave-group-active' : 'wave-group-deactive'} big-input`} >
                   <input id="CPassword" name="cpassword" required value={cPassword} type="password" className="input credentials-form-input" onChange={(e) => {setCPassword(e.target.value)}}/>
                   <span className="bar big-input"></span>
-                  <label className="label">
+                  <label className="label" htmlFor="CPassword">
                     <span className="label-char" style={{'--index': 0}}>C</span>
                     <span className="label-char" style={{'--index': 1}}>o</span>
                     <span className="label-char" style={{'--index': 2}}>n</span>
@@ -184,7 +184,7 @@ function SignUp() {
                 <div className={`signin-input grid-g wave-group ${region ?'wave-group-active' : 'wave-group-deactive'} big-input`} >
                   <input id="Region" name="region" required value={region} type="text" className="input credentials-form-input" onChange={(e) => {setRegion(e.target.value)}}/>
                   <span className="bar big-input"></span>
-                  <label className="label">
+                  <label className="label" htmlFor="Region">
                     <span className="label-char" style={{'--index': 0}}>R</span>
                     <span className="label-char" style={{'--index': 1}}>e</span>
                     <span className="label-char" style={{'--index': 2}}>g</span>
@@ -197,7 +197,7 @@ function SignUp() {
                 <div className={`signin-input grid-h wave-group ${phonenumber ?'wave-group-active' : 'wave-group-deactive'} big-input`} >
                   <input id="Phonenumber" name="phonenumber" required value={phonenumber} type="text" className="input credentials-form-input" onChange={(e) => {setPhonenumber(e.target.value)}}/>
                   <span className="bar big-input"></span>
-                  <label className="label">
+                  <label className="label" htmlFor="Phonenumber">
                     <span className="label-char" style={{'--index': 0}}>P</span>
                     <span className="label-char" style={{'--index': 1}}>h</span>
                     <span className="label-char" style={{'--index': 2}}>o</span>
